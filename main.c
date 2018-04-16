@@ -80,16 +80,16 @@ void main(void)
          AD1CON1bits.SAMP = 0;        // start Converting
         while (!AD1CON1bits.DONE);    // conversion done?
          AD1CON1bits.DONE = 0;
-         CH0 = ADC1BUF0;            // yes then get ADC value
-         CH1 = ADC1BUF1;            // yes then get ADC value
+         //CH0 = ADC1BUF0;            // yes then get ADC value
+         //CH1 = ADC1BUF1;            // yes then get ADC value
          CH2 = ADC1BUF2;            // yes then get ADC value
          CH3 = ADC1BUF3;            // yes then get ADC value
 
        
-            printf("CH0= %d  V \n", CH0);
-            printf("CH1= %d  V \n", CH1);
-            printf("CH2= %d  V \n", CH2);
-            printf("CH3= %d  V \n", CH3);
+            //printf("CH0= %d   ", CH0);
+            //printf("CH1= %d   ", CH1);
+            printf("CH2= %d   ", CH2);
+            printf("CH3= %d   \n\r", CH3);
     }
 }
 /**
