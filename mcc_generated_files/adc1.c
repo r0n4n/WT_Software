@@ -80,19 +80,21 @@ static ADC_OBJECT adc1_obj;
 
 void ADC1_Initialize (void)
 {
-    // ASAM enabled; ADDMABM disabled; ADSIDL disabled; DONE disabled; SIMSAM Simultaneous; FORM Absolute decimal result, unsigned, right-justified; SAMP disabled; SSRC Clearing sample bit ends sampling and starts conversion; AD12B 10-bit; ADON enabled; SSRCG disabled; 
+    // ASAM enabled; ADDMABM disabled; ADSIDL disabled; DONE disabled; SIMSAM Simultaneous; FORM Absolute decimal result, unsigned, right-justified; SAMP disabled; SSRC Internal counter ends sampling and starts conversion; AD12B 10-bit; ADON enabled; SSRCG disabled; 
 
-   AD1CON1 = 0x800C;
+   AD1CON1 = 0x80EC;
 
-    // CSCNA disabled; VCFG0 AVDD; VCFG1 AVSS; ALTS disabled; BUFM disabled; SMPI 1; CHPS 4 Channel; 
+    // CSCNA disabled; VCFG0 AVDD; VCFG1 AVSS; ALTS enabled; BUFM disabled; SMPI 4; CHPS 4 Channel; 
 
-   AD1CON2 = 0x100;
+   AD1CON2 = 0x10D;
 
     // SAMC 31; ADRC FOSC/2; ADCS 254; 
 
    AD1CON3 = 0x1FFE;
 
     // CH0SA AN3; CH0SB AN3; CH0NB AVSS; CH0NA AVSS; 
+   
+   AD1CON4 =0x0100 ; 
 
    AD1CHS0 = 0x303;
 

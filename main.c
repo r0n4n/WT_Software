@@ -58,10 +58,10 @@ void main(void)
     uint16_t CH1;
     uint16_t CH2;
     uint16_t CH3;
-    float CH0_volts;
+    /*float CH0_volts;
     float CH1_volts;
     float CH2_volts;
-    float CH3_volts;
+    float CH3_volts;*/
     ADC1_Initialize();
     // When using interrupts, you need to set the Global Interrupt Enable bits
     // Use the following macros to:
@@ -75,21 +75,39 @@ void main(void)
     while (1)
     {
 
-         AD1CON1bits.SAMP = 1;        // start sampling ...
+        // AD1CON1bits.SAMP = 1;        // start sampling ...
          __delay32(60000000);            // for 100 mS at 31,25MHz
-         AD1CON1bits.SAMP = 0;        // start Converting
-        while (!AD1CON1bits.DONE);    // conversion done?
-         AD1CON1bits.DONE = 0;
-         //CH0 = ADC1BUF0;            // yes then get ADC value
-         //CH1 = ADC1BUF1;            // yes then get ADC value
+        // AD1CON1bits.SAMP = 0;        // start Converting
+        //while (!AD1CON1bits.DONE);    // conversion done?
+         //AD1CON1bits.DONE = 0;
+        // while (!_AD1IF);// Wait for all 4 conversions to complete
+        //_AD1IF = 0;
+         CH0 = ADC1BUF0;            // yes then get ADC value
+         CH1 = ADC1BUF1;            // yes then get ADC value
          CH2 = ADC1BUF2;            // yes then get ADC value
          CH3 = ADC1BUF3;            // yes then get ADC value
-
+         
+         printf("ADC1BUF0=%d  ", ADC1BUF0);
+         printf("ADC1BUF1=%d  ", ADC1BUF1);
+         printf("ADC1BUF2=%d  ", ADC1BUF2);
+         printf("ADC1BUF3=%d  ", ADC1BUF3);
+         printf("ADC1BUF4=%d  ", ADC1BUF4);
+         printf("ADC1BUF5=%d  ", ADC1BUF5);
+         printf("ADC1BUF6=%d  ", ADC1BUF6);
+         printf("ADC1BUF7=%d  ", ADC1BUF7);
+         printf("ADC1BUF8=%d  ", ADC1BUF8);
+         printf("ADC1BUF9=%d  ", ADC1BUF9);
+         printf("ADC1BUFA=%d  ", ADC1BUFA);
+         printf("ADC1BUFB=%d  ", ADC1BUFB);
+         printf("ADC1BUFC=%d  ", ADC1BUFC);
+         printf("ADC1BUFD=%d  ", ADC1BUFD);
+         printf("ADC1BUFE=%d  ", ADC1BUFE);
+         printf("ADC1BUFF=%d  \n\n\r", ADC1BUFF);
        
-            //printf("CH0= %d   ", CH0);
-            //printf("CH1= %d   ", CH1);
+            /*printf("CH0= %d   ", CH0);
+            printf("CH1= %d   ", CH1);
             printf("CH2= %d   ", CH2);
-            printf("CH3= %d   \n\r", CH3);
+            printf("CH3= %d   \n\r", CH3);*/
     }
 }
 /**
