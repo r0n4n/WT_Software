@@ -87,7 +87,7 @@ void main(void)
          CH2 = ADC1BUF2;            // yes then get ADC value
          CH3 = ADC1BUF3;            // yes then get ADC value
          
-         printf("ADC1BUF0=%d  ", ADC1BUF0);
+         /*printf("ADC1BUF0=%d  ", ADC1BUF0);
          printf("ADC1BUF1=%d  ", ADC1BUF1);
          printf("ADC1BUF2=%d  ", ADC1BUF2);
          printf("ADC1BUF3=%d  ", ADC1BUF3);
@@ -102,12 +102,12 @@ void main(void)
          printf("ADC1BUFC=%d  ", ADC1BUFC);
          printf("ADC1BUFD=%d  ", ADC1BUFD);
          printf("ADC1BUFE=%d  ", ADC1BUFE);
-         printf("ADC1BUFF=%d  \n\n\r", ADC1BUFF);
+         printf("ADC1BUFF=%d  \n\n\r", ADC1BUFF);*/
        
-            /*printf("CH0= %d   ", CH0);
+            printf("CH0= %d   ", CH0);
             printf("CH1= %d   ", CH1);
             printf("CH2= %d   ", CH2);
-            printf("CH3= %d   \n\r", CH3);*/
+            printf("CH3= %d   \n\r", CH3);
     }
 }
 /**

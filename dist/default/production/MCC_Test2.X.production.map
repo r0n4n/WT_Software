@@ -137,14 +137,14 @@ xc16-ld 1.34 (A)
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200              0x102c          0x1842  (6210)
-.const                      0x122c                0xe4           0x156  (342)
-.text                       0x1310               0x24e           0x375  (885)
-.dinit                      0x155e                0xc8           0x12c  (300)
-.text                       0x1626                0xe4           0x156  (342)
-.init.delay32               0x170a                0x1c            0x2a  (42)
-.text                       0x1726                0x1c            0x2a  (42)
+.const                      0x122c                0x2e            0x45  (69)
+.text                       0x125a               0x170           0x228  (552)
+.dinit                      0x13ca                0xc8           0x12c  (300)
+.text                       0x1492               0x12e           0x1c5  (453)
+.init.delay32               0x15c0                0x1c            0x2a  (42)
+.text                       0x15dc                0x1c            0x2a  (42)
 
-                 Total "program" memory used (bytes):         0x1fe3  (8163) 3%
+                 Total "program" memory used (bytes):         0x1df4  (7668) 2%
 
 
 "data" Memory  [Origin = 0x1000, Length = 0x8000]
@@ -239,50 +239,50 @@ External Symbols in Program Memory (by address):
                   0x001168                  ___umoddi3
                   0x001170                  ___divdi3
                   0x0011d0                  ___moddi3
-                  0x00132e                  _SYSTEM_Initialize
-                  0x001344                  _OSCILLATOR_Initialize
-                  0x00136c                  _SYSTEM_GetResetCause
-                  0x0013c6                  _SYSTEM_ResetCauseFromTrap
-                  0x0013de                  _SYSTEM_ResetCauseFromIllegalOpcode
-                  0x0013fa                  _SYSTEM_ResetCauseFromConfigurationMismatch
-                  0x001416                  _SYSTEM_ResetCauseFromExternal
-                  0x001432                  _SYSTEM_ResetCauseFromSoftware
-                  0x00144e                  _SYSTEM_ResetCauseFromWatchdogTimer
-                  0x001468                  _SYSTEM_ResetCauseClear
-                  0x001478                  _SYSTEM_ResetCauseClearAll
-                  0x001480                  _main
-                  0x001626                  _PIN_MANAGER_Initialize
-                  0x001688                  _UART1_Initialize
-                  0x00169c                  _UART1_Read
-                  0x0016ba                  _UART1_Write
-                  0x0016d2                  _UART1_StatusGet
-                  0x0016da                  _ADC1_Initialize
-                  0x001702                  _ADC1_Tasks
-                  0x00170a                  ___delay32
-                  0x00173c                  _INTERRUPT_Initialize
+                  0x001278                  _SYSTEM_Initialize
+                  0x00128e                  _OSCILLATOR_Initialize
+                  0x0012b6                  _SYSTEM_GetResetCause
+                  0x001310                  _SYSTEM_ResetCauseFromTrap
+                  0x001328                  _SYSTEM_ResetCauseFromIllegalOpcode
+                  0x001344                  _SYSTEM_ResetCauseFromConfigurationMismatch
+                  0x001360                  _SYSTEM_ResetCauseFromExternal
+                  0x00137c                  _SYSTEM_ResetCauseFromSoftware
+                  0x001398                  _SYSTEM_ResetCauseFromWatchdogTimer
+                  0x0013b2                  _SYSTEM_ResetCauseClear
+                  0x0013c2                  _SYSTEM_ResetCauseClearAll
+                  0x001492                  _PIN_MANAGER_Initialize
+                  0x0014f4                  _UART1_Initialize
+                  0x001508                  _UART1_Read
+                  0x001526                  _UART1_Write
+                  0x00153e                  _UART1_StatusGet
+                  0x001546                  _main
+                  0x001592                  _ADC1_Initialize
+                  0x0015b8                  _ADC1_Tasks
+                  0x0015c0                  ___delay32
+                  0x0015f2                  _INTERRUPT_Initialize
                   0x02affa                  __FGS.sec
 
 External Symbols in Program Memory (by name):
 
-                  0x0016da                  _ADC1_Initialize
-                  0x001702                  _ADC1_Tasks
-                  0x00173c                  _INTERRUPT_Initialize
-                  0x001344                  _OSCILLATOR_Initialize
-                  0x001626                  _PIN_MANAGER_Initialize
-                  0x00136c                  _SYSTEM_GetResetCause
-                  0x00132e                  _SYSTEM_Initialize
-                  0x001468                  _SYSTEM_ResetCauseClear
-                  0x001478                  _SYSTEM_ResetCauseClearAll
-                  0x0013fa                  _SYSTEM_ResetCauseFromConfigurationMismatch
-                  0x001416                  _SYSTEM_ResetCauseFromExternal
-                  0x0013de                  _SYSTEM_ResetCauseFromIllegalOpcode
-                  0x001432                  _SYSTEM_ResetCauseFromSoftware
-                  0x0013c6                  _SYSTEM_ResetCauseFromTrap
-                  0x00144e                  _SYSTEM_ResetCauseFromWatchdogTimer
-                  0x001688                  _UART1_Initialize
-                  0x00169c                  _UART1_Read
-                  0x0016d2                  _UART1_StatusGet
-                  0x0016ba                  _UART1_Write
+                  0x001592                  _ADC1_Initialize
+                  0x0015b8                  _ADC1_Tasks
+                  0x0015f2                  _INTERRUPT_Initialize
+                  0x00128e                  _OSCILLATOR_Initialize
+                  0x001492                  _PIN_MANAGER_Initialize
+                  0x0012b6                  _SYSTEM_GetResetCause
+                  0x001278                  _SYSTEM_Initialize
+                  0x0013b2                  _SYSTEM_ResetCauseClear
+                  0x0013c2                  _SYSTEM_ResetCauseClearAll
+                  0x001344                  _SYSTEM_ResetCauseFromConfigurationMismatch
+                  0x001360                  _SYSTEM_ResetCauseFromExternal
+                  0x001328                  _SYSTEM_ResetCauseFromIllegalOpcode
+                  0x00137c                  _SYSTEM_ResetCauseFromSoftware
+                  0x001310                  _SYSTEM_ResetCauseFromTrap
+                  0x001398                  _SYSTEM_ResetCauseFromWatchdogTimer
+                  0x0014f4                  _UART1_Initialize
+                  0x001508                  _UART1_Read
+                  0x00153e                  _UART1_StatusGet
+                  0x001526                  _UART1_Write
                   0x000318                  __AddressError
                   0x0006ca                  __Atexit
                   0x000590                  __Closreg
@@ -302,7 +302,7 @@ External Symbols in Program Memory (by name):
                   0x000fc8                  __Vacopy
                   0x0006e4                  ___Printf_cdnopuxX
                   0x000848                  ___Putfld_cdnopuxX
-                  0x00170a                  ___delay32
+                  0x0015c0                  ___delay32
                   0x001170                  ___divdi3
                   0x000fd4                  ___divsi3
                   0x0011d0                  ___moddi3
@@ -322,7 +322,7 @@ External Symbols in Program Memory (by name):
                   0x0005a2                  _fclose
                   0x000a8c                  _free
                   0x000434                  _fwrite
-                  0x001480                  _main
+                  0x001546                  _main
                   0x000b56                  _malloc
                   0x0004dc                  _memchr
                   0x0004f0                  _memcpy
@@ -529,7 +529,7 @@ __FOSCSEL
 
 __FGS             0x02affa          0x2
  *(__FGS.sec*)
- __FGS.sec        0x02affa          0x2 /CW/_FGS∞—	Ë—	__FGS.sec
+ __FGS.sec        0x02affa          0x2 /CW/_FGS†–ÿ–__FGS.sec
                   0x02affa                  __FGS.sec
 
 __FUID0
@@ -548,7 +548,7 @@ __FUID3
  *(.comment)
  .comment         0x000000         0x5e c:/program files (x86)/microchip/xc16/v1.34/bin/bin/../../lib\liblega-c-elf.a(xfiles.EP_eo)
 
-.debug_info       0x000000       0x4ddb
+.debug_info       0x000000       0x4c8b
  *(.debug_info)
  .debug_info      0x000000       0x1028 build/default/production/mcc_generated_files/adc1.o
  .debug_info      0x001028        0x156 build/default/production/mcc_generated_files/interrupt_manager.o
@@ -556,7 +556,7 @@ __FUID3
  .debug_info      0x00174d        0x741 build/default/production/mcc_generated_files/uart1.o
  .debug_info      0x001e8e        0x5c8 build/default/production/mcc_generated_files/pin_manager.o
  .debug_info      0x002456       0x17cf build/default/production/mcc_generated_files/mcc.o
- .debug_info      0x003c25       0x11b6 build/default/production/main.o
+ .debug_info      0x003c25       0x1066 build/default/production/main.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000        0x72d
@@ -569,7 +569,7 @@ __FUID3
  .debug_abbrev    0x00043d        0x1fb build/default/production/mcc_generated_files/mcc.o
  .debug_abbrev    0x000638         0xf5 build/default/production/main.o
 
-.debug_line       0x000000        0x763
+.debug_line       0x000000        0x758
  *(.debug_line)
  .debug_line      0x000000        0x10a build/default/production/mcc_generated_files/adc1.o
  .debug_line      0x00010a         0x55 build/default/production/mcc_generated_files/interrupt_manager.o
@@ -577,7 +577,7 @@ __FUID3
  .debug_line      0x00029a        0x132 build/default/production/mcc_generated_files/uart1.o
  .debug_line      0x0003cc        0x116 build/default/production/mcc_generated_files/pin_manager.o
  .debug_line      0x0004e2        0x17c build/default/production/mcc_generated_files/mcc.o
- .debug_line      0x00065e        0x105 build/default/production/main.o
+ .debug_line      0x00065e         0xfa build/default/production/main.o
 
 .debug_frame      0x000000        0x3ce
  *(.debug_frame)
@@ -589,14 +589,14 @@ __FUID3
  .debug_frame     0x0001fc        0x19c build/default/production/mcc_generated_files/mcc.o
  .debug_frame     0x000398         0x36 build/default/production/main.o
 
-.debug_str        0x000000        0x284
+.debug_str        0x000000        0x218
  *(.debug_str)
  .debug_str       0x000000         0x87 build/default/production/mcc_generated_files/adc1.o
  .debug_str       0x000087         0x24 build/default/production/mcc_generated_files/traps.o
  .debug_str       0x0000ab         0x15 build/default/production/mcc_generated_files/uart1.o
  .debug_str       0x0000c0         0x16 build/default/production/mcc_generated_files/pin_manager.o
  .debug_str       0x0000d6         0xb2 build/default/production/mcc_generated_files/mcc.o
- .debug_str       0x000188         0xfc build/default/production/main.o
+ .debug_str       0x000188         0x90 build/default/production/main.o
 
 .debug_loc
  *(.debug_loc)
@@ -1937,7 +1937,7 @@ LOAD c:/program files (x86)/microchip/xc16/v1.34/bin/bin/../../lib\libm-elf.a
 LOAD c:/program files (x86)/microchip/xc16/v1.34/bin/bin/../../lib\liblega-c-elf.a
 END GROUP
 OUTPUT(dist/default/production/MCC_Test2.X.production.elf elf32-pic30)
-LOAD /CW/_FGS∞—	Ë—	__FGS.sec
+LOAD /CW/_FGS†–ÿ–__FGS.sec
 LOAD jump_table
 LOAD default_isr
 LOAD data_init
@@ -2122,47 +2122,47 @@ __c30_signature
  .config_JTAGEN
                   0x02aff0          0x2 build/default/production/mcc_generated_files/mcc.o
 
-.const              0x922c         0xe4 load address 0x00122c  
- .const             0x922c         0xe4 build/default/production/main.o
+.const              0x922c         0x2e load address 0x00122c  
+ .const             0x922c         0x2e build/default/production/main.o
 
-.text             0x001310        0x24e
- .text            0x001310        0x170 build/default/production/mcc_generated_files/mcc.o
-                  0x00132e                  _SYSTEM_Initialize
-                  0x001344                  _OSCILLATOR_Initialize
-                  0x00136c                  _SYSTEM_GetResetCause
-                  0x001374                  _SYSTEM_ResetCauseHandler
-                  0x0013c6                  _SYSTEM_ResetCauseFromTrap
-                  0x0013de                  _SYSTEM_ResetCauseFromIllegalOpcode
-                  0x0013fa                  _SYSTEM_ResetCauseFromConfigurationMismatch
-                  0x001416                  _SYSTEM_ResetCauseFromExternal
-                  0x001432                  _SYSTEM_ResetCauseFromSoftware
-                  0x00144e                  _SYSTEM_ResetCauseFromWatchdogTimer
-                  0x001468                  _SYSTEM_ResetCauseClear
-                  0x001478                  _SYSTEM_ResetCauseClearAll
- .text            0x001480         0xde build/default/production/main.o
-                  0x001480                  _main
+.text             0x00125a        0x170
+ .text            0x00125a        0x170 build/default/production/mcc_generated_files/mcc.o
+                  0x001278                  _SYSTEM_Initialize
+                  0x00128e                  _OSCILLATOR_Initialize
+                  0x0012b6                  _SYSTEM_GetResetCause
+                  0x0012be                  _SYSTEM_ResetCauseHandler
+                  0x001310                  _SYSTEM_ResetCauseFromTrap
+                  0x001328                  _SYSTEM_ResetCauseFromIllegalOpcode
+                  0x001344                  _SYSTEM_ResetCauseFromConfigurationMismatch
+                  0x001360                  _SYSTEM_ResetCauseFromExternal
+                  0x00137c                  _SYSTEM_ResetCauseFromSoftware
+                  0x001398                  _SYSTEM_ResetCauseFromWatchdogTimer
+                  0x0013b2                  _SYSTEM_ResetCauseClear
+                  0x0013c2                  _SYSTEM_ResetCauseClearAll
 
-.dinit            0x00155e         0xc8
- .dinit           0x00155e         0xc8 data_init
+.dinit            0x0013ca         0xc8
+ .dinit           0x0013ca         0xc8 data_init
 
-.text             0x001626         0xe4
- .text            0x001626         0x62 build/default/production/mcc_generated_files/pin_manager.o
-                  0x001626                  _PIN_MANAGER_Initialize
- .text            0x001688         0x52 build/default/production/mcc_generated_files/uart1.o
-                  0x001688                  _UART1_Initialize
-                  0x00169c                  _UART1_Read
-                  0x0016ba                  _UART1_Write
-                  0x0016d2                  _UART1_StatusGet
- .text            0x0016da         0x30 build/default/production/mcc_generated_files/adc1.o
-                  0x0016da                  _ADC1_Initialize
-                  0x001702                  _ADC1_Tasks
+.text             0x001492        0x12e
+ .text            0x001492         0x62 build/default/production/mcc_generated_files/pin_manager.o
+                  0x001492                  _PIN_MANAGER_Initialize
+ .text            0x0014f4         0x52 build/default/production/mcc_generated_files/uart1.o
+                  0x0014f4                  _UART1_Initialize
+                  0x001508                  _UART1_Read
+                  0x001526                  _UART1_Write
+                  0x00153e                  _UART1_StatusGet
+ .text            0x001546         0x4c build/default/production/main.o
+                  0x001546                  _main
+ .text            0x001592         0x2e build/default/production/mcc_generated_files/adc1.o
+                  0x001592                  _ADC1_Initialize
+                  0x0015b8                  _ADC1_Tasks
 
-.init.delay32     0x00170a         0x1c
- .init.delay32    0x00170a         0x1c c:/program files (x86)/microchip/xc16/v1.34/bin/bin/../../lib\liblega-pic30-elf.a(delay32ep.Leo)
-                  0x00170a                  ___delay32
+.init.delay32     0x0015c0         0x1c
+ .init.delay32    0x0015c0         0x1c c:/program files (x86)/microchip/xc16/v1.34/bin/bin/../../lib\liblega-pic30-elf.a(delay32ep.Leo)
+                  0x0015c0                  ___delay32
 
-.text             0x001726         0x1c
- .text            0x001726         0x16 build/default/production/mcc_generated_files/traps.o
-                  0x001726                  _TRAPS_halt_on_error
- .text            0x00173c          0x6 build/default/production/mcc_generated_files/interrupt_manager.o
-                  0x00173c                  _INTERRUPT_Initialize
+.text             0x0015dc         0x1c
+ .text            0x0015dc         0x16 build/default/production/mcc_generated_files/traps.o
+                  0x0015dc                  _TRAPS_halt_on_error
+ .text            0x0015f2          0x6 build/default/production/mcc_generated_files/interrupt_manager.o
+                  0x0015f2                  _INTERRUPT_Initialize
