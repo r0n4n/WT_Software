@@ -45,6 +45,7 @@
 #include "mcc_generated_files/mcc.h"
 #include <stdio.h>
 #include "xc.h"
+#include "pwm.h"
 
 /*
                          Main application
@@ -63,6 +64,10 @@ void main(void)
     float CH2_volts;
     float CH3_volts;*/
     ADC1_Initialize();
+    init_pwm();
+    
+    PTCONbits.PTEN = 1;
+    
     // When using interrupts, you need to set the Global Interrupt Enable bits
     // Use the following macros to:
 
@@ -76,16 +81,16 @@ void main(void)
     {
 
         // AD1CON1bits.SAMP = 1;        // start sampling ...
-         __delay32(60000000);            // for 100 mS at 31,25MHz
+//         __delay32(60000000);            // for 100 mS at 31,25MHz
         // AD1CON1bits.SAMP = 0;        // start Converting
         //while (!AD1CON1bits.DONE);    // conversion done?
          //AD1CON1bits.DONE = 0;
         // while (!_AD1IF);// Wait for all 4 conversions to complete
         //_AD1IF = 0;
-         CH0 = ADC1BUF0;            // yes then get ADC value
-         CH1 = ADC1BUF1;            // yes then get ADC value
-         CH2 = ADC1BUF2;            // yes then get ADC value
-         CH3 = ADC1BUF3;            // yes then get ADC value
+//         CH0 = ADC1BUF0;            // yes then get ADC value
+//         CH1 = ADC1BUF1;            // yes then get ADC value
+//         CH2 = ADC1BUF2;            // yes then get ADC value
+//         CH3 = ADC1BUF3;            // yes then get ADC value
          
          /*printf("ADC1BUF0=%d  ", ADC1BUF0);
          printf("ADC1BUF1=%d  ", ADC1BUF1);
@@ -104,10 +109,10 @@ void main(void)
          printf("ADC1BUFE=%d  ", ADC1BUFE);
          printf("ADC1BUFF=%d  \n\n\r", ADC1BUFF);*/
        
-            printf("CH0= %d   ", CH0);
-            printf("CH1= %d   ", CH1);
-            printf("CH2= %d   ", CH2);
-            printf("CH3= %d   \n\r", CH3);
+//            printf("CH0= %d   ", CH0);
+//            printf("CH1= %d   ", CH1);
+//            printf("CH2= %d   ", CH2);
+//            printf("CH3= %d   \n\r", CH3);
     }
 }
 /**
