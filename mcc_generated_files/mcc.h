@@ -50,8 +50,8 @@
 #include <stdbool.h>
 #include "interrupt_manager.h"
 #include "traps.h"
-#include "adc1.h"
 #include "uart1.h"
+#include "adc1.h"
 
 #define _XTAL_FREQ  60802500UL
 

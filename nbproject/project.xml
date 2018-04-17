@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>MCC_Test2</name>
+            <name>WT_MCU_Slave</name>
             <creation-uuid>0d323eaf-9719-43fc-b39c-24b13babf90e</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>
