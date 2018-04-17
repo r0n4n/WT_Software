@@ -68,7 +68,7 @@
 
 // FOSCSEL
 #pragma config FNOSC = FRCPLL    // Oscillator Source Selection->Fast RC Oscillator with divide-by-N with PLL module (FRCPLL)
-#pragma config PWMLOCK = ON    // PWM Lock Enable bit->Certain PWM registers may only be written after key sequence
+#pragma config PWMLOCK = OFF    // PWM Lock Enable bit->Certain PWM registers may only be written after key sequence
 #pragma config IESO = ON    // Two-speed Oscillator Start-up Enable bit->Start up device with FRC, then switch to user-selected oscillator source
 
 // FGS
