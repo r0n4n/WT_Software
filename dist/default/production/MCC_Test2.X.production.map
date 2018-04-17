@@ -529,7 +529,7 @@ __FOSCSEL
 
 __FGS             0x02affa          0x2
  *(__FGS.sec*)
- __FGS.sec        0x02affa          0x2 /CW/_FGS®ﬂ‡ﬂ__FGS.sec
+ __FGS.sec        0x02affa          0x2 /CW/_FGS
                   0x02affa                  __FGS.sec
 
 __FUID0
@@ -548,15 +548,15 @@ __FUID3
  *(.comment)
  .comment         0x000000         0x5e c:/program files (x86)/microchip/xc16/v1.34/bin/bin/../../lib\liblega-c-elf.a(xfiles.EP_eo)
 
-.debug_info       0x000000       0x4c8b
+.debug_info       0x000000       0x4ca0
  *(.debug_info)
- .debug_info      0x000000       0x1028 build/default/production/mcc_generated_files/adc1.o
- .debug_info      0x001028        0x156 build/default/production/mcc_generated_files/interrupt_manager.o
- .debug_info      0x00117e        0x5cf build/default/production/mcc_generated_files/traps.o
- .debug_info      0x00174d        0x741 build/default/production/mcc_generated_files/uart1.o
- .debug_info      0x001e8e        0x5c8 build/default/production/mcc_generated_files/pin_manager.o
- .debug_info      0x002456       0x17cf build/default/production/mcc_generated_files/mcc.o
- .debug_info      0x003c25       0x1066 build/default/production/main.o
+ .debug_info      0x000000       0x102b build/default/production/mcc_generated_files/adc1.o
+ .debug_info      0x00102b        0x159 build/default/production/mcc_generated_files/interrupt_manager.o
+ .debug_info      0x001184        0x5d2 build/default/production/mcc_generated_files/traps.o
+ .debug_info      0x001756        0x744 build/default/production/mcc_generated_files/uart1.o
+ .debug_info      0x001e9a        0x5cb build/default/production/mcc_generated_files/pin_manager.o
+ .debug_info      0x002465       0x17d2 build/default/production/mcc_generated_files/mcc.o
+ .debug_info      0x003c37       0x1069 build/default/production/main.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000        0x72d
@@ -1937,7 +1937,7 @@ LOAD c:/program files (x86)/microchip/xc16/v1.34/bin/bin/../../lib\libm-elf.a
 LOAD c:/program files (x86)/microchip/xc16/v1.34/bin/bin/../../lib\liblega-c-elf.a
 END GROUP
 OUTPUT(dist/default/production/MCC_Test2.X.production.elf elf32-pic30)
-LOAD /CW/_FGS®ﬂ‡ﬂ__FGS.sec
+LOAD /CW/_FGS
 LOAD jump_table
 LOAD default_isr
 LOAD data_init
