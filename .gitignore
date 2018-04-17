@@ -4,3 +4,6 @@ build/*
 MyConfig.mc3
 
 test_ignore.txt
+
+dist/*
+nbproject
