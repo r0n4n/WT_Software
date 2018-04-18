@@ -44,15 +44,15 @@ unsigned int ipwm_period;
     
     /* PWM2 I/O CONTROL REGISTER */
     IOCON2 = 0; //RAZ Before setting
-    IOCON2bits.PENH = 1; //PWM2H pin is enabled 
-    IOCON2bits.PENL = 1; //PWM2L pin is enabled
+    //IOCON2bits.PENH = 1; //PWM2H pin is enabled 
+    //IOCON2bits.PENL = 1; //PWM2L pin is enabled
     IOCON2bits.POLH = 0; //PWM2H is active low
     IOCON2bits.PMOD = 0; //Complementary pwm mode
     
     /* PWM3 I/O CONTROL REGISTER */
     IOCON3 = 0; //RAZ Before setting
-    IOCON3bits.PENH = 1; //PWM3H pin is enabled 
-    IOCON3bits.PENL = 1; //PWM3L pin is enabled
+    //IOCON3bits.PENH = 1; //PWM3H pin is enabled 
+    //IOCON3bits.PENL = 1; //PWM3L pin is enabled
     IOCON3bits.POLH = 0; //PWM3H is active low
     IOCON3bits.PMOD = 0; //Complementary pwm mode
     /*********************************************/
@@ -91,15 +91,15 @@ unsigned int ipwm_period;
     /********************************************/
     
     /***************** PWM DEAD-TIME   ***********************/
-    DTR1 = 20 ;// PWM1 DEAD-TIME //more or less 100ns deadtime
+    DTR1 = 5 ;// PWM1 DEAD-TIME //more or less 100ns deadtime
     DTR2 = 5 ; // PWM2 DEAD-TIME
-    DTR3 = 0 ; // PWM3 DEAD-TIME
+    DTR3 = 5 ; // PWM3 DEAD-TIME
     /*******************************************************/
     
     /**************   ALTERNATE DEAD-TIME *************/
-    ALTDTR1 = 20 ; // PWM1 ALTERNATE DEAD-TIME
+    ALTDTR1 = 5 ; // PWM1 ALTERNATE DEAD-TIME
     ALTDTR2 = 5 ;  // PWM2 ALTERNATE DEAD-TIME
-    ALTDTR3 = 0 ;  // PWM3 ALTERNATE DEAD-TIME
+    ALTDTR3 = 5 ;  // PWM3 ALTERNATE DEAD-TIME
     /***************************************************/
     
     

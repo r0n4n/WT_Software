@@ -3,13 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Documents/WindModule/Software/charge_controller_implementation/PWM.X/PWM_main.c</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/mcc_generated_files/pin_manager.c</file>
             <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/main.c</file>
-            <file>file:/D:/Documents/WindModule/Software/charge_controller_implementation/PWM.X/PWM.h</file>
-            <file>file:/D:/Documents/WindModule/Software/charge_controller_implementation/PWM.X/PWM_types.h</file>
-            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/nbproject/Makefile-default.mk</file>
-            <file>file:/D:/Documents/WindModule/Software/charge_controller_implementation/PWM.X/PWM.c</file>
-            <file>file:/D:/Documents/WindModule/Software/charge_controller_implementation/PWM.X/Makefile</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/pwm.c</file>
         </group>
     </open-files>
 </project-private>

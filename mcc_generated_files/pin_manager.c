@@ -56,6 +56,9 @@
 */
 void PIN_MANAGER_Initialize(void)
 {
+    /******PORT REGISTER A AND B MAP FORdsPIC33EPXXXGP/MC202/502 DEVICES ********/
+    /****SEE TABLE 4-59 FOR PORTA AND TABLE 4-60 FOR PORTB IN dsPIC33EPXXXMC20X/50X DATASHEET*/
+    
     /****************************************************************************
      * Setting the Output Latch SFR(s)
      ***************************************************************************/
