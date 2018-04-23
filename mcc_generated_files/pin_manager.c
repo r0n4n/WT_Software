@@ -70,9 +70,15 @@ void PIN_MANAGER_Initialize(void)
      * Setting the GPIO Direction SFR(s)
      ***************************************************************************/
     TRISA = 0x001F;   //RA0 RA1 RA2 RA3 RA4 AS INPUTS
-    TRISB = 0xFEDF;   
+    TRISB = 0x02DF;   
     // RB5(DIR) AS OUTPUT
     // RB8 (TX) AS OUTPUT
+    // RB10 (PWM3H) AS OUTPUT
+    // RB11 (PWM3L) AS OUTPUT
+    // RB12 (PWM2H) AS OUTPUT
+    // RB13 (PWM2L) AS OUTPUT
+    // RB14 (PWM1H) AS OUTPUT
+    // RB15 (PWM1L) AS OUTPUT
     // ALL THE REST ARE INPUTS 
 
     /****************************************************************************

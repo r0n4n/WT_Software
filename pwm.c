@@ -16,7 +16,7 @@ void init_pwm(void) {
 unsigned long pwm_frequ;
 float pwm_period;
 unsigned int ipwm_period;
-    pwm_frequ = 182000;
+    pwm_frequ = 90000;
     pwm_period = (1.0e9/(1.04*pwm_frequ));
     ipwm_period=(unsigned int)pwm_period;
     
@@ -25,7 +25,7 @@ unsigned int ipwm_period;
     
     SEVTCMP = 0 ;
     
-    PTPER = 200 ; //Define master time base register
+    PTPER = 400 ; //Define master time base register
     
     
     /*******************PWMx FAULT CURRENT-LIMIT **************/
@@ -37,22 +37,22 @@ unsigned int ipwm_period;
     /**************** I/O CONTROL REGISTER ********************/
     /* PWM1 I/O CONTROL REGISTER */
     IOCON1 = 0; //RAZ Before setting
-    IOCON1bits.PENH = 1; //PWM1H pin is enabled 
-    IOCON1bits.PENL = 1; //PWM1L pin is enabled
+   // IOCON1bits.PENH = 1; //PWM1H pin is enabled 
+    //IOCON1bits.PENL = 1; //PWM1L pin is enabled
     IOCON1bits.POLH = 0; //PWM1H is active low
     IOCON1bits.PMOD = 0; //Complementary pwm mode
     
     /* PWM2 I/O CONTROL REGISTER */
     IOCON2 = 0; //RAZ Before setting
     //IOCON2bits.PENH = 1; //PWM2H pin is enabled 
-    //IOCON2bits.PENL = 1; //PWM2L pin is enabled
+   //IOCON2bits.PENL = 1; //PWM2L pin is enabled
     IOCON2bits.POLH = 0; //PWM2H is active low
     IOCON2bits.PMOD = 0; //Complementary pwm mode
     
     /* PWM3 I/O CONTROL REGISTER */
     IOCON3 = 0; //RAZ Before setting
-    //IOCON3bits.PENH = 1; //PWM3H pin is enabled 
-    //IOCON3bits.PENL = 1; //PWM3L pin is enabled
+    IOCON3bits.PENH = 1; //PWM3H pin is enabled 
+    IOCON3bits.PENL = 1; //PWM3L pin is enabled
     IOCON3bits.POLH = 0; //PWM3H is active low
     IOCON3bits.PMOD = 0; //Complementary pwm mode
     /*********************************************/
@@ -78,9 +78,9 @@ unsigned int ipwm_period;
     /****************************************************************************/
     
     /*********** PWM DUTY CYCLE ************/
-    PDC1 = 100 ; //PWM1 DUTY CYCLE // Duty cycle of 50%
-    PDC2 = 100 ; //PWM2 DUTY CYCLE
-    PDC3 = 100 ; //PWM3 DUTY CYCLE
+    PDC1 = 200 ; //PWM1 DUTY CYCLE // Duty cycle of 50%
+    PDC2 = 200 ; //PWM2 DUTY CYCLE
+    PDC3 = 200 ; //PWM3 DUTY CYCLE
     /*************************************/
     
     /************ PHASE-SHIFT  ******************/
