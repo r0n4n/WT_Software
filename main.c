@@ -59,12 +59,22 @@ void main(void)
     uint16_t CH1;
     uint16_t CH2;
     uint16_t CH3;
-    /*float CH0_volts;
-    float CH1_volts;
-    float CH2_volts;
-    float CH3_volts;*/
+    
+    double CH0_unit;
+    double CH1_unit;
+    double CH2_unit;
+    double CH3_unit;
+    
+    float Gain_frequency = 66;  //Hardware frequency to voltage converter has a 66HZ/V output
+    float Gain_current = 8;     //Hardware current sensors have a 8 A/V. The measurement is signed and the 0A reference is 2.5V. 
+                                //The sensors amplitude is 20A, the gain is 20A/2.5V = 8A/V
+                                //FOR NOW THE MAX POSITIVE CURRENT MEASURABLE BEFORE SATURATION IS (3.3V-2.5V)*8A/V=6.4A
+                                //CONVERTING THE 5V output in 3.3V output will be necessary to get 20A full scale measurement
+    float Gain_Vout = 28.125;   //Hardware voltage divider is designed for a 90V max voltage. The gain is 90V/3.2V = 28.125
+    
     ADC1_Initialize();
-    init_pwm();
+    
+    // init_pwm();
     
     PTCONbits.PTEN = 1;
     
@@ -87,32 +97,54 @@ void main(void)
          //AD1CON1bits.DONE = 0;
         // while (!_AD1IF);// Wait for all 4 conversions to complete
         //_AD1IF = 0;
+         
+         /* Retrieving the sensed values from A/D buffer. The values are from 0 to 1024, converting from 0V to 3.3V */
+         
          CH0 = ADC1BUF0;            // yes then get ADC value
          CH1 = ADC1BUF1;            // yes then get ADC value
          CH2 = ADC1BUF2;            // yes then get ADC value
          CH3 = ADC1BUF3;            // yes then get ADC value
          
-         /*printf("ADC1BUF0=%d  ", ADC1BUF0);
-         printf("ADC1BUF1=%d  ", ADC1BUF1);
-         printf("ADC1BUF2=%d  ", ADC1BUF2);
-         printf("ADC1BUF3=%d  ", ADC1BUF3);
-         printf("ADC1BUF4=%d  ", ADC1BUF4);
-         printf("ADC1BUF5=%d  ", ADC1BUF5);
-         printf("ADC1BUF6=%d  ", ADC1BUF6);
-         printf("ADC1BUF7=%d  ", ADC1BUF7);
-         printf("ADC1BUF8=%d  ", ADC1BUF8);
-         printf("ADC1BUF9=%d  ", ADC1BUF9);
-         printf("ADC1BUFA=%d  ", ADC1BUFA);
-         printf("ADC1BUFB=%d  ", ADC1BUFB);
-         printf("ADC1BUFC=%d  ", ADC1BUFC);
-         printf("ADC1BUFD=%d  ", ADC1BUFD);
-         printf("ADC1BUFE=%d  ", ADC1BUFE);
-         printf("ADC1BUFF=%d  \n\n\r", ADC1BUFF);*/
+            /* For debuguing purpose : printing all values retrieved from the buffer */
+            /*printf("I_T = %d   ", CH0);
+            printf("I_S = %d   ", CH1);
+            printf("RPM = %d   ", CH2);
+            printf("Vout= %d   ", CH3);
+            */
+         
+         /* 
+          For debuguing purpose, converting the A/D values in V to check with reality
+          * 
+         CH0_unit=(float)((CH0/1024)*3.3);
+         CH1_unit=(float)((CH1/1024)*3.3);
+         CH2_unit=(float)((CH2/1024)*3.3);
+         CH3_unit=(float)((CH3/1024)*3.3);
+         */
+         
+         /* The software is configured to calculated with the following pinout
+            AN1 -> CH0 -> Pin5 -> I_T 
+            AN0 -> CH1 -> Pin2 -> I_S
+            AN2 -> CH2 -> Pin3 -> RPM
+            AN3 -> CH3 -> Pin4 -> Vout
+          */
+         
+         CH0_unit=((((float)CH0/1024)*3.3)-2.48)*Gain_current;
+         CH1_unit=((((float)CH1/1024)*3.3)-2.48)*Gain_current;
+         CH2_unit=(((float)CH2/1024)*3.3)*Gain_frequency;
+         CH3_unit=(((float)CH3/1024)*3.3)*Gain_Vout;
        
-            printf("CH0= %d   ", CH0);
-            printf("CH1= %d   ", CH1);
-            printf("CH2= %d   ", CH2);
-            printf("CH3= %d   \n\r", CH3);
+         /* Printing all the A/D results over the RS485  */
+         
+         printf("I_T = %.3f  A ", CH0_unit);
+         printf("I_S = %.3f  A ", CH1_unit);
+         printf("RPM = %.1f  Hz ", CH2_unit);
+         printf("Vout= %.1f  V \n\r", CH3_unit);
+         
+         /*
+                 
+            
+         */       
+      
     }
 }
 /**

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
-  <executable name="dist/default/production/WT_MCU_Slave.X.production.elf">
+  <executable name="dist/default/production/WT_software.production.elf">
     <memory name="data">
       <units>bytes</units>
       <length>32768</length>
-      <used>162</used>
-      <free>32606</free>
+      <used>496</used>
+      <free>32272</free>
     </memory>
     <memory name="program">
       <units>bytes</units>
       <length>263394</length>
-      <used>5616</used>
-      <free>257778</free>
+      <used>10704</used>
+      <free>252690</free>
     </memory>
   </executable>
 </project>
