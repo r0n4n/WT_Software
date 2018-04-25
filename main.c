@@ -49,34 +49,38 @@
 #include <stdio.h>
 #include "xc.h"
 #include "pwm.h"
+#include "trigo.h"
 
 /*----------------------------------------------------------*/
 /* Constants */
 #define DT 20e-6
 
-#define _1_sqrt3 0.57735 
-#define sqrt2 1,4142135623 
-#define sqrt23 0,816496580 // sqrt(2/3)
-#define _sqrt3to2 0,866025403 // sqrt(3)/2
-#define _1sqrt3 0.5774 // 1/sqrt(3)
+#define _1_sqrt3 0.57735f 
+#define sqrt2 1.4142135623f
+#define sqrt23 0.816496580f // sqrt(2/3)
+#define _sqrt3to2 0.866025403f // sqrt(3)/2
+#define _1sqrt3 0.5774f // 1/sqrt(3)
 
 /* variables for communication with Slave DSP */
 int task_id = 0; /* communication channel */
-int index = -1; /* slave DSP command index */
+//int index = -1; /* slave DSP command index */
 float deadband = 2e-6; /* deadband period */
 //int  sync_mode = SLVDSP1103_PWM3_SYNC_LEFT; /* sync mode */
 float exec_time, total_time; /* variables for TRACE and COCKPIT */
 float period = 20e-6; /* PWM period */
+
 /* variables for PWM rectifier */
 float L=0.010;
 float Kp=0.0 ; 
 float Ti=0.0 ; 
 float Ts=DT ; 
 //float pi=PI ; 
-float ia, ib, ic, i_alf, i_bet, psi_alf,psi_bet,psi_alf_c,psi_bet_c,w;
-float Theta,delta_Udc,u_alf,u_bet,delta_udc_old=0.0,udc, udc_old=0.0,ualf,ubet;
+double ia, ib, ic, i_alf=0, i_bet=0, psi_alf,psi_bet,psi_alf_c,psi_bet_c;
+double Theta,delta_Udc,u_alf,u_bet,delta_udc_old=0.0,udc, udc_old=0.0,ualf,ubet,w;
 float p,q,delta_q,delta_p,p_old=0.0,q_old=0.0,p_ref, I_ref,I_ref_old=0.0,I_ref_max=10.0;
-int sector,Sa_old,Sb_old,Sc_old,Sq,Sq_old,Sp,Sp_old, _Ts,_T_in;
+int sector,Sa_old=0,Sb_old=0,Sc_old=0,Sq,Sq_old,Sp,Sp_old, _Ts,_T_in, D_R, D_S, D_T ;
+
+ 
 
 float hh=0; 
 float udc_ref=600.0; 
@@ -116,7 +120,7 @@ float Gain_Vout = 28.125;
 
 void measure(void);
 void controller(void);
-void da_converter(void);
+//void da_converter(void);
 void PWM_sync_interrupt(void);
 /*----------------------------------------------------------*/
 
@@ -217,8 +221,8 @@ void measure(void)
     /* Printing all the A/D results over the RS485  */
     printf("I_T = %.3f  A ", ia);
     printf("I_S = %.3f  A ", ib);
-    printf("RPM = %.1f  Hz ", w);
-    printf("Vout= %.1f  V \n\r", udc);
+    printf("RPM = %f  Hz ", w);
+    printf("Vout= %4.2f  V \n\r", udc);
     
     udc=udc-0.0025; ia=ia+0.002; ib=ib+0.003; /*scaling signals */
     udc=ku1*udc; ia=ki1*ia; ib=ki2*ib;
@@ -233,13 +237,16 @@ void controller(void){
     i_bet = sqrt23*(_sqrt3to2)*(ib-ic);
     
     /* Flux, instantaneous active and reactive power estimator */
-    ualf=0.6666*udc*(Sa_old-0.5(Sb_old+Sc_old)); /*Converter Voltage*/
+    /*Converter Voltage*/ 
+    ualf=0.6666*udc*(Sa_old-0.5*(Sb_old+Sc_old)); 
     ubet=_1sqrt3*udc*(Sb_old- Sc_old);
-    psi_alf_c += Ts*(ualf-_T_in*psi_alf_c); /*Converter Flux*/
+    /*Converter Flux*/
+    psi_alf_c += Ts*(ualf-_T_in*psi_alf_c); 
     psi_bet_c += Ts*(ubet-_T_in*psi_bet_c);
     psi_alf = psi_alf_c + i_alf*L; /* Line Flux */
     psi_bet = psi_bet_c + i_bet*L;
-    p= 2*314*(psi_alf*i_bet - psi_bet*i_alf); /* Instantaneous power estimations*/
+    /* Instantaneous power estimations*/ 
+    p= 2*314*(psi_alf*i_bet - psi_bet*i_alf); 
     q= 314*(psi_alf*i_alf + psi_bet*i_bet);
     Theta=atan2(psi_bet,psi_alf);
     
@@ -262,43 +269,52 @@ void controller(void){
     I_ref=I_ref_old+pdc*delta_Udc+pdc*((Ts/ti)-1)*delta_udc_old;
     p_ref=I_ref*udc;
     delta_p=p_ref-p;
-    if (delta_p>hh) Sp = 1; /* p histeres */
+    
+     /* p histeres */
+    if (delta_p>hh) Sp = 1;
     if (delta_p<(-hh)) Sp = 0;
     if ((delta_p<hh) & (delta_p>(-hh))) Sp=Sp_old;
     /*************************************************************************/
+    
+    /* q histeres */
     delta_q=q_ref-q;
-    if (delta_q>hh) Sq = 1; /* q histeres */
+    if (delta_q>hh) Sq = 1; 
     if (delta_q<(-hh)) Sq = 0;
     if ((delta_q<hh) & (delta_q>(-hh))) Sq=Sq_old;
     /*************************************************************************/
+    
     if((Sp==1) & (Sq==0)){D_R=tab_11[sector]; D_S=tab_12[sector]; D_T=tab_13[sector]; }
     if((Sp==1) & (Sq==1)){D_R=tab_21[sector]; D_S=tab_22[sector]; D_T=tab_23[sector]; }
     if((Sp==0) & (Sq==0)){D_R=tab_31[sector]; D_S=tab_32[sector]; D_T=tab_33[sector]; }
     if((Sp==0) & (Sq==1)){D_R=tab_41[sector]; D_S=tab_42[sector]; D_T=tab_43[sector];}
-    udc_old=udc; p_old=p; q_old=q; /*Old values*/
+    /*Old values*/
+    udc_old=udc; p_old=p; q_old=q; 
     Sp_old=Sp; Sq_old=Sq; Sa_old=D_R; Sb_old=D_S; Sc_old=D_T; I_ref_old=I_ref; delta_udc_old=delta_Udc; ;
-    break; /*END*/
+    //break; /*END*/
 }
 
 
-void da_converter(void)
-{
-    ds1103_dac_write(1,ia*0.1); /* output via DS1103 on-board DAC channel 1 */
-    ds1103_dac_write(2,px*0.001);
-    ds1103_dac_write(3,qx*0.001);
-    ds1103_dac_strobe();
-}
+
 
 void PWM_sync_interrupt(void) /* interrupt service routine for PWM sync interrupt */
 {
-    host_service(1, 0); /* TRACE service */
-    ds1103_tic_start(); /* start time measurement */
+    //host_service(1, 0); /* TRACE service */
+    //ds1103_tic_start(); /* start time measurement */
     measure();
     controller();
-    ds1103_slave_dsp_pwm3_duty_write(task_id, index,D_R,D_S,D_T);
-    da_converter();
-    exec_time = ds1103_tic_read();
+    //ds1103_slave_dsp_pwm3_duty_write(task_id, index,D_R,D_S,D_T);
+    //da_converter();
+    //exec_time = ds1103_tic_read();
 }
+
+
+//void da_converter(void)
+//{
+//    ds1103_dac_write(1,ia*0.1); /* output via DS1103 on-board DAC channel 1 */
+//    ds1103_dac_write(2,px*0.001);
+//    ds1103_dac_write(3,qx*0.001);
+//    ds1103_dac_strobe();
+//}
 
 
 /**

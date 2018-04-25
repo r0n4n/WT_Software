@@ -15,6 +15,7 @@
         <itemPath>mcc_generated_files/mcc.h</itemPath>
       </logicalFolder>
       <itemPath>pwm.h</itemPath>
+      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/trigo.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
