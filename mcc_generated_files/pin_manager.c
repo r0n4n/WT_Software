@@ -69,7 +69,8 @@ void PIN_MANAGER_Initialize(void)
     /****************************************************************************
      * Setting the GPIO Direction SFR(s)
      ***************************************************************************/
-    TRISA = 0x001F;   //RA0 RA1 RA2 RA3 RA4 AS INPUTS
+    TRISA = 0x001F;   //RA0 RA1  RA3 RA4 AS INPUTS
+    IO_RA2_SetDigitalOutput() ; //RA2 as output
     TRISB = 0x02DF;   
     // RB5(DIR) AS OUTPUT
     // RB8 (TX) AS OUTPUT

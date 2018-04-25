@@ -562,6 +562,24 @@
     </code>
 
 */
+#define IO_RA2_Toggle()           _LATA2 ^= 1
+
+/**
+  @Summary
+    Toggles the GPIO pin, RA2, using LATA2.
+
+  @Description
+    Toggles the GPIO pin, RA2, using LATA2.
+
+  @Preconditions
+    The RA2 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+*/
 #define DIR_Toggle()           _LATB5 ^= 1
 /**
   @Summary
@@ -638,18 +656,16 @@
 */
 #define DIR_SetDigitalOutput() _TRISB5 = 0
 
-/**
-    Section: Function Prototypes
-*/
+
+#define IO_RA2_SetDigitalOutput()  _TRISA2 = 0
+
+
 /**
   @Summary
-    Configures the pin settings of the dsPIC33EP256MC502
-    The peripheral pin select, PPS, configuration is also handled by this manager.
+    Configures the GPIO pin, RA0, as an output.
 
   @Description
-    This is the generated manager file for the MPLAB(c) Code Configurator device.  This manager
-    configures the pins direction, initial state, analog setting.
-    The peripheral pin select, PPS, configuration is also handled by this manager.
+    Configures the GPIO pin, RA0, as an output.
 
   @Preconditions
     None.
@@ -662,14 +678,12 @@
 
   @Example
     <code>
-    void SYSTEM_Initialize(void)
-    {
-        // Other initializers are called from this function
-        PIN_MANAGER_Initialize();
-    }
+    // Sets the RA0 as an output
+    channel_AN0_SetDigitalOutput();
     </code>
 
 */
+#define channel_AN0_SetDigitalOutput() _TRISA0 = 0
 void PIN_MANAGER_Initialize(void);
 
 #endif

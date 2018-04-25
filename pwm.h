@@ -32,6 +32,7 @@
 #define	XC_HEADER_TEMPLATE_H
 
 #include <xc.h> 
+#include <stdbool.h>
 
 
 void init_pwm(void);
