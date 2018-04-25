@@ -108,11 +108,7 @@ unsigned int ipwm_period;
     IFS5bits.PWM1IF = false;
     IEC5bits.PWM1IE = true;
     
+    PTCONbits.PTEN = 1; // enable PWM
 }
 
-void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
-{
-	IO_RA2_Toggle() ; 
-	IFS5bits.PWM1IF = false; 
-    //__delay32(600000); 
-}
+

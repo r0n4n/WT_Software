@@ -136,10 +136,6 @@ void main(void)
     
     ADC1_Initialize();
     
-    init_pwm();
-    
-    PTCONbits.PTEN = 1;
-    
     // When using interrupts, you need to set the Global Interrupt Enable bits
     // Use the following macros to:
 
@@ -171,7 +167,7 @@ void main(void)
         /***********************/
         
         // AD1CON1bits.SAMP = 1;        // start sampling ...
-         __delay32(60000000);            // for 100 mS at 31,25MHz
+         //__delay32(60000000);            // for 100 mS at 31,25MHz
          //IO_RA2_Toggle() ; 
         // AD1CON1bits.SAMP = 0;        // start Converting
         //while (!AD1CON1bits.DONE);    // conversion done?
@@ -301,7 +297,7 @@ void PWM_sync_interrupt(void) /* interrupt service routine for PWM sync interrup
 {
     //host_service(1, 0); /* TRACE service */
     //ds1103_tic_start(); /* start time measurement */
-    measure();
+    
     controller();
     //ds1103_slave_dsp_pwm3_duty_write(task_id, index,D_R,D_S,D_T);
     //da_converter();
@@ -317,6 +313,12 @@ void PWM_sync_interrupt(void) /* interrupt service routine for PWM sync interrup
 //    ds1103_dac_strobe();
 //}
 
+void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
+{
+	IO_RA2_Toggle() ; 
+    //measure();
+	IFS5bits.PWM1IF = false; 
+}
 
 /**
  End of File
