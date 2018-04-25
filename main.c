@@ -136,7 +136,7 @@ void main(void)
     
     ADC1_Initialize();
     
-    // init_pwm();
+    init_pwm();
     
     PTCONbits.PTEN = 1;
     
@@ -172,7 +172,7 @@ void main(void)
         
         // AD1CON1bits.SAMP = 1;        // start sampling ...
          __delay32(60000000);            // for 100 mS at 31,25MHz
-         IO_RA2_Toggle() ; 
+         //IO_RA2_Toggle() ; 
         // AD1CON1bits.SAMP = 0;        // start Converting
         //while (!AD1CON1bits.DONE);    // conversion done?
          //AD1CON1bits.DONE = 0;

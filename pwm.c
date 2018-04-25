@@ -60,6 +60,7 @@ unsigned int ipwm_period;
     
     /**********************  PWMx CONTROL REGISTER  ***************/
     /*** PWM1 CONTROL REGISTER ***/
+    PWMCON1 = 0x400 ; 
     PWMCON1bits.ITB = 0; //PWM use PTPER as period time reference
     PWMCON1bits.MDCS = 0; //PWM use PDC1 and SDC1 for duty cycle setting 
     PWMCON1bits.DTC = 0; //PWM use positive deadtime for all output setted in DTR1
@@ -111,7 +112,7 @@ unsigned int ipwm_period;
 
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 {
-	//IO_RA2_Toggle() ; 
+	IO_RA2_Toggle() ; 
 	IFS5bits.PWM1IF = false; 
-    
+    //__delay32(600000); 
 }
