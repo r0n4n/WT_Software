@@ -124,6 +124,9 @@ void controller(void);
 void PWM_sync_interrupt(void);
 /*----------------------------------------------------------*/
 
+
+
+
 /*
                          Main application
  */
@@ -167,7 +170,37 @@ void main(void)
         /***********************/
         
         // AD1CON1bits.SAMP = 1;        // start sampling ...
-         //__delay32(60000000);            // for 100 mS at 31,25MHz
+         __delay32(60000000);            // for 100 mS at 31,25MHz
+         //float x = 20 ;
+         //double d = 20 ; 
+        / union u number  ; 
+         //number.f = 20 ; 
+         number.f = 20.0 ; 
+         //printf("%f", (double)Gain_frequency);
+          
+         
+         //UART1_Write(65) ;
+         UART1_Write(number.s[0]) ;
+         UART1_Write(number.s[1]) ;
+         UART1_Write(number.s[2]) ;
+         UART1_Write(number.s[3]) ;
+         number.f = 30.0 ;
+         //UART1_Write(66) ;
+         UART1_Write(number.s[0]) ;
+         UART1_Write(number.s[1]) ;
+         UART1_Write(number.s[2]) ;
+         UART1_Write(number.s[3]) ;
+         
+//         UART1_Write(number.s[4]) ;
+//         UART1_Write(number.s[5]) ;
+//         UART1_Write(number.s[6]) ;
+//         UART1_Write(number.s[7]) ;
+//         
+//         UART1_Write(number.s[8]) ;
+//         UART1_Write(number.s[9]) ;
+//         UART1_Write(number.s[10]) ;
+//         UART1_Write(number.s[11]) ;
+         //UART1_Write(8) ;
          //IO_RA2_Toggle() ; 
         // AD1CON1bits.SAMP = 0;        // start Converting
         //while (!AD1CON1bits.DONE);    // conversion done?
