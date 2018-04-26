@@ -12,14 +12,8 @@
 extern "C" {
 #endif
 
-
-union u
-{
-    unsigned int i; /**< acesso a pedaço de mémória de 32 bits através de tipo inteiro sem sinal. */
-    float f; 
-    double d ; 
-    uint8_t s[4]; /**< acesso a pedaço de mémória de 32 bits pedaços correspondentes a caractéres. */
-};
+#include <xc.h>
+#include "mcc_generated_files/mcc.h"
 
 void sendData(float data) ; 
 

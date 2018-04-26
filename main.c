@@ -50,6 +50,7 @@
 #include "xc.h"
 #include "pwm.h"
 #include "trigo.h"
+#include "serialData.h"
 
 /*----------------------------------------------------------*/
 /* Constants */
@@ -123,7 +124,13 @@ void controller(void);
 //void da_converter(void);
 void PWM_sync_interrupt(void);
 /*----------------------------------------------------------*/
-
+union u
+{
+    unsigned int i; /**< acesso a pedaço de mémória de 32 bits através de tipo inteiro sem sinal. */
+    float f; 
+    double d ; 
+    uint8_t s[4]; /**< acesso a pedaço de mémória de 32 bits pedaços correspondentes a caractéres. */
+};
 
 
 
@@ -173,23 +180,24 @@ void main(void)
          __delay32(60000000);            // for 100 mS at 31,25MHz
          //float x = 20 ;
          //double d = 20 ; 
-        / union u number  ; 
+         //union u number  ; 
          //number.f = 20 ; 
-         number.f = 20.0 ; 
+         //number.f = 20.0 ; 
          //printf("%f", (double)Gain_frequency);
-          
+         sendData(30) ; 
+          sendData(20) ; 
          
-         //UART1_Write(65) ;
-         UART1_Write(number.s[0]) ;
-         UART1_Write(number.s[1]) ;
-         UART1_Write(number.s[2]) ;
-         UART1_Write(number.s[3]) ;
-         number.f = 30.0 ;
+//         //UART1_Write(65) ;
+//         UART1_Write(number.s[0]) ;
+//         UART1_Write(number.s[1]) ;
+//         UART1_Write(number.s[2]) ;
+//         UART1_Write(number.s[3]) ;
+//         number.f = 30.0 ;
          //UART1_Write(66) ;
-         UART1_Write(number.s[0]) ;
-         UART1_Write(number.s[1]) ;
-         UART1_Write(number.s[2]) ;
-         UART1_Write(number.s[3]) ;
+//         UART1_Write(number.s[0]) ;
+//         UART1_Write(number.s[1]) ;
+//         UART1_Write(number.s[2]) ;
+//         UART1_Write(number.s[3]) ;
          
 //         UART1_Write(number.s[4]) ;
 //         UART1_Write(number.s[5]) ;
