@@ -136,12 +136,6 @@ void main(void)
     
     ADC1_Initialize();
     
-    // When using interrupts, you need to set the Global Interrupt Enable bits
-    // Use the following macros to:
-
-    // Enable the Global Interrupts
-    //INTERRUPT_GlobalEnable();
-
     // Disable the Global Interrupts
     //INTERRUPT_GlobalDisable();
     
@@ -168,7 +162,7 @@ void main(void)
         
         // AD1CON1bits.SAMP = 1;        // start sampling ...
          //__delay32(60000000);            // for 100 mS at 31,25MHz
-         //IO_RA2_Toggle() ; 
+        //IO_RA2_Toggle() ; 
         // AD1CON1bits.SAMP = 0;        // start Converting
         //while (!AD1CON1bits.DONE);    // conversion done?
          //AD1CON1bits.DONE = 0;
@@ -216,13 +210,10 @@ void measure(void)
     udc=(((float)CH3/1024)*3.3)*Gain_Vout;
 
     /* Printing all the A/D results over the RS485  */
-    printf("I_T = %.3f  A ", ia);
-    printf("I_S = %.3f  A ", ib);
-    printf("RPM = %f  Hz ", w);
-    printf("Vout= %4.2f  V \n\r", udc);
-    
-    udc=udc-0.0025; ia=ia+0.002; ib=ib+0.003; /*scaling signals */
-    udc=ku1*udc; ia=ki1*ia; ib=ki2*ib;
+//    printf("I_T = %.3f  A ", ia);
+//    printf("I_S = %.3f  A ", ib);
+//    printf("RPM = %f  Hz ", w);
+//    printf("Vout= %4.2f  V \n\r", udc);
 }
 
 void controller(void){
@@ -293,16 +284,16 @@ void controller(void){
 
 
 
-void PWM_sync_interrupt(void) /* interrupt service routine for PWM sync interrupt */
-{
-    //host_service(1, 0); /* TRACE service */
-    //ds1103_tic_start(); /* start time measurement */
-    
-    controller();
-    //ds1103_slave_dsp_pwm3_duty_write(task_id, index,D_R,D_S,D_T);
-    //da_converter();
-    //exec_time = ds1103_tic_read();
-}
+//void PWM_sync_interrupt(void) /* interrupt service routine for PWM sync interrupt */
+//{
+//    //host_service(1, 0); /* TRACE service */
+//    //ds1103_tic_start(); /* start time measurement */
+//    
+//    controller();
+//    //ds1103_slave_dsp_pwm3_duty_write(task_id, index,D_R,D_S,D_T);
+//    //da_converter();
+//    //exec_time = ds1103_tic_read();
+//}
 
 
 //void da_converter(void)
@@ -315,8 +306,9 @@ void PWM_sync_interrupt(void) /* interrupt service routine for PWM sync interrup
 
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 {
-	IO_RA2_Toggle() ; 
+	IO_RA2_SetHigh() ;  
     //measure();
+    IO_RA2_SetLow() ; 
 	IFS5bits.PWM1IF = false; 
 }
 

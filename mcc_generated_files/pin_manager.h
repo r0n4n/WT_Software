@@ -656,6 +656,8 @@
 */
 #define DIR_SetDigitalOutput() _TRISB5 = 0
 
+#define IO_RA2_SetHigh()          _LATA2 = 1
+#define IO_RA2_SetLow()          _LATA2 = 0
 
 #define IO_RA2_SetDigitalOutput()  _TRISA2 = 0
 
