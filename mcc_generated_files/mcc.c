@@ -64,12 +64,12 @@
 #pragma config POSCMD = NONE    // Primary Oscillator Mode Select bits->Primary Oscillator disabled
 #pragma config OSCIOFNC = OFF    // OSC2 Pin Function bit->OSC2 is clock output
 #pragma config IOL1WAY = ON    // Peripheral pin select configuration->Allow only one reconfiguration
-#pragma config FCKSM = CSDCMD    // Clock Switching Mode bits->Both Clock switching and Fail-safe Clock Monitor are disabled
+#pragma config FCKSM = CSECMD    // Clock Switching Mode bits->Clock switching is enabled,Fail-safe Clock Monitor is disabled
 
 // FOSCSEL
-#pragma config FNOSC = FRCPLL    // Oscillator Source Selection->Fast RC Oscillator with divide-by-N with PLL module (FRCPLL)
-#pragma config PWMLOCK = OFF    // PWM Lock Enable bit->PWM registers may be written without key sequence
-#pragma config IESO = ON    // Two-speed Oscillator Start-up Enable bit->Start up device with FRC, then switch to user-selected oscillator source
+#pragma config FNOSC = FRC    // Oscillator Source Selection->Internal Fast RC (FRC)
+#pragma config PWMLOCK = ON    // PWM Lock Enable bit->Certain PWM registers may only be written after key sequence
+#pragma config IESO = OFF    // Two-speed Oscillator Start-up Enable bit->Start up with user-selected oscillator source
 
 // FGS
 #pragma config GWRP = OFF    // General Segment Write-Protect bit->General Segment may be written
@@ -99,8 +99,8 @@ void SYSTEM_ResetCauseClear(RESET_MASKS resetFlagMask);
 void SYSTEM_Initialize(void)
 {
     PIN_MANAGER_Initialize();
-    INTERRUPT_Initialize();
     OSCILLATOR_Initialize();
+    INTERRUPT_Initialize();
     ADC1_Initialize();
     init_pwm();
     UART1_Initialize();
@@ -110,21 +110,27 @@ void SYSTEM_Initialize(void)
 
 void OSCILLATOR_Initialize(void)
 {
-    // CF no clock failure; NOSC FRCPLL; CLKLOCK unlocked; OSWEN Switch is Complete; 
-    __builtin_write_OSCCONL((uint8_t) (0x100 & 0x00FF));
-    // FRCDIV FRC/2; PLLPRE 2; DOZE 1:8; PLLPOST 1:2; DOZEN disabled; ROI disabled; 
-    CLKDIV = 0x3100;
+    // FRCDIV FRC/1; PLLPRE 3; DOZE 1:8; PLLPOST 1:2; DOZEN disabled; ROI disabled; 
+    CLKDIV = 0x1;
     // TUN Center frequency; 
     OSCTUN = 0x0;
     // ROON disabled; ROSEL disabled; RODIV Base clock value; ROSSLP disabled; 
     REFOCON = 0x0;
-    // PLLDIV 64; 
-    PLLFBD = 0x40;
+    // PLLDIV 63; 
+    PLLFBD = 0x3F;
     // RND disabled; SATB disabled; SATA disabled; ACCSAT disabled; 
 	CORCONbits.RND = 0;
 	CORCONbits.SATB = 0;
 	CORCONbits.SATA = 0;
 	CORCONbits.ACCSAT = 0;
+    
+       // Initiate Clock Switch to FRC oscillator with PLL (NOSC=0b001)
+    __builtin_write_OSCCONH(0x01);
+    __builtin_write_OSCCONL(OSCCON | 0x01);
+    // Wait for Clock switch to occur
+    while (OSCCONbits.COSC!= 0b001);
+    // Wait for PLL to lock
+    while (OSCCONbits.LOCK!= 1);
 }
 
 uint16_t SYSTEM_GetResetCause(void)
