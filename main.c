@@ -76,8 +76,8 @@ float Kp=0.0 ;
 float Ti=0.0 ; 
 float Ts=DT ; 
 //float pi=PI ; 
-double ia, ib, ic, i_alf=0, i_bet=0, psi_alf,psi_bet,psi_alf_c,psi_bet_c;
-double Theta,delta_Udc,u_alf,u_bet,delta_udc_old=0.0,udc, udc_old=0.0,ualf,ubet,w;
+float ia=1, ib=2, ic=3, i_alf=0, i_bet=0, psi_alf,psi_bet,psi_alf_c,psi_bet_c;
+float Theta,delta_Udc,u_alf,u_bet,delta_udc_old=0.0,udc, udc_old=0.0,ualf,ubet,w;
 float p,q,delta_q,delta_p,p_old=0.0,q_old=0.0,p_ref, I_ref,I_ref_old=0.0,I_ref_max=10.0;
 int sector,Sa_old=0,Sb_old=0,Sc_old=0,Sq,Sq_old,Sp,Sp_old, _Ts,_T_in, D_R, D_S, D_T ;
 
@@ -178,37 +178,19 @@ void main(void)
         
         // AD1CON1bits.SAMP = 1;        // start sampling ...
          __delay32(60000000);            // for 100 mS at 31,25MHz
-         //float x = 20 ;
-         //double d = 20 ; 
-         //union u number  ; 
-         //number.f = 20 ; 
-         //number.f = 20.0 ; 
-         //printf("%f", (double)Gain_frequency);
-         sendData(30) ; 
-          sendData(20) ; 
-         
-//         //UART1_Write(65) ;
-//         UART1_Write(number.s[0]) ;
-//         UART1_Write(number.s[1]) ;
-//         UART1_Write(number.s[2]) ;
-//         UART1_Write(number.s[3]) ;
-//         number.f = 30.0 ;
-         //UART1_Write(66) ;
-//         UART1_Write(number.s[0]) ;
-//         UART1_Write(number.s[1]) ;
-//         UART1_Write(number.s[2]) ;
-//         UART1_Write(number.s[3]) ;
-         
-//         UART1_Write(number.s[4]) ;
-//         UART1_Write(number.s[5]) ;
-//         UART1_Write(number.s[6]) ;
-//         UART1_Write(number.s[7]) ;
-//         
-//         UART1_Write(number.s[8]) ;
-//         UART1_Write(number.s[9]) ;
-//         UART1_Write(number.s[10]) ;
-//         UART1_Write(number.s[11]) ;
-         //UART1_Write(8) ;
+//         sendData(30) ; 
+//         sendData(20) ; 
+//        sendData(3) ; 
+//        sendData(4) ;
+          ia=((((float)CH0/1024)*3.3)-2.48)*Gain_current; // ia is a float but ch0 was double for test 
+          ib=((((float)CH1/1024)*3.3)-2.48)*Gain_current;
+          w=(((float)CH2/1024)*3.3)*Gain_frequency;
+          udc=(((float)CH3/1024)*3.3)*Gain_Vout;
+        sendData(ia) ; 
+        sendData(ib) ;
+        sendData(CH2) ; 
+        sendData(CH3) ; 
+
          //IO_RA2_Toggle() ; 
         // AD1CON1bits.SAMP = 0;        // start Converting
         //while (!AD1CON1bits.DONE);    // conversion done?
@@ -237,10 +219,10 @@ void measure(void)
    */
 
     /* For debuguing purpose, converting the A/D values in V to check with reality */ 
-    /*
-    ia=(float)((CH0/1024)*3.3);
-    ib=(float)((CH1/1024)*3.3);
-    w=(float)((CH2/1024)*3.3);
+    
+//    ia=(float)((CH0/1024)*3.3);
+//    ib=(float)((CH1/1024)*3.3);
+    /*w=(float)((CH2/1024)*3.3);
     udc=(float)((CH3/1024)*3.3);
     */
 
@@ -251,19 +233,21 @@ void measure(void)
       AN3 -> CH3 -> Pin4 -> Vout
    */
 
-    ia=((((float)CH0/1024)*3.3)-2.48)*Gain_current; // ia is a float but ch0 was double for test 
-    ib=((((float)CH1/1024)*3.3)-2.48)*Gain_current;
-    w=(((float)CH2/1024)*3.3)*Gain_frequency;
-    udc=(((float)CH3/1024)*3.3)*Gain_Vout;
+//    ia=((((float)CH0/1024)*3.3)-2.48)*Gain_current; // ia is a float but ch0 was double for test 
+//    ib=((((float)CH1/1024)*3.3)-2.48)*Gain_current;
+//    w=(((float)CH2/1024)*3.3)*Gain_frequency;
+//    udc=(((float)CH3/1024)*3.3)*Gain_Vout;
 
     /* Printing all the A/D results over the RS485  */
-    printf("I_T = %.3f  A ", ia);
-    printf("I_S = %.3f  A ", ib);
-    printf("RPM = %f  Hz ", w);
-    printf("Vout= %4.2f  V \n\r", udc);
+//    printf("I_T = %.3f  A ", ia);
+//    printf("I_S = %.3f  A ", ib);
+//    printf("RPM = %f  Hz ", w);
+//    printf("Vout= %4.2f  V \n\r", udc);
+    //sendData(1) ; 
+    //sendData(2) ; 
+    //sendData(w) ;
+    //sendData(udc) ; 
     
-    udc=udc-0.0025; ia=ia+0.002; ib=ib+0.003; /*scaling signals */
-    udc=ku1*udc; ia=ki1*ia; ib=ki2*ib;
 }
 
 void controller(void){
@@ -357,7 +341,7 @@ void PWM_sync_interrupt(void) /* interrupt service routine for PWM sync interrup
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 {
 	IO_RA2_Toggle() ; 
-    //measure();
+    measure();
 	IFS5bits.PWM1IF = false; 
 }
 
