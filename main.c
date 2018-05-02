@@ -177,19 +177,19 @@ void main(void)
         /***********************/
         
         // AD1CON1bits.SAMP = 1;        // start sampling ...
-         __delay32(60000000);            // for 100 mS at 31,25MHz
+         //__delay32(60000000);            // for 100 mS at 31,25MHz
 //         sendData(30) ; 
 //         sendData(20) ; 
 //        sendData(3) ; 
 //        sendData(4) ;
-          ia=((((float)CH0/1024)*3.3)-2.48)*Gain_current; // ia is a float but ch0 was double for test 
-          ib=((((float)CH1/1024)*3.3)-2.48)*Gain_current;
-          w=(((float)CH2/1024)*3.3)*Gain_frequency;
-          udc=(((float)CH3/1024)*3.3)*Gain_Vout;
+         ia=((((float)CH0/1024)*3.3)-2.48)*Gain_current; // ia is a float but ch0 was double for test 
+         ib=((((float)CH1/1024)*3.3)-2.48)*Gain_current;
+         w=(((float)CH2/1024)*3.3)*Gain_frequency;
+         udc=(((float)CH3/1024)*3.3)*Gain_Vout;
         sendData(ia) ; 
         sendData(ib) ;
-        sendData(CH2) ; 
-        sendData(CH3) ; 
+        sendData(w) ; 
+        sendData(udc) ; 
 
          //IO_RA2_Toggle() ; 
         // AD1CON1bits.SAMP = 0;        // start Converting
@@ -212,11 +212,11 @@ void measure(void)
     CH3 = ADC1BUF3;            // yes then get ADC value
 
    /* For debuguing purpose : printing all values retrieved from the buffer */
-   /*printf("I_T = %d   ", CH0);
-   printf("I_S = %d   ", CH1);
-   printf("RPM = %d   ", CH2);
-   printf("Vout= %d   ", CH3);
-   */
+//   printf("I_T = %d   ", CH0);
+//   printf("I_S = %d   ", CH1);
+//   printf("RPM = %d   ", CH2);
+//   printf("Vout= %d   \n\r", CH3);
+   
 
     /* For debuguing purpose, converting the A/D values in V to check with reality */ 
     
