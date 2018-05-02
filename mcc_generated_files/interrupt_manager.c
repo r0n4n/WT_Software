@@ -52,5 +52,8 @@
 */
 void INTERRUPT_Initialize (void)
 {
+    //    PWM1I: PWM1 Interrupt
+    //    Priority: 1
+        IPC23bits.PWM1IP = 1;
 }
 

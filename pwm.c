@@ -10,6 +10,7 @@
 
 
 #include "pwm.h"
+#include "mcc_generated_files/pin_manager.h"
 
 void init_pwm(void) {
     
@@ -37,15 +38,15 @@ unsigned int ipwm_period;
     /**************** I/O CONTROL REGISTER ********************/
     /* PWM1 I/O CONTROL REGISTER */
     IOCON1 = 0; //RAZ Before setting
-   // IOCON1bits.PENH = 1; //PWM1H pin is enabled 
-    //IOCON1bits.PENL = 1; //PWM1L pin is enabled
+    IOCON1bits.PENH = 1; //PWM1H pin is enabled 
+    IOCON1bits.PENL = 1; //PWM1L pin is enabled
     IOCON1bits.POLH = 0; //PWM1H is active low
     IOCON1bits.PMOD = 0; //Complementary pwm mode
     
     /* PWM2 I/O CONTROL REGISTER */
     IOCON2 = 0; //RAZ Before setting
-    //IOCON2bits.PENH = 1; //PWM2H pin is enabled 
-   //IOCON2bits.PENL = 1; //PWM2L pin is enabled
+    IOCON2bits.PENH = 1; //PWM2H pin is enabled 
+    IOCON2bits.PENL = 1; //PWM2L pin is enabled
     IOCON2bits.POLH = 0; //PWM2H is active low
     IOCON2bits.PMOD = 0; //Complementary pwm mode
     
@@ -59,6 +60,7 @@ unsigned int ipwm_period;
     
     /**********************  PWMx CONTROL REGISTER  ***************/
     /*** PWM1 CONTROL REGISTER ***/
+    PWMCON1 = 0x400 ; 
     PWMCON1bits.ITB = 0; //PWM use PTPER as period time reference
     PWMCON1bits.MDCS = 0; //PWM use PDC1 and SDC1 for duty cycle setting 
     PWMCON1bits.DTC = 0; //PWM use positive deadtime for all output setted in DTR1
@@ -102,5 +104,11 @@ unsigned int ipwm_period;
     ALTDTR3 = 5 ;  // PWM3 ALTERNATE DEAD-TIME
     /***************************************************/
     
+    /******* Interrupts ****/
+    IFS5bits.PWM1IF = false;
+    IEC5bits.PWM1IE = true;
     
+    PTCONbits.PTEN = 1; // enable PWM
 }
+
+
