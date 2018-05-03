@@ -46,6 +46,7 @@
 #include <stdio.h>
 #include "xc.h"
 #include "pwm.h"
+#include "serialData.h"
 
 /*
                          Main application
@@ -72,7 +73,7 @@ void main(void)
                                 //CONVERTING THE 5V output in 3.3V output will be necessary to get 20A full scale measurement
     float Gain_Vout = 28.125;   //Hardware voltage divider is designed for a 90V max voltage. The gain is 90V/3.2V = 28.125
     
-    ADC1_Initialize();
+    
     
     // init_pwm();
     
@@ -146,6 +147,13 @@ void main(void)
          */       
       
     }
+}
+
+void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
+{
+	IO_RA2_Toggle() ; 
+    //measure();
+	IFS5bits.PWM1IF = false; 
 }
 /**
  End of File
