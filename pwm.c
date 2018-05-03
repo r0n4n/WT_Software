@@ -32,6 +32,10 @@ unsigned int ipwm_period;
     FCLCON1 = 0x0003; //Disabling Faults PWM1
     FCLCON2 = 0x0003; //Disabling Faults PWM2
     FCLCON3 = 0x0003; //Disabling Faults PWM3
+    
+    //FCLCON1 = 0x0001; //The selected Fault source forces PWMxH, PWMxL pins to FLTDAT values (cycl
+    //FCLCON2 = 0x0001; //The selected Fault source forces PWMxH, PWMxL pins to FLTDAT values (cycl
+    //FCLCON3 = 0x0001; //The selected Fault source forces PWMxH, PWMxL pins to FLTDAT values (cycl
     /**********************************************************/
     
     /**************** I/O CONTROL REGISTER ********************/
@@ -101,6 +105,8 @@ unsigned int ipwm_period;
     ALTDTR2 = 5 ;  // PWM2 ALTERNATE DEAD-TIME
     ALTDTR3 = 5 ;  // PWM3 ALTERNATE DEAD-TIME
     /***************************************************/
-    
-    
+}
+
+abc state_switch(void) {
+    abc.a=
 }
