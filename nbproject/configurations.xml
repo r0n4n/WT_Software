@@ -202,6 +202,30 @@
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
       </C30Global>
+      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.c"
+            ex="true"
+            overriding="false">
+      </item>
+      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.h"
+            ex="true"
+            overriding="false">
+      </item>
+      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.c"
+            ex="true"
+            overriding="false">
+      </item>
+      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.h"
+            ex="true"
+            overriding="false">
+      </item>
+      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.c"
+            ex="true"
+            overriding="false">
+      </item>
+      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.h"
+            ex="true"
+            overriding="false">
+      </item>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
