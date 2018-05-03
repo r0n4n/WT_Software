@@ -105,8 +105,16 @@ unsigned int ipwm_period;
     ALTDTR2 = 5 ;  // PWM2 ALTERNATE DEAD-TIME
     ALTDTR3 = 5 ;  // PWM3 ALTERNATE DEAD-TIME
     /***************************************************/
-    PTCONbits.PTEN = 1;
+
+    
+    /******* Interrupts ****/
+    IFS5bits.PWM1IF = false;
+    IEC5bits.PWM1IE = true;
+   
+    PTCONbits.PTEN = 1; // enable PWM
 }
+
+
 
 abc state_switch(void) {
     
@@ -122,3 +130,4 @@ abc state_switch(void) {
     
     return abc;
 }
+

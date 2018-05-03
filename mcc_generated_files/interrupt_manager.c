@@ -52,5 +52,6 @@
 */
 void INTERRUPT_Initialize (void)
 {
+    IPC23bits.PWM1IP = 1;
 }
 
