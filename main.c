@@ -50,6 +50,7 @@
 #include "xc.h"
 #include "pwm.h"
 #include "trigo.h"
+#include "serialData.h"
 
 /*----------------------------------------------------------*/
 /* Constants */
@@ -75,8 +76,8 @@ float Kp=0.0 ;
 float Ti=0.0 ; 
 float Ts=DT ; 
 //float pi=PI ; 
-double ia, ib, ic, i_alf=0, i_bet=0, psi_alf,psi_bet,psi_alf_c,psi_bet_c;
-double Theta,delta_Udc,u_alf,u_bet,delta_udc_old=0.0,udc, udc_old=0.0,ualf,ubet,w;
+float ia=1, ib=2, ic=3, i_alf=0, i_bet=0, psi_alf,psi_bet,psi_alf_c,psi_bet_c;
+float Theta,delta_Udc,u_alf,u_bet,delta_udc_old=0.0,udc, udc_old=0.0,ualf,ubet,w;
 float p,q,delta_q,delta_p,p_old=0.0,q_old=0.0,p_ref, I_ref,I_ref_old=0.0,I_ref_max=10.0;
 int sector,Sa_old=0,Sb_old=0,Sc_old=0,Sq,Sq_old,Sp,Sp_old, _Ts,_T_in, D_R, D_S, D_T ;
 
@@ -123,6 +124,15 @@ void controller(void);
 //void da_converter(void);
 void PWM_sync_interrupt(void);
 /*----------------------------------------------------------*/
+union u
+{
+    unsigned int i; /**< acesso a pedaço de mémória de 32 bits através de tipo inteiro sem sinal. */
+    float f; 
+    double d ; 
+    uint8_t s[4]; /**< acesso a pedaço de mémória de 32 bits pedaços correspondentes a caractéres. */
+};
+
+
 
 /*
                          Main application
@@ -162,7 +172,24 @@ void main(void)
         
         // AD1CON1bits.SAMP = 1;        // start sampling ...
          //__delay32(60000000);            // for 100 mS at 31,25MHz
+<<<<<<< HEAD
         //IO_RA2_Toggle() ; 
+=======
+//         sendData(30) ; 
+//         sendData(20) ; 
+//        sendData(3) ; 
+//        sendData(4) ;
+         ia=((((float)CH0/1024)*3.3)-2.48)*Gain_current; // ia is a float but ch0 was double for test 
+         ib=((((float)CH1/1024)*3.3)-2.48)*Gain_current;
+         w=(((float)CH2/1024)*3.3)*Gain_frequency;
+         udc=(((float)CH3/1024)*3.3)*Gain_Vout;
+        sendData(ia) ; 
+        sendData(ib) ;
+        sendData(w) ; 
+        sendData(udc) ; 
+
+         //IO_RA2_Toggle() ; 
+>>>>>>> serial_com
         // AD1CON1bits.SAMP = 0;        // start Converting
         //while (!AD1CON1bits.DONE);    // conversion done?
          //AD1CON1bits.DONE = 0;
@@ -183,17 +210,17 @@ void measure(void)
     CH3 = ADC1BUF3;            // yes then get ADC value
 
    /* For debuguing purpose : printing all values retrieved from the buffer */
-   /*printf("I_T = %d   ", CH0);
-   printf("I_S = %d   ", CH1);
-   printf("RPM = %d   ", CH2);
-   printf("Vout= %d   ", CH3);
-   */
+//   printf("I_T = %d   ", CH0);
+//   printf("I_S = %d   ", CH1);
+//   printf("RPM = %d   ", CH2);
+//   printf("Vout= %d   \n\r", CH3);
+   
 
     /* For debuguing purpose, converting the A/D values in V to check with reality */ 
-    /*
-    ia=(float)((CH0/1024)*3.3);
-    ib=(float)((CH1/1024)*3.3);
-    w=(float)((CH2/1024)*3.3);
+    
+//    ia=(float)((CH0/1024)*3.3);
+//    ib=(float)((CH1/1024)*3.3);
+    /*w=(float)((CH2/1024)*3.3);
     udc=(float)((CH3/1024)*3.3);
     */
 
@@ -204,16 +231,24 @@ void measure(void)
       AN3 -> CH3 -> Pin4 -> Vout
    */
 
-    ia=((((float)CH0/1024)*3.3)-2.48)*Gain_current; // ia is a float but ch0 was double for test 
-    ib=((((float)CH1/1024)*3.3)-2.48)*Gain_current;
-    w=(((float)CH2/1024)*3.3)*Gain_frequency;
-    udc=(((float)CH3/1024)*3.3)*Gain_Vout;
+//    ia=((((float)CH0/1024)*3.3)-2.48)*Gain_current; // ia is a float but ch0 was double for test 
+//    ib=((((float)CH1/1024)*3.3)-2.48)*Gain_current;
+//    w=(((float)CH2/1024)*3.3)*Gain_frequency;
+//    udc=(((float)CH3/1024)*3.3)*Gain_Vout;
 
     /* Printing all the A/D results over the RS485  */
 //    printf("I_T = %.3f  A ", ia);
 //    printf("I_S = %.3f  A ", ib);
 //    printf("RPM = %f  Hz ", w);
 //    printf("Vout= %4.2f  V \n\r", udc);
+<<<<<<< HEAD
+=======
+    //sendData(1) ; 
+    //sendData(2) ; 
+    //sendData(w) ;
+    //sendData(udc) ; 
+    
+>>>>>>> serial_com
 }
 
 void controller(void){
@@ -306,9 +341,14 @@ void controller(void){
 
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 {
+<<<<<<< HEAD
 	IO_RA2_SetHigh() ;  
     //measure();
     IO_RA2_SetLow() ; 
+=======
+	IO_RA2_Toggle() ; 
+    measure();
+>>>>>>> serial_com
 	IFS5bits.PWM1IF = false; 
 }
 
