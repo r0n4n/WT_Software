@@ -105,6 +105,7 @@ unsigned int ipwm_period;
     ALTDTR2 = 5 ;  // PWM2 ALTERNATE DEAD-TIME
     ALTDTR3 = 5 ;  // PWM3 ALTERNATE DEAD-TIME
     /***************************************************/
+
     
     /******* Interrupts ****/
     IFS5bits.PWM1IF = false;
@@ -113,6 +114,20 @@ unsigned int ipwm_period;
     PTCONbits.PTEN = 1; // enable PWM
 }
 
-//abc state_switch(void) {
-//    abc.a=
-//}
+
+
+abc state_switch(void) {
+    
+    abc abc;
+    
+    abc.a=PORTBbits.RB15;
+    abc.b=PORTBbits.RB13;
+    abc.c=PORTBbits.RB11;
+    
+    printf("switch a = %f", abc.a);
+    printf("switch b = %f", abc.b);
+    printf("switch c = %f", abc.c);
+    
+    return abc;
+}
+
