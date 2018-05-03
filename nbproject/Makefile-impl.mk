@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=WT_software
+PROJECTNAME=WT_MCU_Slave.X
 
 # Active Configuration
 DEFAULTCONF=default

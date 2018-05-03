@@ -33,6 +33,7 @@
 
 #include <xc.h> 
 #include "typedef.h"
+#include <stdbool.h>
 
 
 void init_pwm(void);

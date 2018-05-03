@@ -46,7 +46,9 @@
 #include <stdio.h>
 #include "xc.h"
 #include "pwm.h"
+#include "serialData.h"
 #include "typedef.h"
+
 
 /*
                          Main application
@@ -55,10 +57,37 @@ void main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
+
+    
+    uint16_t CH0;
+    uint16_t CH1;
+    uint16_t CH2;
+    uint16_t CH3;
+    
+    double CH0_unit;
+    double CH1_unit;
+    double CH2_unit;
+    double CH3_unit;
+    
+    float Gain_frequency = 66;  //Hardware frequency to voltage converter has a 66HZ/V output
+    float Gain_current = 8;     //Hardware current sensors have a 8 A/V. The measurement is signed and the 0A reference is 2.5V. 
+                                //The sensors amplitude is 20A, the gain is 20A/2.5V = 8A/V
+                                //FOR NOW THE MAX POSITIVE CURRENT MEASURABLE BEFORE SATURATION IS (3.3V-2.5V)*8A/V=6.4A
+                                //CONVERTING THE 5V output in 3.3V output will be necessary to get 20A full scale measurement
+    float Gain_Vout = 28.125;   //Hardware voltage divider is designed for a 90V max voltage. The gain is 90V/3.2V = 28.125
+    
+    
+    
+    // init_pwm();
+    
+    PTCONbits.PTEN = 1;
+    
+
     init_pwm();
    
     sensor sense;
     abc s;
+
     // When using interrupts, you need to set the Global Interrupt Enable bits
     // Use the following macros to:
 
@@ -76,6 +105,13 @@ void main(void)
          }
 
     return 1;
+}
+
+void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
+{
+	IO_RA2_Toggle() ; 
+    //measure();
+	IFS5bits.PWM1IF = false; 
 }
 /**
  End of File
