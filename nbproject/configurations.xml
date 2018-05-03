@@ -17,9 +17,9 @@
       <itemPath>pwm.h</itemPath>
       <itemPath>typedef.h</itemPath>
       <itemPath>transform.h</itemPath>
-      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.h</itemPath>
-      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.h</itemPath>
-      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.h</itemPath>
+      <itemPath>estimation.h</itemPath>
+      <itemPath>control.h</itemPath>
+      <itemPath>serialData.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -41,9 +41,9 @@
       <itemPath>main.c</itemPath>
       <itemPath>pwm.c</itemPath>
       <itemPath>transform.c</itemPath>
-      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.c</itemPath>
-      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.c</itemPath>
-      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.c</itemPath>
+      <itemPath>control.c</itemPath>
+      <itemPath>estimation.c</itemPath>
+      <itemPath>serialData.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -202,30 +202,6 @@
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
       </C30Global>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.c"
-            ex="true"
-            overriding="false">
-      </item>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.h"
-            ex="true"
-            overriding="false">
-      </item>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.c"
-            ex="true"
-            overriding="false">
-      </item>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.h"
-            ex="true"
-            overriding="false">
-      </item>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.c"
-            ex="true"
-            overriding="false">
-      </item>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.h"
-            ex="true"
-            overriding="false">
-      </item>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>

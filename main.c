@@ -55,6 +55,25 @@
                          Main application
  */
 
+    /* sensor declaration */
+    sensor sense;
+ 
+    /* line current declaration */
+    abc il;
+    alphabeta il_alphabeta;
+    dq il_dq;
+    dq i_ref;
+    
+    /* voltage declaration */
+
+    float udc;
+    float udc_ref;
+    float err_udc;
+    
+    /* estimated voltage */
+    abc us;
+    alphabeta us_alphabeta;
+    dq us_dq;
 
     tPID voltage_controler;
     tPID id_controler;
@@ -73,34 +92,10 @@ int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
-
-    
-    uint16_t CH0;
-    uint16_t CH1;
-    uint16_t CH2;
-    uint16_t CH3;
-    
-    double CH0_unit;
-    double CH1_unit;
-    double CH2_unit;
-    double CH3_unit;
-    
-    float Gain_frequency = 66;  //Hardware frequency to voltage converter has a 66HZ/V output
-    float Gain_current = 8;     //Hardware current sensors have a 8 A/V. The measurement is signed and the 0A reference is 2.5V. 
-                                //The sensors amplitude is 20A, the gain is 20A/2.5V = 8A/V
-                                //FOR NOW THE MAX POSITIVE CURRENT MEASURABLE BEFORE SATURATION IS (3.3V-2.5V)*8A/V=6.4A
-                                //CONVERTING THE 5V output in 3.3V output will be necessary to get 20A full scale measurement
-    float Gain_Vout = 28.125;   //Hardware voltage divider is designed for a 90V max voltage. The gain is 90V/3.2V = 28.125
-    
-    
-    
-    // init_pwm();
-    
-    PTCONbits.PTEN = 1;
-    
-
     init_pwm();
+   
     
+    /* PID INITIALISATION */
         voltage_controler.abcCoefficients = &abcCoefficient_voltage[0];    /*Set up pointer to derived coefficients */
         id_controler.abcCoefficients = &abcCoefficient_id[0];    /*Set up pointer to derived coefficients */
         iq_controler.abcCoefficients = &abcCoefficient_iq[0];    /*Set up pointer to derived coefficients */
@@ -113,25 +108,23 @@ int main(void)
         PIDInit(&id_controler);                               /*Clear the controler history and the controller output */
         PIDInit(&iq_controler);                               /*Clear the controler history and the controller output */
 
-        voltage_gain_coeff[0] = Q15(0.7);
-      	voltage_gain_coeff[1] = Q15(0.2);
-    	voltage_gain_coeff[2] = Q15(0);
-        id_gain_coeff[0] = Q15(0.7);
-      	id_gain_coeff[1] = Q15(0.2);
-    	id_gain_coeff[2] = Q15(0);
-        iq_gain_coeff[0] = Q15(0.7);
-      	iq_gain_coeff[1] = Q15(0.2);
-    	iq_gain_coeff[2] = Q15(0);
+        voltage_gain_coeff[0] = 20;                           //Kp voltage_controler
+      	voltage_gain_coeff[1] = 3;                            //Ki voltage_controler
+    	voltage_gain_coeff[2] = 0;                            //Kd voltage_controler
+        id_gain_coeff[0] = 20;                                //Kp id_controler
+      	id_gain_coeff[1] = 3;                                 //Ki id_controler
+    	id_gain_coeff[2] = 0;                                 //Kd id_controler
+        iq_gain_coeff[0] = 20;                                //Kp iq_controler
+      	iq_gain_coeff[1] = 3;                                 //Ki iq_controler
+    	iq_gain_coeff[2] = 0;                                 //Kd iq_controler
         
         PIDCoeffCalc(&voltage_gain_coeff[0], &voltage_controler);             /*Derive the a,b, & c coefficients from the Kp, Ki & Kd */
         PIDCoeffCalc(&id_gain_coeff[0], &id_controler);             /*Derive the a,b, & c coefficients from the Kp, Ki & Kd */
         PIDCoeffCalc(&iq_gain_coeff[0], &iq_controler);             /*Derive the a,b, & c coefficients from the Kp, Ki & Kd */
 
-        voltage_controler.controlReference = Q15(0.28);
-        iq_controler.controlReference = Q15(0);
+        voltage_controler.controlReference = udc_ref;
+        iq_controler.controlReference = i_ref.q;
 
-    sensor sense;
-    abc s;
 
     // When using interrupts, you need to set the Global Interrupt Enable bits
     // Use the following macros to:
@@ -145,13 +138,12 @@ int main(void)
     while (1)
     {
         sense=get_sensor();
-        s=state_switch();
+        us=state_switch();
  
-        id_controler.controlReference = Q15(0.1);
-        
-        voltage_controler.measuredOutput = Q15(0.2);
-        id_controler.measuredOutput = Q15 (0.01);
-        iq_controler.measuredOutput = Q15 (0.2);
+        id_controler.controlReference = i_ref.d;
+        voltage_controler.measuredOutput = udc;
+        id_controler.measuredOutput = il_dq.d;
+        iq_controler.measuredOutput = il_dq.q;
         
         PID (&voltage_controler);
         PID (&id_controler);

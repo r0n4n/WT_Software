@@ -29,10 +29,10 @@ typedef struct  {
     }dq;
     
 typedef struct  {
-        float a;
-        float b;
-        float c;
-        float d;
+        float it;
+        float is;
+        float rpm;
+        float vout;
     }sensor;
 
 #ifdef	__cplusplus
