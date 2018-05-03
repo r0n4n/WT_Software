@@ -41,7 +41,6 @@
       <itemPath>main.c</itemPath>
       <itemPath>pwm.c</itemPath>
       <itemPath>transform.c</itemPath>
-      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.c</itemPath>
       <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.c</itemPath>
       <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.c</itemPath>
     </logicalFolder>
@@ -76,8 +75,8 @@
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libm-elf.a</linkerLibFileItem>
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libpic30-elf.a</linkerLibFileItem>
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libq-dsp-elf.a</linkerLibFileItem>
-            <linkerLibFileItem>../../../../../Program Files (x86)/Microchip/xc16/v1.34/lib/libq-dsp-coff.a</linkerLibFileItem>
-            <linkerLibFileItem>../../../../../Program Files (x86)/Microchip/xc16/v1.34/lib/libdsp-elf.a</linkerLibFileItem>
+            <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libdsp-elf.a</linkerLibFileItem>
+            <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libq-dsp-coff.a</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
         <archiverTool>
@@ -202,30 +201,6 @@
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
       </C30Global>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.c"
-            ex="true"
-            overriding="false">
-      </item>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.h"
-            ex="true"
-            overriding="false">
-      </item>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.c"
-            ex="true"
-            overriding="false">
-      </item>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.h"
-            ex="true"
-            overriding="false">
-      </item>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.c"
-            ex="true"
-            overriding="false">
-      </item>
-      <item path="D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.h"
-            ex="true"
-            overriding="false">
-      </item>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
