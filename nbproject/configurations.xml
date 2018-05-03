@@ -20,6 +20,7 @@
       <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.h</itemPath>
       <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.h</itemPath>
       <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.h</itemPath>
+      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/parameters.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

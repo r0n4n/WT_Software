@@ -13,10 +13,13 @@ extern "C" {
 #endif
 
 #include "typedef.h"
+#include <math.h>
+#include "transform.h"
+#include "parameters.h"
 
 float theta_estimator(alphabeta ul);
-alphabeta voltage_estimator(abc iabc) ; 
-
+alphabeta line_voltage_estimator(abc iabc, alphabeta us_alpha_beta  ) ; 
+alphabeta converter_voltage_estimator(float udc, abc S) ; 
 #ifdef	__cplusplus
 }
 #endif

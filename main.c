@@ -109,7 +109,7 @@ void main(void)
 
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 {
-	IO_RA2_Toggle() ; 
+	//IO_RA2_Toggle() ; 
     //measure();
 	IFS5bits.PWM1IF = false; 
 }
