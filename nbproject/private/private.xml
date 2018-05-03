@@ -3,12 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/JAL/Desktop/Software/WT_software/pwm.h</file>
-            <file>file:/C:/Users/JAL/Desktop/Software/WT_software/pwm.c</file>
-            <file>file:/C:/Users/JAL/Desktop/Software/WT_software/transform.c</file>
-            <file>file:/C:/Users/JAL/Desktop/Software/WT_software/transform.h</file>
-            <file>file:/C:/Users/JAL/Desktop/Software/WT_software/typedef.h</file>
-            <file>file:/C:/Users/JAL/Desktop/Software/WT_software/main.c</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/mcc_generated_files/uart1.c</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/mcc_generated_files/uart1.h</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/main.c</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/mcc_generated_files/adc1.c</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/mcc_generated_files/mcc.c</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/mcc_generated_files/mcc.h</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/pwm.c</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/nbproject/Makefile-default.mk</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.c</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/pwm.h</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/mcc_generated_files/interrupt_manager.c</file>
+            <file>file:/D:/Documents/WindModule/Software/WT_MCU_Slave.X/typedef.h</file>
         </group>
     </open-files>
 </project-private>

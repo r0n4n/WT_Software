@@ -47,10 +47,16 @@
 #include "xc.h"
 #include "pwm.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "serialData.h"
 =======
 #include "typedef.h"
 >>>>>>> 3d1e604692e25df449c215c71a730b7d6cf572b9
+=======
+#include "serialData.h"
+#include "typedef.h"
+
+>>>>>>> 6da1a7a9ae53d9d4f0cd043a8daf3179f2cc1f7b
 
 /*
                          Main application
@@ -60,6 +66,10 @@ void main(void)
     // initialize the device
     SYSTEM_Initialize();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6da1a7a9ae53d9d4f0cd043a8daf3179f2cc1f7b
     
     uint16_t CH0;
     uint16_t CH1;
@@ -84,12 +94,20 @@ void main(void)
     
     PTCONbits.PTEN = 1;
     
+<<<<<<< HEAD
 =======
+=======
+
+>>>>>>> 6da1a7a9ae53d9d4f0cd043a8daf3179f2cc1f7b
     init_pwm();
    
     sensor sense;
     abc s;
+<<<<<<< HEAD
 >>>>>>> 3d1e604692e25df449c215c71a730b7d6cf572b9
+=======
+
+>>>>>>> 6da1a7a9ae53d9d4f0cd043a8daf3179f2cc1f7b
     // When using interrupts, you need to set the Global Interrupt Enable bits
     // Use the following macros to:
 

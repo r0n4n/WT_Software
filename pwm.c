@@ -106,12 +106,17 @@ unsigned int ipwm_period;
     ALTDTR3 = 5 ;  // PWM3 ALTERNATE DEAD-TIME
     /***************************************************/
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6da1a7a9ae53d9d4f0cd043a8daf3179f2cc1f7b
     
     /******* Interrupts ****/
     IFS5bits.PWM1IF = false;
     IEC5bits.PWM1IE = true;
    
     PTCONbits.PTEN = 1; // enable PWM
+<<<<<<< HEAD
 }
 
 //abc state_switch(void) {
@@ -119,7 +124,11 @@ unsigned int ipwm_period;
 //}
 =======
     PTCONbits.PTEN = 1;
+=======
+>>>>>>> 6da1a7a9ae53d9d4f0cd043a8daf3179f2cc1f7b
 }
+
+
 
 abc state_switch(void) {
     
@@ -135,4 +144,8 @@ abc state_switch(void) {
     
     return abc;
 }
+<<<<<<< HEAD
 >>>>>>> 3d1e604692e25df449c215c71a730b7d6cf572b9
+=======
+
+>>>>>>> 6da1a7a9ae53d9d4f0cd043a8daf3179f2cc1f7b
