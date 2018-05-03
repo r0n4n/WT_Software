@@ -12,23 +12,28 @@
 extern "C" {
 #endif
 
-    struct abc {
+typedef struct  {
         float a;
         float b;
         float c;
-    };
+    }abc;
     
-    struct alphabeta {
+typedef struct  {
         float alpha;
         float beta;
-    };
+    }alphabeta;
     
-    struct dq {
+typedef struct  {
         float d;
         float q;
-    };
+    }dq;
     
-    
+typedef struct  {
+        float a;
+        float b;
+        float c;
+        float d;
+    }sensor;
 
 #ifdef	__cplusplus
 }
