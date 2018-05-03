@@ -108,5 +108,7 @@ unsigned int ipwm_period;
 }
 
 abc state_switch(void) {
-    abc.a=
+    abc.a=PORTBbits.RB15;
+    abc.b=PORTBbits.RB13;
+    abc.c=PORTBbits.RB11;
 }
