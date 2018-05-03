@@ -32,9 +32,12 @@
 #define	XC_HEADER_TEMPLATE_H
 
 #include <xc.h> 
+#include "typedef.h"
+#include <stdbool.h>
 
 
 void init_pwm(void);
+abc state_switch(void);
 
 // include processor files - each processor file is guarded.  
 

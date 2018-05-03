@@ -52,6 +52,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "../typedef.h"
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -977,6 +978,7 @@ inline static void ADC1_InterruptPrioritySet( uint16_t priorityValue )
 */
 void ADC1_Tasks(void);
 
+sensor get_sensor(void);
         
 #ifdef __cplusplus  // Provide C++ Compatibility
 

@@ -46,14 +46,34 @@
 #include <stdio.h>
 #include "xc.h"
 #include "pwm.h"
+#include "serialData.h"
+#include "typedef.h"
+#include <dsp.h>
+
 
 /*
                          Main application
  */
-void main(void)
+
+
+    tPID voltage_controler;
+    tPID id_controler;
+    tPID iq_controler;
+    fractional abcCoefficient_voltage[3] __attribute__ ((section (".xbss, bss, xmemory")));
+    fractional controlHistory_voltage[3] __attribute__ ((section (".ybss, bss, ymemory")));
+    fractional abcCoefficient_id[3] __attribute__ ((section (".xbss, bss, xmemory")));
+    fractional controlHistory_id[3] __attribute__ ((section (".ybss, bss, ymemory")));
+    fractional abcCoefficient_iq[3] __attribute__ ((section (".xbss, bss, xmemory")));
+    fractional controlHistory_iq[3] __attribute__ ((section (".ybss, bss, ymemory")));
+    fractional voltage_gain_coeff[3] = {0 ,0 ,0};
+    fractional id_gain_coeff[3] = {0 ,0 ,0};
+    fractional iq_gain_coeff[3] = {0 ,0 ,0};  
+    
+int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
+
     
     uint16_t CH0;
     uint16_t CH1;
@@ -72,12 +92,47 @@ void main(void)
                                 //CONVERTING THE 5V output in 3.3V output will be necessary to get 20A full scale measurement
     float Gain_Vout = 28.125;   //Hardware voltage divider is designed for a 90V max voltage. The gain is 90V/3.2V = 28.125
     
-    ADC1_Initialize();
+    
     
     // init_pwm();
     
     PTCONbits.PTEN = 1;
     
+
+    init_pwm();
+    
+        voltage_controler.abcCoefficients = &abcCoefficient_voltage[0];    /*Set up pointer to derived coefficients */
+        id_controler.abcCoefficients = &abcCoefficient_id[0];    /*Set up pointer to derived coefficients */
+        iq_controler.abcCoefficients = &abcCoefficient_iq[0];    /*Set up pointer to derived coefficients */
+
+        voltage_controler.controlHistory = &controlHistory_voltage[0];     /*Set up pointer to controller history samples */
+        id_controler.controlHistory = &controlHistory_id[0];     /*Set up pointer to controller history samples */
+        iq_controler.controlHistory = &controlHistory_iq[0];     /*Set up pointer to controller history samples */
+        
+        PIDInit(&voltage_controler);                          /*Clear the controler history and the controller output */
+        PIDInit(&id_controler);                               /*Clear the controler history and the controller output */
+        PIDInit(&iq_controler);                               /*Clear the controler history and the controller output */
+
+        voltage_gain_coeff[0] = Q15(0.7);
+      	voltage_gain_coeff[1] = Q15(0.2);
+    	voltage_gain_coeff[2] = Q15(0);
+        id_gain_coeff[0] = Q15(0.7);
+      	id_gain_coeff[1] = Q15(0.2);
+    	id_gain_coeff[2] = Q15(0);
+        iq_gain_coeff[0] = Q15(0.7);
+      	iq_gain_coeff[1] = Q15(0.2);
+    	iq_gain_coeff[2] = Q15(0);
+        
+        PIDCoeffCalc(&voltage_gain_coeff[0], &voltage_controler);             /*Derive the a,b, & c coefficients from the Kp, Ki & Kd */
+        PIDCoeffCalc(&id_gain_coeff[0], &id_controler);             /*Derive the a,b, & c coefficients from the Kp, Ki & Kd */
+        PIDCoeffCalc(&iq_gain_coeff[0], &iq_controler);             /*Derive the a,b, & c coefficients from the Kp, Ki & Kd */
+
+        voltage_controler.controlReference = Q15(0.28);
+        iq_controler.controlReference = Q15(0);
+
+    sensor sense;
+    abc s;
+
     // When using interrupts, you need to set the Global Interrupt Enable bits
     // Use the following macros to:
 
@@ -89,63 +144,32 @@ void main(void)
    
     while (1)
     {
+        sense=get_sensor();
+        s=state_switch();
+ 
+        id_controler.controlReference = Q15(0.1);
+        
+        voltage_controler.measuredOutput = Q15(0.2);
+        id_controler.measuredOutput = Q15 (0.01);
+        iq_controler.measuredOutput = Q15 (0.2);
+        
+        PID (&voltage_controler);
+        PID (&id_controler);
+        PID (&iq_controler);
 
-        // AD1CON1bits.SAMP = 1;        // start sampling ...
-         __delay32(60000000);            // for 100 mS at 31,25MHz
-        // AD1CON1bits.SAMP = 0;        // start Converting
-        //while (!AD1CON1bits.DONE);    // conversion done?
-         //AD1CON1bits.DONE = 0;
-        // while (!_AD1IF);// Wait for all 4 conversions to complete
-        //_AD1IF = 0;
-         
-         /* Retrieving the sensed values from A/D buffer. The values are from 0 to 1024, converting from 0V to 3.3V */
-         
-         CH0 = ADC1BUF0;            // yes then get ADC value
-         CH1 = ADC1BUF1;            // yes then get ADC value
-         CH2 = ADC1BUF2;            // yes then get ADC value
-         CH3 = ADC1BUF3;            // yes then get ADC value
-         
-            /* For debuguing purpose : printing all values retrieved from the buffer */
-            /*printf("I_T = %d   ", CH0);
-            printf("I_S = %d   ", CH1);
-            printf("RPM = %d   ", CH2);
-            printf("Vout= %d   ", CH3);
-            */
-         
-         /* 
-          For debuguing purpose, converting the A/D values in V to check with reality
-          * 
-         CH0_unit=(float)((CH0/1024)*3.3);
-         CH1_unit=(float)((CH1/1024)*3.3);
-         CH2_unit=(float)((CH2/1024)*3.3);
-         CH3_unit=(float)((CH3/1024)*3.3);
-         */
-         
-         /* The software is configured to calculated with the following pinout
-            AN1 -> CH0 -> Pin5 -> I_T 
-            AN0 -> CH1 -> Pin2 -> I_S
-            AN2 -> CH2 -> Pin3 -> RPM
-            AN3 -> CH3 -> Pin4 -> Vout
-          */
-         
-         CH0_unit=((((float)CH0/1024)*3.3)-2.48)*Gain_current;
-         CH1_unit=((((float)CH1/1024)*3.3)-2.48)*Gain_current;
-         CH2_unit=(((float)CH2/1024)*3.3)*Gain_frequency;
-         CH3_unit=(((float)CH3/1024)*3.3)*Gain_Vout;
-       
-         /* Printing all the A/D results over the RS485  */
-         
-         printf("I_T = %.3f  A ", CH0_unit);
-         printf("I_S = %.3f  A ", CH1_unit);
-         printf("RPM = %.1f  Hz ", CH2_unit);
-         printf("Vout= %.1f  V \n\r", CH3_unit);
-         
-         /*
-                 
-            
-         */       
-      
-    }
+        
+        __delay32(60000000);
+        
+         }
+
+    return 1;
+}
+
+void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
+{
+	IO_RA2_Toggle() ; 
+    //measure();
+	IFS5bits.PWM1IF = false; 
 }
 /**
  End of File
