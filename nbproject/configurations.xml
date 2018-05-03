@@ -70,6 +70,8 @@
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libm-elf.a</linkerLibFileItem>
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libpic30-elf.a</linkerLibFileItem>
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libq-dsp-elf.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../../../Program Files (x86)/Microchip/xc16/v1.34/lib/libq-dsp-coff.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../../../Program Files (x86)/Microchip/xc16/v1.34/lib/libdsp-elf.a</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
         <archiverTool>
