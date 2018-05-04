@@ -42,9 +42,9 @@
       <itemPath>main.c</itemPath>
       <itemPath>pwm.c</itemPath>
       <itemPath>transform.c</itemPath>
-      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.c</itemPath>
-      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.c</itemPath>
-      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.c</itemPath>
+      <itemPath>control.c</itemPath>
+      <itemPath>estimation.c</itemPath>
+      <itemPath>serialData.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -77,6 +77,8 @@
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libm-elf.a</linkerLibFileItem>
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libpic30-elf.a</linkerLibFileItem>
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libq-dsp-elf.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../../../Program Files (x86)/Microchip/xc16/v1.34/lib/libq-dsp-coff.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../../../Program Files (x86)/Microchip/xc16/v1.34/lib/libdsp-elf.a</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
         <archiverTool>

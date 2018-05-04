@@ -20,6 +20,8 @@ extern "C" {
 float theta_estimator(alphabeta ul);
 alphabeta line_voltage_estimator(abc iabc, alphabeta us_alpha_beta  ) ; 
 alphabeta converter_voltage_estimator(float udc, abc S) ; 
+float derivate(float old, float new, float step_time) ; 
+
 #ifdef	__cplusplus
 }
 #endif

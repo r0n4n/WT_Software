@@ -25,6 +25,8 @@ extern "C" {
 #define Kp_u 0 
 #define Ki_u 0 
 #define Kd_u 0 
+    
+#define Ts 0.0000001 
 
 #ifdef	__cplusplus
 }

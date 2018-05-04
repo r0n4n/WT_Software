@@ -193,15 +193,17 @@ sensor get_sensor(void){
        
          /* Printing all the A/D results over the RS485  */
          
+
 //         printf("I_T = %.3f  A ", CH0_unit);
 //         printf("I_S = %.3f  A ", CH1_unit);
 //         printf("RPM = %.1f  Hz ", CH2_unit);
 //         printf("Vout= %.1f  V \n\r", CH3_unit);
+
          
-         sensor.a=CH0_unit;
-         sensor.b=CH1_unit;
-         sensor.c=CH2_unit;
-         sensor.d=CH3_unit;
+         sensor.iabc.a=CH0_unit;
+         sensor.iabc.b=CH1_unit;
+         sensor.rpm=CH2_unit;
+         sensor.vout=CH3_unit;
     
          return sensor;
 }
