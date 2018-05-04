@@ -48,6 +48,8 @@
 #include "pwm.h"
 #include "serialData.h"
 #include "typedef.h"
+#include "estimation.h"
+#include "transform.h"
 #include <dsp.h>
 
 
@@ -66,9 +68,15 @@
     
     /* voltage declaration */
 
+    abc ul;
+    alphabeta ul_alphabeta;
+    dq ul_dq;
     float udc;
     float udc_ref;
     float err_udc;
+    float omega;
+    float theta;
+    float L;
     
     /* estimated voltage */
     abc us;
@@ -139,18 +147,23 @@ int main(void)
     {
         sense=get_sensor();
         us=state_switch();
- 
-        id_controler.controlReference = i_ref.d;
+        ul_alphabeta = voltage_estimator(us);
+        theta = theta_estimator(ul_alphabeta);
+        ul_dq = alphabeta_to_dq(ul_alphabeta, theta);
+        il_alphabeta = abc_to_alphabeta(il);
+        il_dq = alphabeta_to_dq(il_alphabeta, theta);
+         
         voltage_controler.measuredOutput = udc;
-        id_controler.measuredOutput = il_dq.d;
-        iq_controler.measuredOutput = il_dq.q;
-        
         PID (&voltage_controler);
+        id_controler.controlReference = voltage_controler.controlOutput;
+        id_controler.measuredOutput = il_dq.d;
         PID (&id_controler);
+        us_dq.d = id_controler.controlOutput + ul_dq.d + il_dq.q*omega*L;
+        iq_controler.measuredOutput = il_dq.q;
         PID (&iq_controler);
-
-        
-        __delay32(60000000);
+        us_dq.q = iq_controler.controlOutput + il_dq.d*omega*L;
+        us_alphabeta = dq_to_alphabeta(us_dq, theta);
+        us = alphabeta_to_abc(us_alphabeta);
         
          }
 
