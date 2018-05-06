@@ -76,10 +76,10 @@
     float err_udc;
     float omega;
     float theta;
-    float L;
-    
+   
+    abc s; // switch state 
     /* estimated voltage */
-    abc us;
+    abc us_abc ; 
     alphabeta us_alphabeta;
     dq us_dq;
 
@@ -146,8 +146,8 @@ int main(void)
     while (1)
     {
         sense=get_sensor();
-        us=state_switch();
-        ul_alphabeta = voltage_estimator(us);
+        s=state_switch();
+        ul_alphabeta = converter_voltage_estimator(sense.vout,s);
         theta = theta_estimator(ul_alphabeta);
         ul_dq = alphabeta_to_dq(ul_alphabeta, theta);
         il_alphabeta = abc_to_alphabeta(il);
@@ -163,7 +163,7 @@ int main(void)
         PID (&iq_controler);
         us_dq.q = iq_controler.controlOutput + il_dq.d*omega*L;
         us_alphabeta = dq_to_alphabeta(us_dq, theta);
-        us = alphabeta_to_abc(us_alphabeta);
+        us_abc = alphabeta_to_abc(us_alphabeta);
         
          }
 

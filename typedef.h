@@ -29,8 +29,7 @@ typedef struct  {
     }dq;
     
 typedef struct  {
-        float it;
-        float is;
+        abc iabc ; 
         float rpm;
         float vout;
     }sensor;

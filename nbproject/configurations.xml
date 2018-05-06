@@ -17,9 +17,10 @@
       <itemPath>pwm.h</itemPath>
       <itemPath>typedef.h</itemPath>
       <itemPath>transform.h</itemPath>
-      <itemPath>estimation.h</itemPath>
-      <itemPath>control.h</itemPath>
-      <itemPath>serialData.h</itemPath>
+      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/estimation.h</itemPath>
+      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/control.h</itemPath>
+      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/serialData.h</itemPath>
+      <itemPath>D:/Documents/WindModule/Software/WT_MCU_Slave.X/parameters.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -76,8 +77,8 @@
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libm-elf.a</linkerLibFileItem>
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libpic30-elf.a</linkerLibFileItem>
             <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libq-dsp-elf.a</linkerLibFileItem>
-            <linkerLibFileItem>../../../../../Program Files (x86)/Microchip/xc16/v1.34/lib/libq-dsp-coff.a</linkerLibFileItem>
-            <linkerLibFileItem>../../../../../Program Files (x86)/Microchip/xc16/v1.34/lib/libdsp-elf.a</linkerLibFileItem>
+            <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libdsp-elf.a</linkerLibFileItem>
+            <linkerLibFileItem>C:/Program Files (x86)/Microchip/xc16/v1.34/lib/libq-dsp-coff.a</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
         <archiverTool>

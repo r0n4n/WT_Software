@@ -124,9 +124,9 @@ abc state_switch(void) {
     abc.b=PORTBbits.RB13;
     abc.c=PORTBbits.RB11;
     
-    printf("switch a = %f", abc.a);
-    printf("switch b = %f", abc.b);
-    printf("switch c = %f", abc.c);
+//    printf("switch a = %f", abc.a);
+//    printf("switch b = %f", abc.b);
+//    printf("switch c = %f", abc.c);
     
     return abc;
 }
