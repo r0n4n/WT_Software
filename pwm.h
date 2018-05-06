@@ -37,6 +37,7 @@
 
 
 void init_pwm(void);
+void pwm_control(abc us);
 abc state_switch(void);
 void set_duty_cycle(abc us_abc, float udc) ; 
 

@@ -80,42 +80,40 @@ static ADC_OBJECT adc1_obj;
 
 
 void ADC1_Initialize (void)
-{
-    // ASAM enabled; ADDMABM disabled; ADSIDL disabled; DONE disabled; SIMSAM Simultaneous; FORM Absolute decimal result, unsigned, right-justified; SAMP disabled; SSRC Internal counter ends sampling and starts conversion; AD12B 10-bit; ADON enabled; SSRCG disabled; 
-
-   AD1CON1 = 0x90EC;
-
-    // CSCNA disabled; VCFG0 AVDD; VCFG1 AVSS; ALTS enabled; BUFM disabled; SMPI 4; CHPS 4 Channel; 
-
-   AD1CON2 = 0x200;
-
-    // SAMC 31; ADRC FOSC/2; ADCS 254; 
-
-   AD1CON3 = 0x1FFE;
-
-    // CH0SA AN3; CH0SB AN3; CH0NB AVSS; CH0NA AVSS; 
-   
-   AD1CON4 =0x0000 ; 
-
-   AD1CHS0 = 0x303;
-
-    // CSS25 disabled; CSS24 disabled; CSS31 disabled; CSS30 disabled; 
-
-   AD1CSSH = 0x0;
-
-    // CSS2 disabled; CSS1 disabled; CSS0 disabled; CSS5 disabled; CSS4 disabled; CSS3 disabled; 
-
-   AD1CSSL = 0x0;
-
-    // CH123SA CH1=OA2/AN0,CH2=AN1,CH3=AN2; CH123SB CH1=OA2/AN0,CH2=AN1,CH3=AN2; CH123NA CH1=VREF-,CH2=VREF-,CH3=VREF-; CH123NB CH1=VREF-,CH2=VREF-,CH3=VREF-; 
-
-   AD1CHS123 = 0x0;
-
-
-   adc1_obj.intSample = AD1CON2bits.SMPI;
-   
-   // Enabling ADC1 interrupt.
+{   
+    AD1CON1bits.ADON=0; //ADC IS OFF DURING INITIALIZATION
+    AD1CON1bits.AD12B=1; //ADC IS IN 1 CHANNEL 12BITS MODE
+    AD1CON1bits.FORM=0; //ADC CONVERSION OUTPUT IS AN INTEGER
+    AD1CON1bits.ASAM=1; //SAMPLING MODE AUTOMATIC
+    AD1CON1bits.SSRCG=0; // PWM primary Special Event Trigger ends sampling and starts conversion
+    AD1CON1bits.SSRC=3;  //PWM primary Special Event Trigger ends sampling and starts conversion
+    
+    AD1CON2bits.VCFG=0; //ADC IS USING AVDD AND AVSS AS VOLTAGE REFERENCE
+    AD1CON2bits.CSCNA=1; //Scans inputs for CH0+ during Sample A bit        
+    AD1CON2bits.SMPI=0b00110; //ADC interrupt is generated at the completion of every 6th sample/conversion operation
+    AD1CON2bits.BUFM=0; //Always starts filling the buffer from the Start address
+    AD1CON2bits.ALTS=0; //Always uses channel input selects for Sample MUXA
+    
+    AD1CON3bits.ADRC=10; //Clock derived from system clock 10*Tcy=TAD  DEPENDS ON CLOCK !!
+    AD1CON3bits.SAMC=4 ;//Auto-sample time 4TAD   MINIMAL IS 3TAD
+    
+    AD1CON4bits.ADDMAEN=0; //Conversion results stored in ADCxBUF0 through ADCxBUFF registers; DMA is not used
+    AD1CHS0bits.CH0NB=0; //Negative Input Select for Sample MUXB bits =  Channel 0 negative input is VREFL
+    AD1CHS0bits.CH0NA=0; //Negative Input Select for Sample MUXA bits =  Channel 0 negative input is VREFL
+    
+    AD1CSSH=0;            //None of the AO outputs are scanned
+    AD1CSSLbits.CSS0=1;   //AN0 is scanned
+    AD1CSSLbits.CSS1=1;   //AN1 is scanned
+    AD1CSSLbits.CSS2=1;   //AN2 is scanned
+    AD1CSSLbits.CSS3=1;   //AN3 is scanned
+    AD1CSSLbits.CSS4=1;   //AN4 is scanned
+    AD1CSSLbits.CSS5=1;   //AN5 is scanned
+    
+    AD1CON1bits.ADON=0;   //START ADC
+    
+    // Enabling ADC1 interrupt.
    IEC0bits.AD1IE = 1;
+
 }
 
 
@@ -130,15 +128,20 @@ sensor get_sensor(void){
     
     sensor sensor;
     
-    uint16_t CH0;
-    uint16_t CH1;
-    uint16_t CH2;
-    uint16_t CH3;
+    uint16_t AN0;
+    uint16_t AN1;
+    uint16_t AN2;
+    uint16_t AN3;
+    uint16_t AN4;
+    uint16_t AN5;
     
-    float CH0_unit;
-    float CH1_unit;
-    float CH2_unit;
-    float CH3_unit;
+    float AN0_unit;
+    float AN1_unit;
+    float AN2_unit;
+    float AN3_unit;
+    float AN4_unit;
+    float AN5_unit;
+    
     
     float Gain_frequency = 66;  //Hardware frequency to voltage converter has a 66HZ/V output
     float Gain_current = 8;     //Hardware current sensors have a 8 A/V. The measurement is signed and the 0A reference is 2.5V. 
@@ -146,6 +149,7 @@ sensor get_sensor(void){
                                 //FOR NOW THE MAX POSITIVE CURRENT MEASURABLE BEFORE SATURATION IS (3.3V-2.5V)*8A/V=6.4A
                                 //CONVERTING THE 5V output in 3.3V output will be necessary to get 20A full scale measurement
     float Gain_Vout = 28.125;   //Hardware voltage divider is designed for a 90V max voltage. The gain is 90V/3.2V = 28.125
+    float Gain_vin;
     
         //ADC1_Initialize();        
     
@@ -160,10 +164,13 @@ sensor get_sensor(void){
          /* Retrieving the sensed values from A/D buffer. The values are from 0 to 1024, converting from 0V to 3.3V */
          
          
-         CH0 = ADC1BUF0;            // yes then get ADC value
-         CH1 = ADC1BUF1;            // yes then get ADC value
-         CH2 = ADC1BUF2;            // yes then get ADC value
-         CH3 = ADC1BUF3;            // yes then get ADC value
+         AN0 = ADC1BUF0;            // yes then get ADC value
+         AN1 = ADC1BUF1;            // yes then get ADC value
+         AN2 = ADC1BUF2;            // yes then get ADC value
+         AN3 = ADC1BUF3;            // yes then get ADC value
+         AN4 = ADC1BUF4;   
+         AN5 = ADC1BUF5; 
+         
          
             /* For debuguing purpose : printing all values retrieved from the buffer */
             /*printf("I_T = %d   ", CH0);
@@ -188,10 +195,13 @@ sensor get_sensor(void){
             AN3 -> CH3 -> Pin4 -> Vout
           */
          
-         CH0_unit=((((float)CH0/1024)*3.3)-2.48)*Gain_current;
-         CH1_unit=((((float)CH1/1024)*3.3)-2.48)*Gain_current;
-         CH2_unit=(((float)CH2/1024)*3.3)*Gain_frequency;
-         CH3_unit=(((float)CH3/1024)*3.3)*Gain_Vout;
+         AN0_unit=((((float)AN0/4096)*3.3)-2.48)*Gain_current;
+         AN1_unit=((((float)AN1/4096)*3.3)-2.48)*Gain_current;
+         AN2_unit=(((float)AN2/4096)*3.3)*Gain_frequency;
+         AN3_unit=(((float)AN3/4096)*3.3)*Gain_Vout;
+         AN4_unit=(((float)AN4/4096)*3.3)*Gain_vin;
+         AN5_unit=(((float)AN5/4096)*3.3)*Gain_vin;
+         
        
          /* Printing all the A/D results over the RS485  */
          
@@ -202,10 +212,12 @@ sensor get_sensor(void){
 //         printf("Vout= %.1f  V \n\r", CH3_unit);
 
          
-         sensor.iabc.a=CH0_unit;
-         sensor.iabc.b=CH1_unit;
-         sensor.rpm=CH2_unit;
-         sensor.vout=CH3_unit;
+         sensor.iabc.a=AN0_unit;
+         sensor.iabc.b=AN1_unit;
+         sensor.rpm=AN2_unit;
+         sensor.vout=AN3_unit;
+         sensor.vina=AN4_unit;
+         sensor.vinb=AN5_unit;
     
          return sensor;
 }
