@@ -52,6 +52,7 @@
 */
 void INTERRUPT_Initialize (void)
 {
-    IPC23bits.PWM1IP = 1;
+    //IPC23bits.PWM1IP = 1; // set PWM1 interrupt priority 
+    IPC3bits.AD1IP = 1; // set ADC interrupt priority
 }
 

@@ -80,7 +80,7 @@ static ADC_OBJECT adc1_obj;
 
 
 void ADC1_Initialize (void)
-{
+{   
     AD1CON1bits.ADON=0; //ADC IS OFF DURING INITIALIZATION
     AD1CON1bits.AD12B=1; //ADC IS IN 1 CHANNEL 12BITS MODE
     AD1CON1bits.FORM=0; //ADC CONVERSION OUTPUT IS AN INTEGER
@@ -95,7 +95,7 @@ void ADC1_Initialize (void)
     AD1CON2bits.ALTS=0; //Always uses channel input selects for Sample MUXA
     
     AD1CON3bits.ADRC=10; //Clock derived from system clock 10*Tcy=TAD  DEPENDS ON CLOCK !!
-    AD1CON3bits.SAMC=4 //Auto-sample time 4TAD   MINIMAL IS 3TAD
+    AD1CON3bits.SAMC=4 ;//Auto-sample time 4TAD   MINIMAL IS 3TAD
     
     AD1CON4bits.ADDMAEN=0; //Conversion results stored in ADCxBUF0 through ADCxBUFF registers; DMA is not used
     AD1CHS0bits.CH0NB=0; //Negative Input Select for Sample MUXB bits =  Channel 0 negative input is VREFL
@@ -110,11 +110,15 @@ void ADC1_Initialize (void)
     AD1CSSLbits.CSS5=1;   //AN5 is scanned
     
     AD1CON1bits.ADON=0;   //START ADC
+    
+    // Enabling ADC1 interrupt.
+   IEC0bits.AD1IE = 1;
+
 }
 
 
 
-void ADC1_Tasks ( void )
+void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 {
     // clear the ADC interrupt flag
     IFS0bits.AD1IF = false;

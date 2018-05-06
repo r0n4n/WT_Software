@@ -976,7 +976,7 @@ inline static void ADC1_InterruptPrioritySet( uint16_t priorityValue )
     Refer to ADC1_Initializer(); for an example
     
 */
-void ADC1_Tasks(void);
+
 
 sensor get_sensor(void);
         

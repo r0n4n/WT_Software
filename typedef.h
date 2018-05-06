@@ -13,9 +13,9 @@ extern "C" {
 #endif
 
 typedef struct  {
-        float a;
-        float b;
-        float c;
+        float a; // R branch value 
+        float b; // S branch value 
+        float c; // T branch value 
     }abc;
     
 typedef struct  {
