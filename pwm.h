@@ -38,6 +38,7 @@
 
 void init_pwm(void);
 abc state_switch(void);
+void set_duty_cycle(abc us_abc, float udc) ; 
 
 // include processor files - each processor file is guarded.  
 

@@ -109,7 +109,7 @@ unsigned int ipwm_period;
     
     /******* Interrupts ****/
     IFS5bits.PWM1IF = false;
-    IEC5bits.PWM1IE = true;
+    //IEC5bits.PWM1IE = true;
    
     PTCONbits.PTEN = 1; // enable PWM
 }
@@ -131,3 +131,15 @@ abc state_switch(void) {
     return abc;
 }
 
+/* set_duty_cycle() set the duty cycle of the 3 branches according to the 
+ * converter voltage reference. The references are scaled to match the duty 
+ * cycle register range (16bits= 0 to 65535). The duty cycle registers match with RST branches. 
+ * 
+*/
+void set_duty_cycle(abc us_abc, float udc){
+    /* ref to "Voltage Oriented Control of Three?Phase Boost PWM Converters" *
+     * see figure 4.4 */
+    PDC1 = (us_abc.a/udc + 0.5)*65535  ; // set PWM1 duty cycle 
+    PDC2 = (us_abc.b/udc + 0.5)*65535 ; // set PWM2 duty cycle 
+    PDC3 = (us_abc.c/udc + 0.5)*65535 ;  // set PWM3 duty cycle 
+}
