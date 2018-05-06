@@ -114,11 +114,13 @@ void ADC1_Initialize (void)
 
    adc1_obj.intSample = AD1CON2bits.SMPI;
    
+   // Enabling ADC1 interrupt.
+   IEC0bits.AD1IE = 1;
 }
 
 
 
-void ADC1_Tasks ( void )
+void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 {
     // clear the ADC interrupt flag
     IFS0bits.AD1IF = false;
