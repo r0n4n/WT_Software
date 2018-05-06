@@ -37,6 +37,7 @@
 
 
 void init_pwm(void);
+void pwm_control(abc us);
 abc state_switch(void);
 
 // include processor files - each processor file is guarded.  
