@@ -13,18 +13,13 @@
 
 void init_pwm(void) {
     
-unsigned long pwm_frequ;
-float pwm_period;
-unsigned int ipwm_period;
-    pwm_frequ = 90000;
-    pwm_period = (1.0e9/(1.04*pwm_frequ));
-    ipwm_period=(unsigned int)pwm_period;
-    
     PTCON = 0; //Disable PWM for setting
+    PTCONbits.SEIEN=1; // Special Event Interrupt is enabled
+    PTCONbits.SEVTPS=3; // 1:4 postscaler generates Special Event trigger at every second compare match event
+    
     PTCON2 = 0; //Prescaler 1:1 PWM will use Tosc
-    
-    SEVTCMP = 0 ;
-    
+   
+    SEVTCMP = 0 ; //Special event compare at the start of the period
     PTPER = 400 ; //Define master time base register
     
     
