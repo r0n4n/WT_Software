@@ -153,7 +153,7 @@ int main(void)
         il_alphabeta = abc_to_alphabeta(il);
         il_dq = alphabeta_to_dq(il_alphabeta, theta);
          
-        voltage_controler.measuredOutput = udc;
+        voltage_controler.measuredOutput = sense.vout;
         PID (&voltage_controler);
         id_controler.controlReference = voltage_controler.controlOutput;
         id_controler.measuredOutput = il_dq.d;
@@ -165,7 +165,7 @@ int main(void)
         us_alphabeta = dq_to_alphabeta(us_dq, theta);
         us_abc = alphabeta_to_abc(us_alphabeta);
         
-         }
+        }
 
     return 1;
 }
