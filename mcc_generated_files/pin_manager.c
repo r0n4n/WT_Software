@@ -64,7 +64,7 @@ void PIN_MANAGER_Initialize(void)
      ***************************************************************************/
     
     LATA = 0x0000;
-    LATB = 0x0110;  //RB4 and RB8 start high
+    LATB = 0x0120;  //RB4 and RB8 start high
 
     /****************************************************************************
      * Setting the GPIO Direction SFR(s)
@@ -79,8 +79,8 @@ void PIN_MANAGER_Initialize(void)
     TRISBbits.TRISB1=1;     //AN3 as input
     TRISBbits.TRISB2=1;     //AN4 as input
     TRISBbits.TRISB3=1;     //AN5 as input
-    TRISBbits.TRISB4=0;     // RB4(DIR) AS OUTPUT
-    TRISBbits.TRISB5=1;        
+    TRISBbits.TRISB4=1;     
+    TRISBbits.TRISB5=0;     // RB5(DIR) AS OUTPUT   
     TRISBbits.TRISB6=1;   
     TRISBbits.TRISB7=1;   
     TRISBbits.TRISB8=0;        // RB8 (TX) AS OUTPUT
