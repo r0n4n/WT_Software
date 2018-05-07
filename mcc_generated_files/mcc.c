@@ -104,6 +104,7 @@ void SYSTEM_Initialize(void)
     ADC1_Initialize();
     UART1_Initialize();
     INTERRUPT_GlobalEnable();
+    init_pwm();
     CORCON_ModeOperatingSet(CORCON_MODE_PORVALUES);
 }
 
