@@ -13,6 +13,16 @@ extern "C" {
 #endif
 
 #include "typedef.h"
+#include "parameters.h"
+#include "estimation.h"
+#include <dsp.h>
+#include "mcc_generated_files/adc1.h"
+    
+    void VOC_controller() ; 
+    void VOC_initialize() ; 
+    
+    
+   
 
 
 #ifdef	__cplusplus
