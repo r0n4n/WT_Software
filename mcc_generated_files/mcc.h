@@ -52,6 +52,7 @@
 #include "traps.h"
 #include "uart1.h"
 #include "adc1.h"
+#include "../pwm.h"
 
 #define _XTAL_FREQ  60802500UL
 
