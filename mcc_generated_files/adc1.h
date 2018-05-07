@@ -53,6 +53,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "../typedef.h"
+#include <xc.h>
+
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 
