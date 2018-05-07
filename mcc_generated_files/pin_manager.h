@@ -515,6 +515,58 @@
 
 */
 #define DIR_SetHigh()          _LATB5 = 1
+
+/**
+  @Summary
+    Sets the GPIO pin, RA2, high using LATA2.
+
+  @Description
+    Sets the GPIO pin, RA2, high using LATA2.
+
+  @Preconditions
+    The RA2 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RA2 high (1)
+    RA2_SetHigh();
+    </code>
+
+*/
+
+#define RA2_SetHigh()          _LATA2 = 1
+
+/**
+  @Summary
+    Sets the GPIO pin, RA2, low using LATA2.
+
+  @Description
+    Sets the GPIO pin, RA2, low using LATA2.
+
+  @Preconditions
+    The RA2 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RA2 low (0)
+    RA2_SetLow();
+    </code>
+
+*/
+#define RA2_SetLow()           _LATA2 = 0
+
 /**
   @Summary
     Sets the GPIO pin, RB5, low using LATB5.
@@ -539,6 +591,8 @@
 
 */
 #define DIR_SetLow()           _LATB5 = 0
+
+
 /**
   @Summary
     Toggles the GPIO pin, RB5, using LATB5.
@@ -563,6 +617,33 @@
 
 */
 #define DIR_Toggle()           _LATB5 ^= 1
+
+
+/**
+  @Summary
+    Toggles the GPIO pin, RA2, using LATA2.
+
+  @Description
+    Toggles the GPIO pin, RA2, using LATA2.
+
+  @Preconditions
+    The RA2 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RA2
+    RA2_Toggle();
+    </code>
+
+*/
+#define RA2_Toggle()           _LATA2 ^= 1
+
 /**
   @Summary
     Reads the value of the GPIO pin, RB5.
@@ -613,6 +694,8 @@
 
 */
 #define DIR_SetDigitalInput()  _TRISB5 = 1
+
+
 /**
   @Summary
     Configures the GPIO pin, RB5, as an output.
@@ -636,7 +719,33 @@
     </code>
 
 */
+
 #define DIR_SetDigitalOutput() _TRISB5 = 0
+
+/**
+  @Summary
+    Configures the GPIO pin, RA2, as an output.
+
+  @Description
+    Configures the GPIO pin, RA2, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RA2 as an output
+    RA2_SetDigitalOutput();
+    </code>
+
+*/
+#define RA2_SetDigitalOutput() _TRISA2 = 0
 
 /**
     Section: Function Prototypes
