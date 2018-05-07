@@ -72,7 +72,7 @@ typedef struct
 
 ADC_OBJECT;
 
-static ADC_OBJECT adc1_obj;
+
 
 /**
   Section: Driver Interface
@@ -124,6 +124,16 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
     IFS0bits.AD1IF = false;
 }
 
+
+/*
+ * AN0 -> ia 
+ * AN1 -> ib 
+ * AN2 -> vout 
+ * AN3 -> va 
+ * AN4 -> vb 
+ * AN5 -> vc or AN5 -> freq 
+ * 
+ */
 sensor get_sensor(void){
     
     sensor sensor;
@@ -143,13 +153,13 @@ sensor get_sensor(void){
     float AN5_unit;
     
     
-    float Gain_frequency = 66;  //Hardware frequency to voltage converter has a 66HZ/V output
+    //float Gain_frequency = 66;  //Hardware frequency to voltage converter has a 66HZ/V output
     float Gain_current = 8;     //Hardware current sensors have a 8 A/V. The measurement is signed and the 0A reference is 2.5V. 
                                 //The sensors amplitude is 20A, the gain is 20A/2.5V = 8A/V
                                 //FOR NOW THE MAX POSITIVE CURRENT MEASURABLE BEFORE SATURATION IS (3.3V-2.5V)*8A/V=6.4A
                                 //CONVERTING THE 5V output in 3.3V output will be necessary to get 20A full scale measurement
     float Gain_Vout = 28.125;   //Hardware voltage divider is designed for a 90V max voltage. The gain is 90V/3.2V = 28.125
-    float Gain_vin;
+    float Gain_vin= 1; // set gain value 
     
         //ADC1_Initialize();        
     
@@ -195,12 +205,14 @@ sensor get_sensor(void){
             AN3 -> CH3 -> Pin4 -> Vout
           */
          
-         AN0_unit=((((float)AN0/4096)*3.3)-2.48)*Gain_current;
-         AN1_unit=((((float)AN1/4096)*3.3)-2.48)*Gain_current;
-         AN2_unit=(((float)AN2/4096)*3.3)*Gain_frequency;
-         AN3_unit=(((float)AN3/4096)*3.3)*Gain_Vout;
+         AN0_unit=((((float)AN0/4096)*3.3)-2.48)*Gain_current; // ia 
+         AN1_unit=((((float)AN1/4096)*3.3)-2.48)*Gain_current; // ib 
+         AN2_unit=(((float)AN2/4096)*3.3)*Gain_Vout; // vout
+         AN3_unit=(((float)AN3/4096)*3.3)*Gain_vin;
          AN4_unit=(((float)AN4/4096)*3.3)*Gain_vin;
          AN5_unit=(((float)AN5/4096)*3.3)*Gain_vin;
+         //AN2_unit=(((float)AN2/4096)*3.3)*Gain_frequency; // frequency
+         
          
        
          /* Printing all the A/D results over the RS485  */
@@ -214,11 +226,11 @@ sensor get_sensor(void){
          
          sensor.iabc.a=AN0_unit;
          sensor.iabc.b=AN1_unit;
-         sensor.rpm=AN2_unit;
-         sensor.vout=AN3_unit;
-         sensor.vina=AN4_unit;
-         sensor.vinb=AN5_unit;
-    
+         sensor.vout=AN2_unit;
+         sensor.vabc.a=AN3_unit;
+         sensor.vabc.b=AN4_unit; 
+         sensor.vabc.c=AN5_unit; 
+         // sensor.rpm=AN2_unit;
          return sensor;
 }
 
