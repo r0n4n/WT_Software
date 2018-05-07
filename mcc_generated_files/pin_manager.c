@@ -71,7 +71,7 @@ void PIN_MANAGER_Initialize(void)
      ***************************************************************************/
     TRISAbits.TRISA0 = 1;   //AN0 AS input
     TRISAbits.TRISA1 = 1;   //AN1 As input
-    TRISAbits.TRISA2 = 1;   
+    TRISAbits.TRISA2 = 0;  //RA2 as output to debug
     TRISAbits.TRISA3 = 1;
     TRISAbits.TRISA4 = 1;        
     

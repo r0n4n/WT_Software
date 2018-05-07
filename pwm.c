@@ -15,7 +15,7 @@ void init_pwm(void) {
     
     PTCON = 0; //Disable PWM for setting
     PTCONbits.SEIEN=1; // Special Event Interrupt is enabled
-    PTCONbits.SEVTPS=3; // 1:4 postscaler generates Special Event trigger at every second compare match event
+    PTCONbits.SEVTPS=0; // 1:4 postscaler generates Special Event trigger at every 4th compare match event
     
     PTCON2 = 0; //Prescaler 1:1 PWM will use Tosc
    

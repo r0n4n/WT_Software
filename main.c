@@ -64,7 +64,15 @@ int main(void)
   
     while (1)
     {
-        
+//        __delay32(60000000);
+//        RA2_Toggle() ; 
+//        if (AD1CON1bits.DONE){
+//            RA2_SetHigh() ; 
+//        }
+//        else {
+//              RA2_SetLow() ;
+//        }
+       
         
     }
 
@@ -78,6 +86,16 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
     //measure();
 	IFS5bits.PWM1IF = false; 
 }
+
+
+void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
+{
+    
+    RA2_Toggle() ;
+    // clear the ADC interrupt flag
+    IFS0bits.AD1IF = false;
+}
+
 /**
  End of File
 */

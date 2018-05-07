@@ -94,9 +94,11 @@ void ADC1_Initialize (void)
     AD1CON2bits.BUFM=0; //Always starts filling the buffer from the Start address
     AD1CON2bits.ALTS=0; //Always uses channel input selects for Sample MUXA
     
-    AD1CON3bits.ADRC=10; //Clock derived from system clock 10*Tcy=TAD  DEPENDS ON CLOCK !!
-    AD1CON3bits.SAMC=4 ;//Auto-sample time 4TAD   MINIMAL IS 3TAD
-    
+    AD1CON3bits.ADRC=1; // Clock derived from system clock
+    AD1CON3bits.SAMC=3 ;//Auto-sample time 4TAD   MINIMAL IS 3TAD
+    AD1CON3bits.ADCS = 4 ;////Clock derived from system clock 10*Tcy=TAD  DEPENDS ON CLOCK !!
+         
+            
     AD1CON4bits.ADDMAEN=0; //Conversion results stored in ADCxBUF0 through ADCxBUFF registers; DMA is not used
     AD1CHS0bits.CH0NB=0; //Negative Input Select for Sample MUXB bits =  Channel 0 negative input is VREFL
     AD1CHS0bits.CH0NA=0; //Negative Input Select for Sample MUXA bits =  Channel 0 negative input is VREFL
@@ -109,7 +111,7 @@ void ADC1_Initialize (void)
     AD1CSSLbits.CSS4=1;   //AN4 is scanned
     AD1CSSLbits.CSS5=1;   //AN5 is scanned
     
-    AD1CON1bits.ADON=0;   //START ADC
+    AD1CON1bits.ADON=1;   //START ADC
     
     // Enabling ADC1 interrupt.
    IEC0bits.AD1IE = 1;
@@ -118,11 +120,7 @@ void ADC1_Initialize (void)
 
 
 
-void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
-{
-    // clear the ADC interrupt flag
-    IFS0bits.AD1IF = false;
-}
+
 
 
 /*
