@@ -30,10 +30,9 @@ typedef struct  {
     
 typedef struct  {
         abc iabc ; 
+        abc vabc ; 
         float rpm;
         float vout;
-        float vina;
-        float vinb;
     }sensor;
 
 #ifdef	__cplusplus
