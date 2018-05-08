@@ -20,7 +20,7 @@ void init_pwm(void) {
     PTCON2 = 0; //Prescaler 1:1 PWM will use Tosc
    
     SEVTCMP = 0 ; //Special event compare at the start of the period
-    PTPER = 400 ; //Define master time base register
+    PTPER = 6000 ; //Define master time base register
     
     
     /*******************PWMx FAULT CURRENT-LIMIT **************/
@@ -36,15 +36,15 @@ void init_pwm(void) {
     /**************** I/O CONTROL REGISTER ********************/
     /* PWM1 I/O CONTROL REGISTER */
     IOCON1 = 0; //RAZ Before setting
-   // IOCON1bits.PENH = 1; //PWM1H pin is enabled 
-    //IOCON1bits.PENL = 1; //PWM1L pin is enabled
+    IOCON1bits.PENH = 1; //PWM1H pin is enabled 
+    IOCON1bits.PENL = 1; //PWM1L pin is enabled
     IOCON1bits.POLH = 0; //PWM1H is active low
     IOCON1bits.PMOD = 0; //Complementary pwm mode
     
     /* PWM2 I/O CONTROL REGISTER */
     IOCON2 = 0; //RAZ Before setting
-    //IOCON2bits.PENH = 1; //PWM2H pin is enabled 
-   //IOCON2bits.PENL = 1; //PWM2L pin is enabled
+    IOCON2bits.PENH = 1; //PWM2H pin is enabled 
+   IOCON2bits.PENL = 1; //PWM2L pin is enabled
     IOCON2bits.POLH = 0; //PWM2H is active low
     IOCON2bits.PMOD = 0; //Complementary pwm mode
     
@@ -62,6 +62,7 @@ void init_pwm(void) {
     PWMCON1bits.MDCS = 0; //PWM use PDC1 and SDC1 for duty cycle setting 
     PWMCON1bits.DTC = 0; //PWM use positive deadtime for all output setted in DTR1
     PWMCON1bits.IUE = 0; //Uptades to the active PDC1 are synchronized to the pwm time base
+    PWMCON1bits.TRGIEN = 1 ; 
     
      /*** PWM2 CONTROL REGISTER ***/
     PWMCON2bits.ITB = 0; //PWM use PTPER as period time reference
@@ -77,9 +78,9 @@ void init_pwm(void) {
     /****************************************************************************/
     
     /*********** PWM DUTY CYCLE ************/
-    PDC1 = 200 ; //PWM1 DUTY CYCLE // Duty cycle of 50%
-    PDC2 = 200 ; //PWM2 DUTY CYCLE
-    PDC3 = 200 ; //PWM3 DUTY CYCLE
+    PDC1 = 3000 ; //PWM1 DUTY CYCLE // Duty cycle of 50%
+    PDC2 = 3000 ; //PWM2 DUTY CYCLE
+    PDC3 = 3000; //PWM3 DUTY CYCLE
     /*************************************/
     
     /************ PHASE-SHIFT  ******************/
@@ -104,7 +105,7 @@ void init_pwm(void) {
     
     /******* Interrupts ****/
     IFS5bits.PWM1IF = false;
-    //IEC5bits.PWM1IE = true;
+    IEC5bits.PWM1IE = true; // enable PWM1 interrupt 
    
     PTCONbits.PTEN = 1; // enable PWM
 }
