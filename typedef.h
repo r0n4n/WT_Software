@@ -13,26 +13,26 @@ extern "C" {
 #endif
 
 typedef struct  {
-        float a; // R branch value 
-        float b; // S branch value 
-        float c; // T branch value 
+        long int a; // R branch value 
+        long int b; // S branch value 
+        long int c; // T branch value 
     }abc;
     
 typedef struct  {
-        float alpha;
-        float beta;
+        long int alpha;
+        long int beta;
     }alphabeta;
     
 typedef struct  {
-        float d;
-        float q;
+        long int d;
+        long int q;
     }dq;
     
 typedef struct  {
         abc iabc ; 
         abc vabc ; 
-        float rpm;
-        float vout;
+        long int rpm;
+        long int vout;
     }sensor;
 
 #ifdef	__cplusplus

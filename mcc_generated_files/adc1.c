@@ -55,11 +55,11 @@
 #include <libpic30.h>
 
 
-#define GAIN_VIN 16365 // GAIN_VIN = 3.3/4096*20.3125*1000000
-#define GAIN_VOUT  22659     // GAIN_VIN = 3.3/4096*28.125*1000000
-#define GAIN_I_IN  6445 // GAIN_VIN = 3.3/4096*8*1000000
-#define OFFSET_I_IN 1984000 //offset current = -2.48*8*1000000
-#define OFFSET_V_IN 33515625 //offset current = -2.48*8*1000000
+#define GAIN_VIN 16 // GAIN_VIN = 3.3/4096*20.3125*1000000 = 16356
+#define GAIN_VOUT  22     // GAIN_VOUT = 3.3/4096*28.125*1000000 = 22659
+#define GAIN_I_IN  6 // GAIN_I_IN = 3.3/4096*8*1000000 = 6445
+#define OFFSET_I_IN 16500 //offset current = 1.65*10*1000000 = 16500000
+#define OFFSET_V_IN 33515 //offset input voltage = 1.65*20.3125*1000000 = 33515625
 
 //signed long AN0;
 //signed long AN1;
@@ -219,6 +219,7 @@ void get_sensor(sensor *sensor){
 //         AN4_unit=ADC1BUF4*GAIN_VIN; // vb 
 //         AN5_unit=ADC1BUF5*GAIN_VIN; // vc 
          
+         /* ALL THE INPUT ARE *1000*/
          sensor->iabc.a=(long int)ADC1BUF0*GAIN_I_IN-OFFSET_I_IN; // ia 
          sensor->iabc.b=(long int)ADC1BUF1*GAIN_I_IN-OFFSET_I_IN; // ib 
          sensor->vout=(long int)ADC1BUF2*GAIN_VOUT; // vout
@@ -226,6 +227,7 @@ void get_sensor(sensor *sensor){
          sensor->vabc.b=(long int)ADC1BUF4*GAIN_VIN-OFFSET_V_IN; // vb
          sensor->vabc.c=(long int)ADC1BUF5*GAIN_VIN-OFFSET_V_IN; // vc  
          //sensor.rpm=AN2_unit;
+         
          
          
          RA2_SetLow() ;
@@ -241,12 +243,12 @@ void get_sensor(sensor *sensor){
     /***************************************************/   
     
     /* Printing all the A/D results over the RS485  */
-    printf("va=%ld   ", sensor->vabc.a/1000);
-    printf("vb=%ld   ", sensor->vabc.b/1000);
-    printf("vc=%ld   ",sensor->vabc.c/1000);
-    printf("ia=%ld   ", sensor->iabc.a/1000);
-    printf("ib=%ld   ", sensor->iabc.b/1000);
-    printf("vout=%ld   \n\r",sensor->vout/1000);
+//    printf("va=%ld   ", sensor->vabc.a/1000);
+//    printf("vb=%ld   ", sensor->vabc.b/1000);
+//    printf("vc=%ld   ",sensor->vabc.c/1000);
+//    printf("ia=%ld   ", sensor->iabc.a/1000);
+//    printf("ib=%ld   ", sensor->iabc.b/1000);
+//    printf("vout=%ld   \n\r",sensor->vout/1000);
     /***************************************************/  
 }
 

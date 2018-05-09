@@ -19,3 +19,6 @@ void sendData(float data){
       }
 }
 
+void ReceiveData(float data){
+    
+}

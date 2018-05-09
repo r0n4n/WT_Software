@@ -58,11 +58,12 @@ void UART1_Initialize(void)
      Make sure to set LAT bit corresponding to TxPin as high before UART initialization
 */
     // STSEL 1; IREN disabled; PDSEL 8N; UARTEN enabled; RTSMD disabled; USIDL disabled; WAKE disabled; ABAUD disabled; LPBACK disabled; BRGH enabled; URXINV disabled; UEN TX_RX; 
-    U1MODE = (0x8008 & ~(1<<15));  // disabling UARTEN bit   
+    U1MODE = (0x8008 & ~(1<<15));  // disabling UARTEN bit 
+    U1MODEbits.BRGH = 1 ; // High Baud Rate enable 
     // UTXISEL0 TX_ONE_CHAR; UTXINV disabled; OERR NO_ERROR_cleared; URXISEL RX_ONE_CHAR; UTXBRK COMPLETED; UTXEN disabled; ADDEN disabled; 
     U1STA = 0x0;
-    // BaudRate = 9600; Frequency = 30401250 Hz; BRG 791; 
-    U1BRG = 0x317;
+    // BaudRate = 460800; Frequency = 30401250 Hz; BRG 15; 
+    U1BRG = 0xF; // with BRGH = 1 -> BRG = Fp/(4*BaudeRate) -1 ; 
     
     U1MODEbits.UARTEN = 1;  // enabling UARTEN bit
     U1STAbits.UTXEN = 1; 

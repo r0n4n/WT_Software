@@ -54,6 +54,8 @@
 #include <stdlib.h>
 #include "../typedef.h"
 #include <xc.h>
+#include "../serialData.h"
+#include "pin_manager.h"
 
 
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -980,7 +982,7 @@ inline static void ADC1_InterruptPrioritySet( uint16_t priorityValue )
 */
 
 
-sensor get_sensor(void);
+void get_sensor(sensor *sensor);
         
 #ifdef __cplusplus  // Provide C++ Compatibility
 

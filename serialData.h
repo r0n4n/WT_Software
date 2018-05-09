@@ -16,6 +16,7 @@ extern "C" {
 #include "mcc_generated_files/mcc.h"
 
 void sendData(float data) ; 
+void ReceiveData(float data) ; 
 
 
 #ifdef	__cplusplus

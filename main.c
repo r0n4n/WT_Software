@@ -41,6 +41,7 @@
     MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE
     TERMS.
 */
+#define FCY 30401250UL
 
 #include "mcc_generated_files/mcc.h"
 #include <stdio.h>
@@ -50,8 +51,11 @@
 #include "typedef.h"
 #include "estimation.h"
 #include "transform.h"
+#include <libpic30.h>
 
 
+
+ 
 
 /*
                          Main application
@@ -60,20 +64,33 @@ int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
-    
-  
+    VOC_initialize() ; 
+     
     while (1)
     {
-//        __delay32(60000000);
-//        RA2_Toggle() ; 
-//        if (AD1CON1bits.DONE){
+        
+  //      RA2_Toggle() ; 
+//        if (_AD1IF){
 //            RA2_SetHigh() ; 
 //        }
 //        else {
-//              RA2_SetLow() ;
+//            RA2_SetLow() ;
 //        }
-       
-        
+       //RA2_SetHigh() ; 
+//        int i ; 
+//    for (i=0;i<6;i++){
+//       sendData(i+1) ; 
+//        sendData(i+2) ; 
+//        sendData(i+3) ; 
+//        sendData(i+4) ; 
+//        sendData(i+5) ; 
+//        sendData(i+6) ; 
+//        printf("Vout= %d   ", i);
+//        __delay32(60000000);
+//       
+//   }
+//        RA2_SetLow() ; 
+ 
     }
 
     return 1;
@@ -82,8 +99,23 @@ int main(void)
 
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 {
-	//IO_RA2_Toggle() ; 
-    //measure();
+	
+   // RA2_Toggle() ; 
+    //__delay32(60000);
+    int i ; 
+    
+    for (i=0;i<6;i++){
+        //RA2_SetHigh() ; 
+        __delay32(16) ; // wait for the end of the conversion 
+        AD1CON1bits.SAMP = 0 ;
+        __delay32(60) ; // wait  ns
+        AD1CON1bits.SAMP = 1 ; // start conversion 
+        //while (!AD1CON1bits.DONE) ; 
+        
+        //AD1CON1bits.DONE = 0 ; 
+        //RA2_SetLow() ; 
+    }
+    
 	IFS5bits.PWM1IF = false; 
 }
 
@@ -91,7 +123,11 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 {
     
-    RA2_Toggle() ;
+    //RA2_Toggle() ;
+    sensor sensor ;
+    get_sensor(&sensor);
+    VOC_controller(sensor) ; 
+    //RA2_Toggle() ;
     // clear the ADC interrupt flag
     IFS0bits.AD1IF = false;
 }

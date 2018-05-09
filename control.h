@@ -17,8 +17,11 @@ extern "C" {
 #include "estimation.h"
 #include <dsp.h>
 #include "mcc_generated_files/adc1.h"
+#include <stdio.h>
     
-    void VOC_controller() ; 
+#define UDC_REF 20 
+    
+    void VOC_controller(sensor sensor) ; 
     void VOC_initialize() ; 
     
     

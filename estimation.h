@@ -16,6 +16,7 @@ extern "C" {
 #include <math.h>
 #include "transform.h"
 #include "parameters.h"
+#include <errno.h> /* for errno */
 
 float theta_estimator(alphabeta ul);
 alphabeta line_voltage_estimator(abc iabc, alphabeta us_alpha_beta  ) ; 

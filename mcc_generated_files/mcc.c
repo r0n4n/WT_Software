@@ -99,12 +99,13 @@ void SYSTEM_ResetCauseClear(RESET_MASKS resetFlagMask);
 void SYSTEM_Initialize(void)
 {
     PIN_MANAGER_Initialize();
+    INTERRUPT_GlobalDisable() ; 
     INTERRUPT_Initialize();
     OSCILLATOR_Initialize();
     ADC1_Initialize();
-    UART1_Initialize();
-    INTERRUPT_GlobalEnable();
+    UART1_Initialize(); 
     init_pwm();
+    INTERRUPT_GlobalEnable();
     CORCON_ModeOperatingSet(CORCON_MODE_PORVALUES);
 }
 
