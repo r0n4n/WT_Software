@@ -21,13 +21,13 @@ extern "C" {
     
 #define UDC_REF 20 
     
-    void VOC_controller(sensor sensor) ; 
-    void VOC_initialize() ; 
+void VOC_controller(sensor sensor) ; 
+void VOC_initialize() ; 
+    
+
     
     
    
-
-
 #ifdef	__cplusplus
 }
 #endif

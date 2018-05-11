@@ -1,6 +1,7 @@
 #include "estimation.h"
 
 #include <stdio.h>
+#include "serialData.h"
 
 alphabeta line_voltage_estimator(abc iabc, alphabeta us_alpha_beta){
     alphabeta i_alpha_beta ; 
@@ -33,10 +34,12 @@ float theta_estimator(alphabeta ul){
 //    printf("ubet=%lf   \n\r", (double)ul.beta);
 //    errno = 0; 
 //    ul.alpha = 13456 ; 
-//    ul.beta = 7891011 ; 
+//    ul.beta = 7891011 ; s
     
     float beta= (float)ul.beta ; 
     float alpha = (float)ul.alpha ; 
+//    sendData(beta) ; 
+//    sendData(alpha) ; 
     float theta= atan2f(beta,alpha) ; // check the parameters order
 //    printf("sizeof long int =%d   \n\r", sizeof(long int) ); 
 //    printf("sizeof double=%d   \n\r", sizeof(float));

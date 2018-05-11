@@ -1,8 +1,9 @@
 
 #include "control.h"
+#include "serialData.h"
 
  /* sensor declaration */
-    sensor sense;
+    //sensor sense;
     
     /* line current declaration */
     alphabeta il_alphabeta;
@@ -16,6 +17,8 @@
     float err_udc;
     float omega;
     float theta;
+    
+     
    
     abc s; // switch state 
     /* estimated voltage */
@@ -38,7 +41,8 @@
     fractional id_gain_coeff[3] = {0 ,0 ,0};
     fractional iq_gain_coeff[3] = {0 ,0 ,0};
      
-
+      
+     
 void VOC_initialize(){
     /* PID INITIALISATION */
         voltage_controler.abcCoefficients = &abcCoefficient_voltage[0];    /*Set up pointer to derived coefficients */
@@ -73,18 +77,32 @@ void VOC_initialize(){
         voltage_controler.controlReference = UDC_REF;
         iq_controler.controlReference = i_ref.q;
         
-        counter = 1  ;
+
+//        chariot.s[0] = '\n' ; 
+//        chariot.s[1] = 0 ; 
+//        chariot.s[2] = 0 ; 
+//        chariot.s[3] = 0 ;
 }
 
 void VOC_controller(sensor sense){
-        
-
+       
         /**********ESTIMATION + TRANSFORMATIONS **********/
         ul_alphabeta = abc_to_alphabeta(sense.vabc) ;
 //        printf("ualpha=%ld   ", ul_alphabeta.alpha); 
 //        printf("ubeta=%ld   \n\r", ul_alphabeta.beta); 
         theta = theta_estimator(ul_alphabeta);
         ul_dq = alphabeta_to_dq(ul_alphabeta, theta);
+       // sendData(theta) ; 
+        //sendData((float)ul_dq.q) ; 
+        sendData((float)sense.vabc.a) ; 
+        sendData((float)sense.iabc.a) ; 
+        sendData((float)sense.iabc.b) ; 
+        sendData((float)sense.iabc.b) ; 
+        sendData((float)sense.iabc.b) ; 
+        //sendData(chariot.f) ;
+//        sendData(theta);
+//        sendData((float)ul_dq.d); 
+//        sendData((float)ul_dq.q) ; 
 //        printf("ULd=%ld   \n\r", ul_dq.d/1000);
 //        printf("ULq=%ld   \n\n\r", ul_dq.q/1000);
         sense.iabc.c = -(sense.iabc.a + sense.iabc.b) ; // get the last current line 
@@ -93,12 +111,14 @@ void VOC_controller(sensor sense){
 //        printf("ic=%ld   \n\r", sense.iabc.c);
         
         il_alphabeta = abc_to_alphabeta(sense.iabc);
-        float theta2 = theta_estimator(il_alphabeta);
-        printf("b=%ld   ", sense.vabc.b/sense.iabc.b); 
-        printf("c=%ld  \n\r", sense.vabc.c/sense.iabc.c);
+        //float theta2 = theta_estimator(il_alphabeta);
+//        printf("b=%ld   ", sense.vabc.b/sense.iabc.b); 
+//        printf("c=%ld  \n\r", sense.vabc.c/sense.iabc.c);
 //        printf("ialpha=%ld   ", il_alphabeta.alpha); 
 //        printf("ibeta=%ld   \n\r", il_alphabeta.beta); 
         il_dq = alphabeta_to_dq(il_alphabeta, theta);
+        
+        
 //        printf("iLd=%ld   ",il_dq.d );
 //        printf("iLq=%ld   \n\r",il_dq.q );
         

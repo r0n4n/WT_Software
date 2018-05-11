@@ -54,9 +54,18 @@
 #include <libpic30.h>
 
 
-
+sensor sense ; 
  
+// union u2
+//{
+//    int i; /**< acesso a pedaço de mémória de 32 bits através de tipo inteiro sem sinal. */
+//    float f; 
+//    char s[4]; /**< acesso a pedaço de mémória de 32 bits pedaços correspondentes a caractéres. */
+//};
+//
+// union u2 chariot ;
 
+float vect[5] ;
 /*
                          Main application
  */ 
@@ -64,7 +73,12 @@ int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
-    VOC_initialize() ; 
+    serialInit() ; 
+    VOC_initialize() ;
+//    chariot.s[0] = '\n' ; 
+//    chariot.s[1] = 0 ; 
+//    chariot.s[2] = 0 ; 
+//    chariot.s[3] = 0 ;
      
     while (1)
     {
@@ -76,21 +90,47 @@ int main(void)
 //        else {
 //            RA2_SetLow() ;
 //        }
-       //RA2_SetHigh() ; 
-//        int i ; 
+       //RA2_SetHigh() ;
+//        long int j = 2 ; 
+//        float i = (float)j ; 
+//        long int j2 = 3 ; 
+//        float i2 = (float)j2 ;
+//        sendData(i) ;
+////   //     __delay32(60000);
+//        sendData(i2) ;
+//        __delay32(60000);
+//        sendData(i+2) ;
+//        __delay32(60000);
+//        sendData(i+3) ;
+//        __delay32(60000);
+//        sendData(i+4) ;
 //    for (i=0;i<6;i++){
 //       sendData(i+1) ; 
-//        sendData(i+2) ; 
-//        sendData(i+3) ; 
-//        sendData(i+4) ; 
-//        sendData(i+5) ; 
-//        sendData(i+6) ; 
-//        printf("Vout= %d   ", i);
-//        __delay32(60000000);
+////        sendData(i+2) ; 
+////        sendData(i+3) ; 
+////        sendData(i+4) ; 
+////        sendData(i+5) ; 
+////        sendData(i+6) ; 
+//        //printf("Vout= %d   ", i);
+        //__delay32(60000);
 //       
 //   }
 //        RA2_SetLow() ; 
- 
+       // VOC_controller(sense) ;
+//        sendData((float)sense.vabc.a) ; 
+//        sendData((float)sense.iabc.a) ; 
+//        sendData((float)sense.iabc.b) ; 
+//        sendData((float)sense.iabc.b) ; 
+//        sendData((float)sense.iabc.b) ; 
+//        sendData(chariot.f) ; 
+         
+        vect[0] = (float)sense.vabc.a ; 
+        vect[1] = (float)sense.vabc.a ; 
+        vect[2] = (float)sense.vabc.a ; 
+        vect[3] = (float)sense.vabc.a ; 
+        vect[4] = (float)sense.vabc.a ; 
+        sendVect(vect, 5 ) ; 
+           
     }
 
     return 1;
@@ -123,11 +163,13 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 {
     
+    RA2_Toggle() ;
+    //RA2_SetHigh() ;
+    
+    get_sensor(&sense);
+    //VOC_controller(sensor) ; 
     //RA2_Toggle() ;
-    sensor sensor ;
-    get_sensor(&sensor);
-    VOC_controller(sensor) ; 
-    //RA2_Toggle() ;
+    //RA2_SetLow() ;
     // clear the ADC interrupt flag
     IFS0bits.AD1IF = false;
 }
