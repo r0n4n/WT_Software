@@ -17,7 +17,8 @@ extern "C" {
 
 void sendData(float data) ; 
 void ReceiveData(float data) ; 
-
+void serialInit() ; 
+void sendVect(float *vect, int length ) ; 
 
 #ifdef	__cplusplus
 }
