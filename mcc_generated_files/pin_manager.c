@@ -84,7 +84,7 @@ void PIN_MANAGER_Initialize(void)
     TRISBbits.TRISB6=1;   
     TRISBbits.TRISB7=1;   
     TRISBbits.TRISB8=0;        // RB8 (TX) AS OUTPUT
-    TRISBbits.TRISB9=1;
+    TRISBbits.TRISB9=1;        // RB9 (RX) AS INPUT
     TRISBbits.TRISB10=0;       // RB10 (PWM3H) AS OUTPUT
     TRISBbits.TRISB11=0;       // RB11 (PWM3L) AS OUTPUT
     TRISBbits.TRISB12=0;       // RB12 (PWM2H) AS OUTPUT
