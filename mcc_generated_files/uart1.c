@@ -58,15 +58,28 @@ void UART1_Initialize(void)
      Make sure to set LAT bit corresponding to TxPin as high before UART initialization
 */
     // STSEL 1; IREN disabled; PDSEL 8N; UARTEN enabled; RTSMD disabled; USIDL disabled; WAKE disabled; ABAUD disabled; LPBACK disabled; BRGH enabled; URXINV disabled; UEN TX_RX; 
-    U1MODE = (0x8008 & ~(1<<15));  // disabling UARTEN bit 
+    //U1MODE = (0x8008 & ~(1<<15));  // disabling UARTEN bit 
+    U1MODEbits.UARTEN = 0 ; // disable uart for the config 
+    U1MODEbits.USIDL = 0 ; // Continues module operation in Idle mode 
+    U1MODEbits.IREN = 0 ; //IrDA encoder and decoder are disabled
+    U1MODEbits.RTSMD = 0 ;  // RTSMD disabled
+    U1MODEbits.UEN = 0 ; // UxTX and UxRX pins are enabled and used; UxCTS and UxRTS/BCLKx pins are controlled by RT latches
+    U1MODEbits.WAKE = 0 ; // No wake-up is enabled 
+    U1MODEbits.LPBACK = 0 ; // Loopback mode is disabled 
+    U1MODEbits.ABAUD = 0 ; // Auto baud rate disable 
+    U1MODEbits.URXINV = 0 ; //UxRX Idle state is 1 (because we have a pull-up resistor) 
     U1MODEbits.BRGH = 1 ; // High Baud Rate enable 
+    U1MODEbits.PDSEL = 0 ; // 8 data bits and no parity bit
+    U1MODEbits.STSEL = 0 ; // one stop bit
+    
     // UTXISEL0 TX_ONE_CHAR; UTXINV disabled; OERR NO_ERROR_cleared; URXISEL RX_ONE_CHAR; UTXBRK COMPLETED; UTXEN disabled; ADDEN disabled; 
     U1STA = 0x0;
     // BaudRate = 460800; Frequency = 30401250 Hz; BRG 15; 
     U1BRG = 0xF; // with BRGH = 1 -> BRG = Fp/(4*BaudeRate) -1 ; 
     
-    U1MODEbits.UARTEN = 1;  // enabling UARTEN bit
-    U1STAbits.UTXEN = 1; 
+    U1MODEbits.UARTEN = 1;  // enable uart 
+    U1STAbits.UTXEN = 1; // enable transmission 
+    
    
 }
 
