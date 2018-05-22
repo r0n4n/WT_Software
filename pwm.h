@@ -35,11 +35,14 @@
 #include "typedef.h"
 #include <stdbool.h>
 
+/*DEFINE */
+#define PWM_PERIOD 6000
+#define INITIAL_DUTY_CYCLE 6000/2
 
 void init_pwm(void);
 void pwm_control(abc us);
 abc state_switch(void);
-void set_duty_cycle(abc us_abc, float udc) ; 
+void set_duty_cycle(abc us_abc, int udc) ; 
 
 // include processor files - each processor file is guarded.  
 

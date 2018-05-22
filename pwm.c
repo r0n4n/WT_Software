@@ -20,7 +20,7 @@ void init_pwm(void) {
     PTCON2 = 0; //Prescaler 1:1 PWM will use Tosc
    
     SEVTCMP = 0 ; //Special event compare at the start of the period
-    PTPER = 6000 ; //Define master time base register
+    PTPER = PWM_PERIOD ; //Define master time base register
     
     
     /*******************PWMx FAULT CURRENT-LIMIT **************/
@@ -78,9 +78,9 @@ void init_pwm(void) {
     /****************************************************************************/
     
     /*********** PWM DUTY CYCLE ************/
-    PDC1 = 3000 ; //PWM1 DUTY CYCLE // Duty cycle of 50%
-    PDC2 = 3000 ; //PWM2 DUTY CYCLE
-    PDC3 = 3000; //PWM3 DUTY CYCLE
+    PDC1 = INITIAL_DUTY_CYCLE ; //PWM1 DUTY CYCLE // Duty cycle of 50%
+    PDC2 = INITIAL_DUTY_CYCLE ; //PWM2 DUTY CYCLE
+    PDC3 = INITIAL_DUTY_CYCLE; //PWM3 DUTY CYCLE
     /*************************************/
     
     /************ PHASE-SHIFT  ******************/
@@ -132,7 +132,7 @@ abc state_switch(void) {
  * cycle register range (16bits= 0 to 65535). The duty cycle registers match with RST branches. 
  * 
 */
-void set_duty_cycle(abc us_abc, float udc){
+void set_duty_cycle(abc us_abc, int udc){
     /* ref to "Voltage Oriented Control of Three?Phase Boost PWM Converters" *
      * see figure 4.4 */
     PDC1 = (us_abc.a/udc + 0.5)*65535  ; // set PWM1 duty cycle 
