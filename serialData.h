@@ -14,11 +14,14 @@ extern "C" {
 
 #include <xc.h>
 #include "mcc_generated_files/mcc.h"
-
+#include "mcc_generated_files/pin_manager.h"
+    
 void sendData(float data) ; 
 void ReceiveData(float data) ; 
 void serialInit() ; 
 void sendVect(float *vect, int length ) ; 
+void setTransmitterMode() ; 
+void setReceiverMode() ; 
 
 #ifdef	__cplusplus
 }

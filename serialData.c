@@ -49,3 +49,11 @@ void sendVect(float *vect, int length ){
     } 
     sendData(chariot.f) ; 
 }
+
+void setTransmitterMode(){
+    RB5_SetHigh() ; 
+}
+
+void setReceiverMode(){
+    RB5_SetLow() ; 
+}
