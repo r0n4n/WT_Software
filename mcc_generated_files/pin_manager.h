@@ -541,6 +541,7 @@
 */
 
 #define RA2_SetHigh()          _LATA2 = 1
+#define RB5_SetHigh()          _LATB5 = 1
 
 /**
   @Summary
@@ -566,6 +567,7 @@
 
 */
 #define RA2_SetLow()           _LATA2 = 0
+#define RB5_SetLow()           _LATB5 = 0
 
 /**
   @Summary
