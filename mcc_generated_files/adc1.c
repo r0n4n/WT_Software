@@ -55,7 +55,7 @@
 #include <libpic30.h>
 
 
-#define GAIN_VIN 16 // GAIN_VIN = 3.3/4096*20.3125*1000000 = 16356
+#define GAIN_VIN 16 // GAIN_VIN = 3.3/4096*20.3125*1000 = 16
 #define GAIN_VOUT  22     // GAIN_VOUT = 3.3/4096*28.125*1000000 = 22659
 #define GAIN_I_IN  6 // GAIN_I_IN = 3.3/4096*8*1000000 = 6445
 #define OFFSET_I_IN 12500 //offset current = 1.65*10*1000000 = 16500000
@@ -109,7 +109,7 @@ void ADC1_Initialize (void)
      
     AD1CON1bits.ADON=0; //ADC IS OFF DURING INITIALIZATION
     AD1CON1bits.AD12B=1; //ADC IS IN 1 CHANNEL 12BITS MODE
-    AD1CON1bits.FORM=0; //ADC CONVERSION OUTPUT IS AN INTEGER
+    AD1CON1bits.FORM=1; //ADC CONVERSION OUTPUT IS A SIGNED INTEGER
     AD1CON1bits.ASAM=1; //SAMPLING MODE MANUEL
     AD1CON1bits.SSRCG=0; // MANUAL SAMPLE  MANUAL CONVERSION
     AD1CON1bits.SSRC=0;  // MANUAL SAMPLE  MANUAL CONVERSION
@@ -233,13 +233,23 @@ void get_sensor(sensor *sensor){
 //         AN5_unit=ADC1BUF5*GAIN_VIN; // vc 
          
          /* ALL THE INPUT ARE *1000*/
-         sensor->iabc.a=(long int)ADC1BUF0*GAIN_I_IN-OFFSET_I_IN; // ia 
-         sensor->iabc.b=(long int)ADC1BUF1*GAIN_I_IN-OFFSET_I_IN; // ib 
-         sensor->vout=(long int)ADC1BUF2*GAIN_VOUT; // vout
-         sensor->vabc.a=(long int)ADC1BUF3*GAIN_VIN-OFFSET_V_IN; // va
-         sensor->vabc.b=(long int)ADC1BUF4*GAIN_VIN-OFFSET_V_IN; // vb
-         sensor->vabc.c=(long int)ADC1BUF5*GAIN_VIN-OFFSET_V_IN; // vc  
-         
+//    int test = -10000 ; 
+         sensor->vabc.a=(signed int)(ADC1BUF0*GAIN_VIN)/1000;//1000; //-OFFSET_V_IN; // va
+         sensor->vabc.b=(signed int)(ADC1BUF1*GAIN_VIN)/1000;//1000; //-OFFSET_V_IN; // vb
+         sensor->vabc.c=(signed int)(ADC1BUF2*GAIN_VIN)/1000 ; //-OFFSET_V_IN; // vc 
+         //sensor->vabc.c= test/1000 ; //-OFFSET_V_IN; // vc 
+         sensor->iabc.a=(signed int)(ADC1BUF3*GAIN_I_IN)/1000 ; //-OFFSET_I_IN; // ia 
+         sensor->iabc.b=(signed int)(ADC1BUF4*GAIN_I_IN)/1000; //-OFFSET_I_IN; // ib 
+         sensor->vout=(signed int)(ADC1BUF5*GAIN_VOUT)/1000; // vout
+          
+//         float vect[5] ; 
+//        vect[0] = (float)(sensor->vabc.a) ; 
+//        vect[1] = (float)(sensor->vabc.a) ; 
+//        vect[2] = (float)(sensor->vabc.a) ; 
+//        vect[3] =(float)(sensor->vabc.a) ; 
+//        vect[4] =  (float)(sensor->vabc.a); 
+// 
+//        sendVect(vect, 5 ) ; 
          //sensor.rpm=AN2_unit;
 //         sendData((float)sensor->vabc.a) ; 
 //         sendData((float)sensor->iabc.a) ; 

@@ -119,6 +119,9 @@ static uint8_t uart1_rxByteQ[UART1_CONFIG_RX_BYTEQ_LENGTH] ;
   Section: Driver Interface
 */
 
+int count_buff = 0 ; 
+int buffer[2] ;
+
 void UART1_Initialize(void)
 {
     // Set the UART1 module to the options selected in the user interface.
@@ -142,7 +145,7 @@ void UART1_Initialize(void)
     U1STA = 0x0;
     // BaudRate = 460800; Frequency = 30401250 Hz; BRG 15; 
     U1BRG = 0xF; // with BRGH = 1 -> BRG = Fp/(4*BaudeRate) -1 ; 
-    IEC0bits.U1RXIE = 1;
+    //IEC0bits.U1RXIE = 1; // enable uart interrupt 
 
    //Make sure to set LAT bit corresponding to TxPin as high before UART initialization
   
@@ -197,28 +200,34 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _U1TXInterrupt ( void )
 
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _U1RXInterrupt( void )
 {
-    
+     
     while((U1STAbits.URXDA == 1))
     {
-        RA2_SetHigh() ;
-        *uart1_obj.rxTail = U1RXREG;
-
-        uart1_obj.rxTail++;
-
-        if(uart1_obj.rxTail == (uart1_rxByteQ + UART1_CONFIG_RX_BYTEQ_LENGTH))
-        {
-            uart1_obj.rxTail = uart1_rxByteQ;
-        }
-
-        uart1_obj.rxStatus.s.empty = false;
+        //RA2_SetHigh() ;
+//        if (U1RXREG == 0){
+//            count_buff = 0 ; 
+//            break ; 
+//        }
         
-        if(uart1_obj.rxTail == uart1_obj.rxHead)
-        {
-            //Sets the flag RX full
-            uart1_obj.rxStatus.s.full = true;
-            break;
-        }
-        RA2_SetLow() ; 
+//        *uart1_obj.rxTail = U1RXREG;
+//
+//        uart1_obj.rxTail++;
+//
+//        if(uart1_obj.rxTail == (uart1_rxByteQ + UART1_CONFIG_RX_BYTEQ_LENGTH))
+//        {
+//            uart1_obj.rxTail = uart1_rxByteQ;
+//        }
+//
+//        uart1_obj.rxStatus.s.empty = false;
+//        
+//        if(uart1_obj.rxTail == uart1_obj.rxHead)
+//        {
+//            //Sets the flag RX full
+//            uart1_obj.rxStatus.s.full = true;
+//            break;
+//        }
+        
+        //RA2_SetLow() ; 
     }
 
     IFS0bits.U1RXIF = false;
@@ -284,28 +293,14 @@ unsigned int UART1_ReadBuffer( uint8_t *buffer, const unsigned int bufLen)
 
 
 
-void UART1_Write( const uint8_t byte)
+void UART1_Write( uint8_t txData)
 {
-    IEC0bits.U1TXIE = false;
-    
-    *uart1_obj.txTail = byte;
-
-    uart1_obj.txTail++;
-    
-    if (uart1_obj.txTail == (uart1_txByteQ + UART1_CONFIG_TX_BYTEQ_LENGTH))
+    while(U1STAbits.UTXBF == 1)
     {
-        uart1_obj.txTail = uart1_txByteQ;
+        
     }
 
-    uart1_obj.txStatus.s.empty = false;
-
-    if (uart1_obj.txHead == uart1_obj.txTail)
-    {
-        uart1_obj.txStatus.s.full = true;
-    }
-
-    IEC0bits.U1TXIE = true ;
-	
+    U1TXREG = txData;  	
 }
 
 

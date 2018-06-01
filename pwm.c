@@ -135,7 +135,7 @@ abc state_switch(void) {
 void set_duty_cycle(abc us_abc, int udc){
     /* ref to "Voltage Oriented Control of Three?Phase Boost PWM Converters" *
      * see figure 4.4 */
-    PDC1 = (us_abc.a/udc + 0.5)*65535  ; // set PWM1 duty cycle 
-    PDC2 = (us_abc.b/udc + 0.5)*65535 ; // set PWM2 duty cycle 
-    PDC3 = (us_abc.c/udc + 0.5)*65535 ;  // set PWM3 duty cycle 
+    PDC1 = (us_abc.a/udc + 0.5)*PWM_PERIOD  ; // set PWM1 duty cycle 
+    PDC2 = (us_abc.b/udc + 0.5)*PWM_PERIOD ; // set PWM2 duty cycle 
+    PDC3 = (us_abc.c/udc + 0.5)*PWM_PERIOD ;  // set PWM3 duty cycle 
 }

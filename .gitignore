@@ -3,3 +3,6 @@ dist/
 nbproject/Makefile-*
 nbproject/Package-* 
 nbproject/private
+doc/html
+doc/latex
+doc/man

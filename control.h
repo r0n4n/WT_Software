@@ -24,7 +24,7 @@ extern "C" {
     
 #define UDC_REF 20 
     
-void VOC_controller(sensor sensor) ; 
+void VOC_controller(sensor sensor, abc *us_abc) ; 
 void VOC_initialize() ; 
     
 

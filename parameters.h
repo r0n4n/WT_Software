@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 
-#define L 0.0001f // line inductance 
+#define L 1 //0.0001f // line inductance 
 #define Kp_id 0.1 
 #define Ki_id 0.1 
 #define Kd_id 0

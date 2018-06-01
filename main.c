@@ -55,6 +55,7 @@
 
 
 sensor sense ; 
+abc us_abc ;
  
 // union u2
 //{
@@ -65,25 +66,35 @@ sensor sense ;
 //
 // union u2 chariot ;
 
-float vect[5] ;
+//float vect[5] ;
+//fractional Clarke[2][3] ;
 /*
                          Main application
  */ 
 int main(void)
 {
     // initialize the device
-    SYSTEM_Initialize();
+    SYSTEM_Initialize(); // hardware initialization 
     serialInit() ; 
-    VOC_initialize() ;
+    VOC_initialize() ; 
+    //Clarke[0][0] = 0 ; 
+    //setReceiverMode() ; 
+    setTransmitterMode() ;
+    
 //    chariot.s[0] = '\n' ; 
 //    chariot.s[1] = 0 ; 
 //    chariot.s[2] = 0 ; 
 //    chariot.s[3] = 0 ;
-     
+    //unsigned int count = 1 ;
+//      vect[0] = 1.0 ; 
+//        vect[1] = 2.0 ; 
+//        vect[2] = 3.0 ; 
+//        vect[3] = 4.0 ; 
+//        vect[4] = 5.0 ;
     while (1)
     {
         
-  //      RA2_Toggle() ; 
+//        RA2_Toggle() ; 
 //        if (_AD1IF){
 //            RA2_SetHigh() ; 
 //        }
@@ -91,46 +102,45 @@ int main(void)
 //            RA2_SetLow() ;
 //        }
        //RA2_SetHigh() ;
-//        long int j = 2 ; 
-//        float i = (float)j ; 
-//        long int j2 = 3 ; 
-//        float i2 = (float)j2 ;
-//        sendData(i) ;
-////   //     __delay32(60000);
-//        sendData(i2) ;
-//        __delay32(60000);
-//        sendData(i+2) ;
-//        __delay32(60000);
-//        sendData(i+3) ;
-//        __delay32(60000);
-//        sendData(i+4) ;
+        //__delay32(60000);
 //    for (i=0;i<6;i++){
 //       sendData(i+1) ; 
-////        sendData(i+2) ; 
-////        sendData(i+3) ; 
-////        sendData(i+4) ; 
-////        sendData(i+5) ; 
-////        sendData(i+6) ; 
 //        //printf("Vout= %d   ", i);
-        //__delay32(60000);
+       
+//         
+//        PDC1 = count ; 
+//        count++ ; 
+//        if (count == PWM_PERIOD) {
+//            count = 1 ; 
+//        }
 //       
 //   }
 //        RA2_SetLow() ; 
-       // VOC_controller(sense) ;
-//        sendData((float)sense.vabc.a) ; 
-//        sendData((float)sense.iabc.a) ; 
-//        sendData((float)sense.iabc.b) ; 
-//        sendData((float)sense.iabc.b) ; 
-//        sendData((float)sense.iabc.b) ; 
-//        sendData(chariot.f) ; 
-         
-        vect[0] = (float)sense.vabc.a ; 
-        vect[1] = (float)sense.vabc.a ; 
-        vect[2] = (float)sense.vabc.a ; 
-        vect[3] = (float)sense.vabc.a ; 
-        vect[4] = (float)sense.vabc.a ; 
-        sendVect(vect, 5 ) ; 
-           
+       
+       VOC_controller(sense,&us_abc) ; 
+//        vect[0] = (float)(sense.vabc.c) ; 
+//        //vect[0] = 1.0 ; 
+//        //__delay32(60000);
+//       // vect[1] = (float)(sense.vabc.a/1000) ; 
+//        vect[1] = (float)(sense.vabc.c) ; 
+//        // __delay32(6000);
+//        vect[2] = (float)(sense.vabc.a) ; 
+//       //  __delay32(6000);
+//        vect[3] =(float)(sense.vabc.b) ; 
+//        vect[4] =  (float)(sense.vabc.c); 
+       
+        //sendVect(vect, 5 ) ; 
+       /* Get the data */
+//        char ReceivedChar;
+//        if(U1STAbits.URXDA == 1)
+//        {
+//            //RA2_SetHigh() ;
+//            __delay32(60000);
+//            ReceivedChar = U1RXREG;
+//            //RA2_SetLow() ; 
+//            
+//        }
+        
     }
 
     return 1;
@@ -140,10 +150,12 @@ int main(void)
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 {
 	
-   // RA2_Toggle() ; 
+    //RA2_Toggle() ; 
     //__delay32(60000);
-    int i ; 
+  
     
+    int i ; 
+    //RA2_SetHigh() ; 
     for (i=0;i<6;i++){
         //RA2_SetHigh() ; 
         __delay32(16) ; // wait for the end of the conversion 
@@ -153,8 +165,9 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
         //while (!AD1CON1bits.DONE) ; 
         
         //AD1CON1bits.DONE = 0 ; 
-        //RA2_SetLow() ; 
+        
     }
+    //RA2_SetLow() ; 
     
 	IFS5bits.PWM1IF = false; 
 }
@@ -163,11 +176,12 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 {
     
-    RA2_Toggle() ;
+    //RA2_Toggle() ;
     //RA2_SetHigh() ;
     
     get_sensor(&sense);
-    //VOC_controller(sensor) ; 
+    //VOC_controller(sense,&us_abc) ;
+    //set_duty_cycle(us_abc, sense.vout) ;
     //RA2_Toggle() ;
     //RA2_SetLow() ;
     // clear the ADC interrupt flag

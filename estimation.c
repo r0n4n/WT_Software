@@ -9,6 +9,7 @@ alphabeta line_voltage_estimator(abc iabc, alphabeta us_alpha_beta){
     static alphabeta old_i_alpha_beta ; 
     old_i_alpha_beta.alpha = 0 ; 
     old_i_alpha_beta.beta = 0 ; 
+    old_i_alpha_beta.alpha = 0 ; 
     
     iabc.c = -(iabc.a+ iabc.b) ; // get the last current line 
     i_alpha_beta = abc_to_alphabeta(iabc) ; // two phase reference frame 
@@ -26,7 +27,8 @@ alphabeta converter_voltage_estimator(float udc, abc S){
     
 }
 
-
+/* Takes 8 µs to perform the estimation 
+ */
 float theta_estimator(alphabeta ul){
 //    printf("ualp=%ld", ul.alpha);
 //    printf("ubet=%ld", ul.beta);
