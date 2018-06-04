@@ -132,10 +132,25 @@ abc state_switch(void) {
  * cycle register range (16bits= 0 to 65535). The duty cycle registers match with RST branches. 
  * 
 */
-void set_duty_cycle(abc us_abc, int udc){
+void set_duty_cycle(abc us_abc, unsigned int udc){
     /* ref to "Voltage Oriented Control of Three?Phase Boost PWM Converters" *
      * see figure 4.4 */
-    PDC1 = (us_abc.a/udc + 0.5)*PWM_PERIOD  ; // set PWM1 duty cycle 
-    PDC2 = (us_abc.b/udc + 0.5)*PWM_PERIOD ; // set PWM2 duty cycle 
-    PDC3 = (us_abc.c/udc + 0.5)*PWM_PERIOD ;  // set PWM3 duty cycle 
+//    PDC1 = (us_abc.a/udc + 0.5)*PWM_PERIOD  ; // set PWM1 duty cycle 
+//    PDC2 = (us_abc.b/udc + 0.5)*PWM_PERIOD ; // set PWM2 duty cycle 
+//    PDC3 = (us_abc.c/udc + 0.5)*PWM_PERIOD ;  // set PWM3 duty cycle 
+    //RA2_SetHigh() ;
+    //int ref = (udc / (us_abc.a + udc/2 )); 
+ 
+    // unsigned int ref =  ; 
+    PDC1 = (us_abc.a + udc/2)/10  ; 
+    PDC2 = (us_abc.b + udc/2)/10  ; 
+    PDC3 = (us_abc.c + udc/2)/10  ; 
+    //printf("ref= %d\n\r", ref); 
+    //sendData((float)ref) ; 
+    RA2_Toggle() ;
+    //PDC1 = PWM_PERIOD/ref ; 
+    //RA2_SetLow() ;
+    //PDC1 = (us_abc.a/udc + 0.5)*PWM_PERIOD  ; // set PWM1 duty cycle 
+//    PDC2 = (us_abc.b/udc + 0.5)*PWM_PERIOD ; // set PWM2 duty cycle 
+//    PDC3 = (us_abc.c/udc + 0.5)*PWM_PERIOD ;  // set PWM3 duty cycle 
 }
