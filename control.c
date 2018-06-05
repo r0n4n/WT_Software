@@ -15,7 +15,8 @@
     dq ul_dq;
     
     float err_udc;
-    _Q15 omega ; 
+    int omega ; 
+    int omega_L ;
     float vect[5] ; 
     trigo_type cos_theta ; 
     trigo_type sin_theta ; 
@@ -65,13 +66,13 @@ void VOC_initialize(){
         PIDInit(&id_controler);                               /*Clear the controler history and the controller output */
         PIDInit(&iq_controler);                               /*Clear the controler history and the controller output */
         /***** TUNE VOLTAGE GAIN CONTROLLER*****/
-        voltage_gain_coeff[0] = Q15(Kp_u);                           //Kp voltage_controler
-      	voltage_gain_coeff[1] = Q15(Ki_u);                            //Ki voltage_controler
-    	voltage_gain_coeff[2] = Q15(Kd_u);                            //Kd voltage_controler
+        voltage_gain_coeff[0] = Q15(Kp_u) ; //3277 ; //Q15(-1) ;                           //Kp voltage_controler
+      	voltage_gain_coeff[1] = Q15(0) ; //Q15(0) ; // Q15(Ki_u);                            //Ki voltage_controler
+    	voltage_gain_coeff[2] = Q15(0) ; //Q15(0); //Q15(Kd_u);                            //Kd voltage_controler
         /***** TUNE Id GAIN CONTROLLER*****/
         id_gain_coeff[0] = Q15(Kp_id);                                //Kp id_controler
-      	id_gain_coeff[1] = Q15(Ki_id);                                 //Ki id_controler
-    	id_gain_coeff[2] = Q15(Kd_id);                                 //Kd id_controler
+      	id_gain_coeff[1] = Q15(0);                                 //Ki id_controler
+    	id_gain_coeff[2] = Q15(0);                                 //Kd id_controler
         /***** TUNE Iq GAIN CONTROLLER*****/
         iq_gain_coeff[0] = Q15(Kp_iq);                                //Kp iq_controler
       	iq_gain_coeff[1] = Q15(Ki_iq);                                 //Ki iq_controler
@@ -81,9 +82,9 @@ void VOC_initialize(){
         PIDCoeffCalc(&id_gain_coeff[0], &id_controler);             /*Derive the a,b, & c coefficients from the Kp, Ki & Kd */
         PIDCoeffCalc(&iq_gain_coeff[0], &iq_controler);             /*Derive the a,b, & c coefficients from the Kp, Ki & Kd */
         /** SET THE INITIAL REFERENCES*/
-        voltage_controler.controlReference = Q15(UDC_REF);
-        iq_controler.controlReference = Q15(0);
-        
+        //voltage_controler.controlReference = 20 ; //Q15(UDC_REF);
+        iq_controler.controlReference = 0;
+        omega = 63 ;
 
 //        chariot.s[0] = '\n' ; 
 //        chariot.s[1] = 0 ; 
@@ -97,70 +98,119 @@ void VOC_controller(sensor sense, abc *us_abc){
 
         /**********ESTIMATION + TRANSFORMATIONS **********/
        ul_alphabeta = abc_to_alphabeta(sense.vabc) ; // 40 탎(long int) ; 1.5 탎 (fract) ; 3 탎 (int)
-          
-//        printf("ualpha=%ld   ", ul_alphabeta.alpha); 
-//        printf("ubeta=%ld   \n\r", ul_alphabeta.beta); 
-       theta = theta_estimator(ul_alphabeta); // 8 탎
+
+      theta = theta_estimator(ul_alphabeta); // 8 탎
         //_Q15theta = (trigo_type)theta ; 
 //        _Q15theta  = (_Q15)(-1) ; 
 //        _Q15theta2 = (_Q15)(0) ;
 //         cos_theta = _Q15cos(0x3) ; 
 //         sin_theta = _Q15cos(0x6) ; 
-        ul_dq = alphabeta_to_dq(ul_alphabeta, theta); // 16 탎
+       ul_dq = alphabeta_to_dq(ul_alphabeta, theta); // 16 탎
         //ul_dq = alphabeta_to_dq2(ul_alphabeta, cos_theta , sin_theta) ; 
 
-//        vect[0] = (float)ul_alphabeta.alpha ; 
-//        vect[1] = (float)ul_alphabeta.beta ; 
-//        vect[2] = theta ; 
-//        vect[3] = (float)ul_dq.d; 
-//        vect[4] = (float)ul_dq.q ;      
-//        sendVect(vect, 5 ) ; 
+       sense.iabc.c = -(sense.iabc.a + sense.iabc.b) ; // get the last current line // takes 400ns with long int and 200 ns with fractional
 
-//        printf("ULd=%ld   \n\r", ul_dq.d/1000);
-//        printf("ULq=%ld   \n\n\r", ul_dq.q/1000);
-          sense.iabc.c = -(sense.iabc.a + sense.iabc.b) ; // get the last current line // takes 400ns with long int and 200 ns with fractional
-//        printf("ia=%ld   ", sense.iabc.a);
-//        printf("ib=%ld   ", sense.iabc.b);
-//        printf("ic=%ld   \n\r", sense.iabc.c);
-        
-        il_alphabeta = abc_to_alphabeta(sense.iabc);
-        //float theta2 = theta_estimator(il_alphabeta);
-//        printf("b=%ld   ", sense.vabc.b/sense.iabc.b); 
-//        printf("c=%ld  \n\r", sense.vabc.c/sense.iabc.c);
-//        printf("ialpha=%ld   ", il_alphabeta.alpha); 
-//        printf("ibeta=%ld   \n\r", il_alphabeta.beta); 
-        il_dq = alphabeta_to_dq(il_alphabeta, theta); 
+       il_alphabeta = abc_to_alphabeta(sense.iabc);
+
+
+       il_dq = alphabeta_to_dq(il_alphabeta, theta); // 43탎 
         //il_dq = alphabeta_to_dq2(il_alphabeta, cos_theta , sin_theta) ; 
-        vect[0] = (float)sense.vabc.a ; 
-        vect[1] = (float)sense.vabc.b ; 
-        vect[2] = (float)sense.vabc.c ; 
-        vect[3] = (float)il_dq.d; 
-        vect[4] = (float)il_dq.q ;      
-        sendVect(vect, 5 ) ;
-        
        
-//        printf("iLd=%ld   ",il_dq.d );
-//        printf("iLq=%ld   \n\r",il_dq.q );
-        
-        
-//        float test = 15 ; 
-//        fractional  frac =1  ; 
-//        int test1 = 15 ; 
-        
+       /****************end transformations ***********************/
+         
         //RA2_SetHigh();
        
+//        voltage_controler.controlReference = 8192 ; // Q15(0.25) ;
+//        voltage_controler.measuredOutput = 0 ; // Q15(-0.25); // 34 탎
         /****************CONTROL ****************/
-//        voltage_controler.measuredOutput = sense.vout; // 34 탎
-//        PID (&voltage_controler); // 2탎
+       
+       /***************VOLTAGE CONTROLER *********/
+       // voltage_controler.measuredOutput = sense.vout; // 34 탎
+       //        PID (&voltage_controler); // 2탎
+       /**********************************************/  
+        
+        /*************id LOOP ******************/
 //        id_controler.controlReference = voltage_controler.controlOutput; // ~0 탎
-//        id_controler.measuredOutput = il_dq.d; // 34탎
-//        PID (&id_controler); // 2 탎 
-//        us_dq.d = id_controler.controlOutput + ul_dq.d + il_dq.q*omega*L; // 14 탎 
-//        iq_controler.measuredOutput = il_dq.q; // 34탎 
-//        PID (&iq_controler); // 2 탎 
-//        us_dq.q = iq_controler.controlOutput + il_dq.d*omega*L; // 24 탎 
-//         //us_alphabeta = dq_to_alphabeta(us_dq, theta); // 20탎(int)
+        id_controler.controlReference = 1000; // ~0 탎
+        id_controler.measuredOutput = il_dq.d; // 34탎
+        PID (&id_controler); // 2 탎 
+        /*************************************/
+        
+        /******** iq loop************************/
+        iq_controler.measuredOutput = il_dq.q; // 34탎 
+        PID (&iq_controler); // 2 탎 
+        /****************************************/
+        
+        /************ decoupling***************/
+        omega_L = omega*L ; 
+        us_dq.d = id_controler.controlOutput + ul_dq.d + il_dq.q*omega_L; // 14 탎 
+        us_dq.q = iq_controler.controlOutput + ul_dq.q - il_dq.d*omega_L; // 24 탎 
+        /************************************/
+        
+       // ul_alphabeta = dq_to_alphabeta(ul_dq, theta); 
+        /***** INVERSE TRANSFORMATION  *********/
+         us_alphabeta = dq_to_alphabeta(us_dq, theta); // 20탎(int)
 //         us_alphabeta = dq_to_alphabeta2(us_dq, cos_theta , sin_theta ) ; 
-//        *us_abc = alphabeta_to_abc(us_alphabeta); // 48 탎 
+       // abc abc = alphabeta_to_abc(ul_alphabeta);  
+        //*us_abc = abc ; 
+        *us_abc = alphabeta_to_abc(us_alphabeta); // 48 탎 
+        /********************************************/
+//        vect[0] = (float)sense.vabc.a ; 
+//        vect[1] = (float)sense.vabc.b ; 
+//        vect[2] = (float)sense.vabc.c ; 
+//        vect[3] = (float)ul_alphabeta.alpha; 
+//        vect[4] = (float)ul_alphabeta.beta; 
+//        
+//        vect[0] = (float)ul_alphabeta.alpha ;
+//        //vect[0] = (float)sense.vabc.a ;
+//        vect[1] = (float)ul_alphabeta.beta ; 
+////        vect[2] = theta ; 
+//        vect[2] = cosf(theta) ; 
+//        vect[3] = (float)ul_dq.d; 
+//        vect[4] = (float)ul_dq.q ;  
+//        
+//        
+//        vect[0] = (float)sense.iabc.a ; 
+//        vect[1] = (float)sense.iabc.b ; 
+//        vect[2] = (float)sense.iabc.c ; 
+//        vect[3] = (float)il_dq.d; 
+//        vect[4] = (float)il_dq.q ; 
+        
+        
+//        vect[0] = (float)id_controler.controlOutput ; 
+//        vect[1] = (float)iq_controler.controlOutput ; 
+//        vect[2] = (float)il_dq.d;       
+//        vect[3] = (float)il_dq.q ;
+//        vect[4] = (float)sense.iabc.c ;
+        
+//        vect[0] = (float)id_controler.controlOutput ; 
+//        vect[1] = (float)iq_controler.controlOutput ; 
+//        vect[2] = (float)us_dq.d; 
+//        vect[3] = (float)us_dq.q ;
+//        vect[4] = (float)sense.iabc.c ;
+        
+//        vect[0] = (float)us_alphabeta.alpha ; 
+//        vect[1] = (float)us_alphabeta.beta ;
+//        vect[2] = (float)us_dq.d; 
+//        vect[3] = (float)us_dq.q ;
+//        vect[4] = (float) us_abc->c ;
+        
+        vect[0] = (float)us_dq.d; 
+        vect[1] = (float)us_dq.q ;
+        vect[2] = (float)(us_abc->a) ; 
+        vect[3] = (float) us_abc->b ; 
+        vect[4] = (float) us_abc->c ;
+    
+//        vect[0] = (float)abc.a ; 
+//        vect[1] = (float)abc.b ; 
+//        vect[2] = (float)abc.c ; 
+//        vect[3] = (float)(ul_alphabeta.alpha); 
+//        vect[4] = (float)(ul_alphabeta.beta) ; 
+//        (udc / (us_abc.a + udc/2 ))
+        
+//        vect[0] = (float)((abc.a + 60000/2)) ;
+//        vect[1] = (float)((abc.a + 60000/2)/10) ;  
+        sendVect(vect,5) ;
+        
         RA2_SetLow() ;
 }
