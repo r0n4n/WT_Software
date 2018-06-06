@@ -9,7 +9,7 @@
 #define SQRT_TWO_BY_TRHEE 81 // sqrt(2/3) = 0.8165 
 #define SQRT_SIX 24  // sqrt(6) = 2.4495 * 10 
 #define SQRT_TWO 14 // sqrt(2) = 1.4142 * 10 
-#define ONE_BY_SQRT_TWO_BY_TRHEE 1224 //1.2247
+#define ONE_BY_SQRT_TWO_BY_TRHEE 12 //1.2247 * 10 
  
 
 /* Formula taken from https://en.wikipedia.org/wiki/Direct-quadrature-zero_transformation */
@@ -96,8 +96,8 @@ alphabeta dq_to_alphabeta(dq dq, float theta){
     alphabeta.alpha = dq.d/cos_theta - dq.q/sin_theta;
     alphabeta.beta = dq.d/sin_theta + dq.q/cos_theta;
     
-    alphabeta.alpha /=10 ; 
-    alphabeta.beta /= 10 ; 
+//    alphabeta.alpha /=10 ; 
+//    alphabeta.beta /= 10 ; 
     return alphabeta;
 }
 
@@ -114,13 +114,17 @@ alphabeta dq_to_alphabeta2(dq dq, trigo_type cos_theta , trigo_type sin_theta ){
  */
 abc alphabeta_to_abc(alphabeta alphabeta){    
     abc abc;
-//    alphabeta.alpha = 10 ; 
-//    alphabeta.beta = 10 ;
+//    alphabeta.alpha *= 10 ; 
+//    alphabeta.beta *= 10 ;
     
-    abc.b = alphabeta.alpha*ONE_BY_SQRT_SIX;
-    abc.c = abc.b - alphabeta.beta*ONE_BY_SQRT_TWO;
-    abc.b +=  alphabeta.beta*ONE_BY_SQRT_TWO; 
-    abc.a = alphabeta.alpha*SQRT_TWO_BY_TRHEE ; 
+    abc.b = -alphabeta.alpha/SQRT_SIX;
+    abc.c = abc.b - alphabeta.beta/SQRT_TWO;
+    abc.b +=  alphabeta.beta/SQRT_TWO; 
+    abc.a = alphabeta.alpha/ONE_BY_SQRT_TWO_BY_TRHEE ; 
+    
+    //abc.a =  alphabeta.alpha/ONE_BY_SQRT_TWO_BY_TRHEE + alphabeta.beta/SQRT_TWO;
+    
+     
     
 //    abc.a/=10 ; 
 //    abc.b/=10 ; 
