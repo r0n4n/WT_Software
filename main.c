@@ -52,10 +52,17 @@
 #include "estimation.h"
 #include "transform.h"
 #include <libpic30.h>
-
+#include "control.h"
 
 sensor sense ; 
+state state_vector ; 
 abc us_abc ;
+signal ul_out ; 
+signal il_out ; 
+signal us ; 
+
+int p ; 
+int *test1 ;
  
 // union u2
 //{
@@ -76,60 +83,22 @@ int main(void)
     // initialize the device
     SYSTEM_Initialize(); // hardware initialization 
     serialInit() ; 
-    VOC_initialize() ; 
-    //Clarke[0][0] = 0 ; 
+    
+    VOC_initialize(test1) ; 
+ 
     //setReceiverMode() ; 
     setTransmitterMode() ;
-    
-//    chariot.s[0] = '\n' ; 
-//    chariot.s[1] = 0 ; 
-//    chariot.s[2] = 0 ; 
-//    chariot.s[3] = 0 ;
-    //unsigned int count = 1 ;
-//      vect[0] = 1.0 ; 
-//        vect[1] = 2.0 ; 
-//        vect[2] = 3.0 ; 
-//        vect[3] = 4.0 ; 
-//        vect[4] = 5.0 ;
+
     while (1)
     {
         
-//        RA2_Toggle() ; 
-//        if (_AD1IF){
-//            RA2_SetHigh() ; 
-//        }
-//        else {
-//            RA2_SetLow() ;
-//        }
-       //RA2_SetHigh() ;
-        //__delay32(60000);
-//    for (i=0;i<6;i++){
-//       sendData(i+1) ; 
-//        //printf("Vout= %d   ", i);
-       
-//         
-//        PDC1 = count ; 
-//        count++ ; 
-//        if (count == PWM_PERIOD) {
-//            count = 1 ; 
-//        }
-//       
-//   }
+        //RA2_Toggle() ; 
+
 //        RA2_SetLow() ; 
        
-       VOC_controller(sense,&us_abc) ; 
-//        vect[0] = (float)(sense.vabc.c) ; 
-//        //vect[0] = 1.0 ; 
-//        //__delay32(60000);
-//       // vect[1] = (float)(sense.vabc.a/1000) ; 
-//        vect[1] = (float)(sense.vabc.c) ; 
-//        // __delay32(6000);
-//        vect[2] = (float)(sense.vabc.a) ; 
-//       //  __delay32(6000);
-//        vect[3] =(float)(sense.vabc.b) ; 
-//        vect[4] =  (float)(sense.vabc.c); 
-       
-        //sendVect(vect, 5 ) ; 
+       //VOC_controller(sense,&us_abc) ; 
+       //set_duty_cycle(us_abc, 10000) ;
+
        /* Get the data */
 //        char ReceivedChar;
 //        if(U1STAbits.URXDA == 1)
@@ -140,20 +109,23 @@ int main(void)
 //            //RA2_SetLow() ; 
 //            
 //        }
+      //send_ul_abc_to_alphabeta(state_vector ) ;
+       //__delay32(100000);
+//       float i ; 
+//       for (i=0;i<10;i++){
+//           sendData(i) ;
+//       }
+    
         
+  
     }
-
     return 1;
 }
 
 
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 {
-	
-    //RA2_Toggle() ; 
-    //__delay32(60000);
-  
-    
+    //RA2_Toggle() ;  
     int i ; 
     //RA2_SetHigh() ; 
     for (i=0;i<6;i++){
@@ -161,14 +133,9 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
         __delay32(16) ; // wait for the end of the conversion 
         AD1CON1bits.SAMP = 0 ;
         __delay32(60) ; // wait  ns
-        AD1CON1bits.SAMP = 1 ; // start conversion 
-        //while (!AD1CON1bits.DONE) ; 
-        
-        //AD1CON1bits.DONE = 0 ; 
-        
+        AD1CON1bits.SAMP = 1 ; // start conversion   
     }
     //RA2_SetLow() ; 
-    
 	IFS5bits.PWM1IF = false; 
 }
 
@@ -176,16 +143,31 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 {
     
-    //RA2_Toggle() ;
+    RA2_Toggle() ;
     //RA2_SetHigh() ;
     
     get_sensor(&sense);
-    //VOC_controller(sense,&us_abc) ;
-    //set_duty_cycle(us_abc, sense.vout) ;
+    state_vector.ul.abc = sense.vabc ; 
+    state_vector.il.abc = sense.iabc ; 
+    //state_vector.il.abc = sense.vabc ; 
+     
+    //VOC_controller(&state_vector,&us) ;
+    //state_vector.il.dq.d = 1000 ;
+    //send_measurements(state_vector ) ; 
+//    send_ul_abc_to_alphabeta(state_vector ) ;
+    //send_ul_alphabeta_to_dq(state_vector ) ; 
+    //send_il_abc_to_alphabeta(state_vector ) ; 
+    //send_il_alphabeta_to_dq( state_vector) ;
+    //send_us_dq_to_alphabeta(us) ; 
+    //send_us_alphabeta_to_abc(us) ; 
+    
+    //__delay32(600000);
+//    set_duty_cycle(us_abc, 10000) ;
+   // set_duty_cycle(us_abc, sense.vout) ;
     //RA2_Toggle() ;
     //RA2_SetLow() ;
     // clear the ADC interrupt flag
-    IFS0bits.AD1IF = false;
+    IFS0bits.AD1IF = false; 
 }
 
 /**
