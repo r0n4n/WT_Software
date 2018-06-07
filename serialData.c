@@ -29,8 +29,10 @@ union u
 
  union u2 chariot ;
  
- 
+ float vect[5] ;
 /**
+ * 
+ * 
  * \fn void serialInit()
  * \brief Initialize the communication parameters. 
  *
@@ -77,4 +79,85 @@ void setTransmitterMode(){
 
 void setReceiverMode(){
     RB5_SetLow() ; 
+}
+
+void send_measurements(state state){
+        vect[0] = (float)state.ul.abc.a ; 
+        vect[1] = (float)state.ul.abc.b ; 
+        vect[2] = (float)state.ul.abc.c ; 
+        vect[3] = (float)state.il.abc.a; 
+        vect[4] = (float)state.il.abc.b; 
+        sendVect(vect,5) ;
+}
+
+void send_ul_abc_to_alphabeta(state state){
+        vect[0] = (float)state.ul.abc.a ; 
+        vect[1] = (float)state.ul.abc.b ; 
+        vect[2] = (float)state.ul.abc.c ; 
+        vect[3] = (float)state.ul.alphabeta.alpha; 
+        vect[4] = (float)state.ul.alphabeta.beta; 
+        sendVect(vect,5) ;
+}
+
+void send_ul_alphabeta_to_dq(state state){
+        vect[0] = (float)state.ul.alphabeta.alpha ;
+        vect[1] = (float)state.ul.alphabeta.beta ; 
+        vect[2] = (float)state.ul.dq.d; 
+        vect[3] = (float)state.ul.dq.q ; 
+        vect[4] = state.ul.theta ;   
+        sendVect(vect,5) ;
+}
+
+void send_il_abc_to_alphabeta(state state){
+        vect[0] = (float)state.il.abc.a ; 
+        vect[1] = (float)state.il.abc.b  ; 
+        vect[2] = (float)state.il.abc.c ; 
+        vect[3] = (float)state.il.alphabeta.alpha; 
+        vect[4] = (float)state.il.alphabeta.beta; 
+        sendVect(vect,5) ;
+} 
+
+void send_il_alphabeta_to_dq(state state){
+        vect[0] = (float)state.il.alphabeta.alpha ;
+        vect[1] = (float)state.il.alphabeta.beta ; 
+        vect[2] = (float)state.il.dq.d; 
+        vect[3] = (float)state.il.dq.q ; 
+        vect[4] = state.ul.theta ;   
+        sendVect(vect,5) ;
+}
+
+//void send_idq_controller(state state, tPID id_PID, tPID iq_PID ){
+//        vect[0] = (float)id_controler.controlOutput ; 
+//        vect[1] = (float)iq_controler.controlOutput ;  
+//        vect[2] = (float)il_dq.d;       
+//        vect[3] = (float)il_dq.q ;
+//        vect[4] = 0 ;
+//        sendVect(vect,5) ;
+//}
+//
+//void send_decoupler_controller(){
+//        vect[0] = (float)id_controler.controlOutput ; 
+//        vect[1] = (float)iq_controler.controlOutput ; 
+//        vect[2] = (float)us_dq.d; 
+//        vect[3] = (float)us_dq.q ;
+//        //vect[4] = (float)sense.iabc.c ;
+//        sendVect(vect,5) ;
+//}
+
+void send_us_dq_to_alphabeta(signal us){
+    vect[0] = (float)us.dq.d; 
+    vect[1] = (float)us.dq.q ;
+    vect[2] = (float)us.alphabeta.alpha ; 
+    vect[3] = (float)us.alphabeta.beta ;
+    //vect[4] = (float) us_abc->c ;
+    sendVect(vect,5) ;
+}
+
+void send_us_alphabeta_to_abc(signal us){
+    vect[0] = (float)us.alphabeta.alpha ; 
+    vect[1] = (float)us.alphabeta.beta ;
+    vect[2] = (float)us.abc.a; 
+    vect[3] = (float)us.abc.b ;
+    vect[4] = (float)us.abc.c ;
+    sendVect(vect,5) ;
 }
