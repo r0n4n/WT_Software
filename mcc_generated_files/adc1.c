@@ -55,11 +55,12 @@
 #include <libpic30.h>
 
 
-#define GAIN_VIN 16 // GAIN_VIN = 3.3/4096*20.3125*1000 = 16
-#define GAIN_VOUT  22     // GAIN_VOUT = 3.3/4096*28.125*1000000 = 22659
-#define GAIN_I_IN  6 // GAIN_I_IN = 3.3/4096*8*1000000 = 6445
-#define OFFSET_I_IN 12500 //offset current = 1.65*10*1000000 = 16500000
+#define GAIN_VIN 16 // GAIN_VIN = 3.3/4096*20.3125*1000 = 16.3651
+#define GAIN_VOUT  22     // GAIN_VOUT = 3.3/4096*28.125*1000 = 22.659
+#define GAIN_I_IN  6 // GAIN_I_IN = 3.3/4096*8*1000 = 6,4453125
+#define OFFSET_I_IN 12500 //offset current = 1.65*10*1000 = 16500000
 #define OFFSET_V_IN 33515 //offset input voltage = 1.65*20.3125*1000000 = 33515625
+#define ADC_GAIN 10 
 
 signed long AN0;
 signed long AN1;
@@ -116,7 +117,7 @@ void ADC1_Initialize (void)
     
     AD1CON2bits.VCFG=0; //ADC IS USING AVDD AND AVSS AS VOLTAGE REFERENCE
     AD1CON2bits.CSCNA=1; //Scans inputs for CH0+ during Sample A bit        
-    AD1CON2bits.SMPI=0b00110; //ADC interrupt is generated at the completion of every 6th sample/conversion operation
+    AD1CON2bits.SMPI=0b00101; //ADC interrupt is generated at the completion of every 6th sample/conversion operation
     AD1CON2bits.BUFM=0; //Always starts filling the buffer from the Start address
     AD1CON2bits.ALTS=0; //Always uses channel input selects for Sample MUXA
     
@@ -234,19 +235,19 @@ void get_sensor(sensor *sensor){
          
          /* ALL THE INPUT ARE *1000*/
 //    int test = -10000 ; 
-         sensor->vabc.a=(signed int)(ADC1BUF0*GAIN_VIN)/1000;//1000; //-OFFSET_V_IN; // va
-         sensor->vabc.b=(signed int)(ADC1BUF1*GAIN_VIN)/1000;//1000; //-OFFSET_V_IN; // vb
-         sensor->vabc.c=(signed int)(ADC1BUF2*GAIN_VIN)/1000 ; //-OFFSET_V_IN; // vc 
+         sensor->vabc.a=(int)(ADC1BUF0*GAIN_VIN)/ADC_GAIN; //-OFFSET_V_IN; // va
+         sensor->vabc.b=(int)(ADC1BUF1*GAIN_VIN)/ADC_GAIN; //-OFFSET_V_IN; // vb
+         sensor->vabc.c=(int)(ADC1BUF2*GAIN_VIN)/ADC_GAIN ; //-OFFSET_V_IN; // vc 
          //sensor->vabc.c= test/1000 ; //-OFFSET_V_IN; // vc 
-         sensor->iabc.a=(signed int)(ADC1BUF3*GAIN_I_IN)/1000 ; //-OFFSET_I_IN; // ia 
-         sensor->iabc.b=(signed int)(ADC1BUF4*GAIN_I_IN)/1000; //-OFFSET_I_IN; // ib 
-         sensor->vout=(signed int)(ADC1BUF5*GAIN_VOUT)/1000; // vout
+         sensor->iabc.a=(int)(ADC1BUF3*GAIN_I_IN)/ADC_GAIN ; //-OFFSET_I_IN; // ia 
+         sensor->iabc.b=(int)(ADC1BUF4*GAIN_I_IN)/ADC_GAIN; //-OFFSET_I_IN; // ib 
+         sensor->vout=(int)(ADC1BUF5*GAIN_VOUT); // vout
           
-//         float vect[5] ; 
+//         float vect[5] ;
 //        vect[0] = (float)(sensor->vabc.a) ; 
 //        vect[1] = (float)(sensor->vabc.a) ; 
 //        vect[2] = (float)(sensor->vabc.a) ; 
-//        vect[3] =(float)(sensor->vabc.a) ; 
+///        vect[3] =(float)(sensor->vabc.a) ; 
 //        vect[4] =  (float)(sensor->vabc.a); 
 // 
 //        sendVect(vect, 5 ) ; 
