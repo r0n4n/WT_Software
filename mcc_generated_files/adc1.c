@@ -116,14 +116,15 @@ void ADC1_Initialize (void)
     AD1CON1bits.SSRC=0;  // MANUAL SAMPLE  MANUAL CONVERSION
     
     AD1CON2bits.VCFG=0; //ADC IS USING AVDD AND AVSS AS VOLTAGE REFERENCE
-    AD1CON2bits.CSCNA=1; //Scans inputs for CH0+ during Sample A bit        
-    AD1CON2bits.SMPI=0b00101; //ADC interrupt is generated at the completion of every 6th sample/conversion operation
+    AD1CON2bits.CSCNA=1; //Scans inputs for CH0+ during Sample A bit      
+    AD1CON2bits.CHPS =0;  //Converts CH0
+    AD1CON2bits.SMPI=5; //ADC interrupt is generated at the completion of every 6th sample/conversion operation
     AD1CON2bits.BUFM=0; //Always starts filling the buffer from the Start address
     AD1CON2bits.ALTS=0; //Always uses channel input selects for Sample MUXA
     
     AD1CON3bits.ADRC=1; // Clock derived from system clock
     AD1CON3bits.SAMC=3 ;//Auto-sample time 4TAD   MINIMAL IS 3TAD
-    AD1CON3bits.ADCS = 4 ;////Clock derived from system clock 10*Tcy=TAD  DEPENDS ON CLOCK !!
+    AD1CON3bits.ADCS=4 ;////Clock derived from system clock 10*Tcy=TAD  DEPENDS ON CLOCK !!
          
             
     AD1CON4bits.ADDMAEN=0; //Conversion results stored in ADCxBUF0 through ADCxBUFF registers; DMA is not used
