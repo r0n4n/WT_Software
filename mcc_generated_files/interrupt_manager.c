@@ -62,6 +62,6 @@ void INTERRUPT_Initialize (void)
     //    URXI: UART1 Receiver
     //    Priority: 1
         //IPC2bits.U1RXIP = 1;
-        IPC3bits.AD1IP = 1; // set ADC interrupt priority
+        IPC3bits.AD1IP = 2; // set ADC interrupt priority
 }
 
