@@ -5,10 +5,9 @@
     int omega ; 
     int omega_L ;
     int last_theta ; 
-    trigo_type cos_theta ; 
-    trigo_type sin_theta ; 
+    int cos_theta ; 
+    int sin_theta ; 
 
-    float theta;    
    
     tPID voltage_controler;
     tPID id_controler;
@@ -63,7 +62,8 @@ void VOC_initialize(int *id){
         /** SET THE INITIAL REFERENCES*/
         //voltage_controler.controlReference = 20 ; //Q15(UDC_REF);
         iq_controler.controlReference = 0;
-        omega = 0 ; 
+        omega = 63 ; 
+        last_theta = generate_theta() ; 
 
 }
 
@@ -71,18 +71,34 @@ void VOC_controller(state *state, signal *us){
    //RA2_SetHigh() ;
 
     /**********ESTIMATION + TRANSFORMATIONS **********/
+    RA2_SetHigh() ;
+    state->ul.alphabeta = abc_to_alphabeta(state->ul.abc) ; // 3 탎 (int)    
+    state->ul.theta = theta_estimator(state->ul.alphabeta); // time change with the value of alpha and beta
+
+    //state->ul.theta = generate_theta() ; 
+    //omega = derivate(last_theta, (int)theta, FS) ; 
+    //omega = omega_estimation(last_theta, state->ul.theta ) ; 
+   // last_theta = state->ul.theta ; 
     
-    state->ul.alphabeta = abc_to_alphabeta(state->ul.abc) ; // 3 탎 (int)
-//    state->ul.alphabeta.alpha = 1000 ; 
-//    state->ul.alphabeta.beta = 1000 ;
-//    state->ul.theta = theta_estimator(state->ul.alphabeta); // time change with the value of alpha and beta
     
-    omega = derivate(last_theta,theta,FS) ; 
-    /**************38탎*******/
-//    cos_theta = (trigo_type)(1/cosf(state->ul.theta)*10) ; 
-//    sin_theta = (trigo_type)(1/sinf(state->ul.theta)*10) ; 
+/******************************/
+    cos_theta = _Q15cosPI(state->ul.theta)/10 ; 
+    sin_theta = _Q15sinPI(state->ul.theta)/10 ;
+    
+    if (cos_theta!=0){
+        cos_theta = INT_MAX/(cos_theta) ; 
+    }
+    else cos_theta = INT_MAX ; 
+    if (sin_theta!=0){
+        sin_theta = INT_MAX/(sin_theta) ; 
+    }
+    else 
+        sin_theta = INT_MAX ; 
+/*****************************/
+
+
     //RA2_SetHigh() ;
-    //state->ul.dq = alphabeta_to_dq(state->ul.alphabeta, cos_theta, sin_theta); // 4 탎
+    state->ul.dq = alphabeta_to_dq(state->ul.alphabeta, cos_theta, sin_theta); // 4 탎
 //
 //    state->il.abc.c = -(state->il.abc.a + state->il.abc.b) ; // get the last current line
 //    state->il.alphabeta = abc_to_alphabeta(state->il.abc);
@@ -91,18 +107,17 @@ void VOC_controller(state *state, signal *us){
          
        // RA2_SetHigh();
        
-//        voltage_controler.controlReference = 8192 ; // Q15(0.25) ;
-//        voltage_controler.measuredOutput = 0 ; // Q15(-0.25); // 34 탎
+
         /****************CONTROL ****************/
        
        /***************VOLTAGE CONTROLER *********/
-        //voltage_controler.measuredOutput = state->vout; // 200 ns
+//        voltage_controler.measuredOutput = state->vout; // 200 ns
 //        PID (&voltage_controler); // 1.5탎
        /**********************************************/  
         
         /*************id LOOP ******************/
-//        id_controler.controlReference = voltage_controler.controlOutput; // ~0 탎
-//        id_controler.controlReference = 1000; // ~0 탎id_controler.measuredOutput = state->il.dq.d; // 34�
+////        id_controler.controlReference = voltage_controler.controlOutput; // ~0 탎
+//        id_controler.controlReference = 4000; // ~0 탎id_controler.measuredOutput = state->il.dq.d; // 34�
 //        id_controler.measuredOutput = state->il.dq.d; // 34탎
 //        PID (&id_controler); // 2 탎 
 //        /*************************************/
@@ -113,18 +128,19 @@ void VOC_controller(state *state, signal *us){
         /****************************************/
         
         /************ decoupling***************/
-//      omega_L = omega*L ; // 130ns
-      // us->dq.d = id_controler.controlOutput + state->ul.dq.d + state->il.dq.q*omega_L; // 500 ns 
-//       us->dq.q = iq_controler.controlOutput + state->ul.dq.q - state->il.dq.d*omega_L; // 500 ns 
+//        omega_L = omega*L ; // 130ns
+        //omega_L = 0 ;
+//       us->dq.d = id_controler.controlOutput + state->ul.dq.d/10 + (state->il.dq.q*omega_L)/10; // 500 ns 
+//       us->dq.q = iq_controler.controlOutput + state->ul.dq.q/10 - (state->il.dq.d*omega_L)/10; // 500 ns 
         /************************************/
 //        us->dq.d = 3000 ; 
 //        us->dq.q = 0 ; 
         /***** INVERSE TRANSFORMATION  *********/
 //        us->alphabeta = dq_to_alphabeta(us->dq, cos_theta, sin_theta); // 4.3탎
-      // us->abc = alphabeta_to_abc(us->alphabeta); // 2.6 탎 
+//       us->abc = alphabeta_to_abc(us->alphabeta); // 2.6 탎 
         /********************************************/
         
-       // RA2_SetLow() ;
+        RA2_SetLow() ;
 }
 
 
