@@ -99,12 +99,27 @@ void send_ul_abc_to_alphabeta(state state){
         sendVect(vect,5) ;
 }
 
+//void send_theta_estimation(state state){
+//    vect[0] =(float)state.ul.alphabeta.alpha ; 
+//    vect[1] = (float)state.ul.alphabeta.beta ;
+//    
+//}
+
+
+void send_theta_cos_theta(state state, trigo_type cos_theta, trigo_type sin_theta ){
+    vect[0] = (float)state.ul.theta ;
+    vect[1] = (float)cos_theta ; 
+    vect[2] = (float)sin_theta; 
+    sendVect(vect,3) ;
+}
+
+
 void send_ul_alphabeta_to_dq(state state){
         vect[0] = (float)state.ul.alphabeta.alpha ;
         vect[1] = (float)state.ul.alphabeta.beta ; 
         vect[2] = (float)state.ul.dq.d; 
         vect[3] = (float)state.ul.dq.q ; 
-        vect[4] = state.ul.theta ;   
+        vect[4] = (float)state.ul.theta ;   
         sendVect(vect,5) ;
 }
 
@@ -126,23 +141,35 @@ void send_il_alphabeta_to_dq(state state){
         sendVect(vect,5) ;
 }
 
-//void send_idq_controller(state state, tPID id_PID, tPID iq_PID ){
-//        vect[0] = (float)id_controler.controlOutput ; 
-//        vect[1] = (float)iq_controler.controlOutput ;  
-//        vect[2] = (float)il_dq.d;       
-//        vect[3] = (float)il_dq.q ;
-//        vect[4] = 0 ;
-//        sendVect(vect,5) ;
-//}
-//
-//void send_decoupler_controller(){
-//        vect[0] = (float)id_controler.controlOutput ; 
-//        vect[1] = (float)iq_controler.controlOutput ; 
-//        vect[2] = (float)us_dq.d; 
-//        vect[3] = (float)us_dq.q ;
-//        //vect[4] = (float)sense.iabc.c ;
-//        sendVect(vect,5) ;
-//}
+void send_id_controller(tPID id_PID){
+        vect[0] = (float)id_PID.controlReference; 
+        vect[1] = (float)id_PID.measuredOutput ;  
+        vect[2] = (float)id_PID.controlOutput;       
+        sendVect(vect,3) ;
+}
+
+void send_iq_controller(tPID iq_PID){
+        vect[0] = (float)iq_PID.controlReference; 
+        vect[1] = (float)iq_PID.measuredOutput ;  
+        vect[2] = (float)iq_PID.controlOutput;       
+        sendVect(vect,3) ;
+}
+
+void send_usd_decoupler_controller(state state,signal us, tPID id_PID){
+        vect[0] = (float)id_PID.controlOutput ; 
+        vect[1] = (float)state.ul.dq.d; 
+        vect[2] = (float)state.il.dq.q; 
+        vect[3] = (float)us.dq.d ;
+        sendVect(vect,4) ;
+}
+
+void send_usq_decoupler_controller(state state,signal us, tPID iq_PID){
+        vect[0] = (float)iq_PID.controlOutput ; 
+        vect[1] = (float)state.ul.dq.q; 
+        vect[2] = (float)state.il.dq.d; 
+        vect[3] = (float)us.dq.q ;
+        sendVect(vect,4) ;
+}
 
 void send_us_dq_to_alphabeta(signal us){
     vect[0] = (float)us.dq.d; 
@@ -160,4 +187,10 @@ void send_us_alphabeta_to_abc(signal us){
     vect[3] = (float)us.abc.b ;
     vect[4] = (float)us.abc.c ;
     sendVect(vect,5) ;
+}
+
+void send_omega(int omega, float theta) {
+    vect[0] = theta ; 
+    vect[1] = (float)omega ; 
+    sendVect(vect,2) ; 
 }
