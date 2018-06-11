@@ -11,18 +11,19 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
+    
 #include "typedef.h"
 #include <math.h>
 #include "transform.h"
 #include "parameters.h"
 #include <errno.h> /* for errno */
 #include <dsp.h>
+#include <LIMITS.H>
 
-float theta_estimator(alphabeta ul);
+int theta_estimator(alphabeta ul);
 alphabeta line_voltage_estimator(abc iabc, alphabeta us_alpha_beta  ) ; 
 alphabeta converter_voltage_estimator(float udc, abc S) ; 
-float derivate(float old, float new, float step_time) ; 
+int omega_estimation(int last, int new ) ; 
 
 #ifdef	__cplusplus
 }

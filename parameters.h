@@ -14,19 +14,22 @@ extern "C" {
 
 
 #define L 1 //0.0001f // line inductance 
-#define Kp_id 0.1 
-#define Ki_id 0.1 
-#define Kd_id 0
     
-#define Kp_iq 0.1 
-#define Ki_iq 0.1 
-#define Kd_iq 0
-    
-#define Kp_u 0.1 
-#define Ki_u 0.1 
+#define Kp_u 0.1
+#define Ki_u 0  //0.1 
 #define Kd_u 0
     
-#define Ts 0.0000001 
+#define Kp_id 1
+#define Ki_id 0 
+#define Kd_id 0
+    
+#define Kp_iq 1
+#define Ki_iq 0 
+#define Kd_iq 0
+    
+
+#define Ts 0.0001 
+#define FS 100
 
 #ifdef	__cplusplus
 }

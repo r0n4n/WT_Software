@@ -19,14 +19,14 @@ extern "C" {
 #define INTEG 
 //#define LONGINT
   
-typedef float trigo_type ;  
-//typedef _Q15 trigo_type ;
+//typedef int trigo_type ;  
+typedef _Q15 trigo_type ;
     
 typedef struct  {
 #ifdef LONGINT 
-    long int a; // R branch value 
-    long int b; // S branch value 
-    long int c; // T branch value 
+      long int a; // R branch value 
+      long int b; // S branch value 
+      long int c; // T branch value 
 #elif defined FRACT
     fractional a; // R branch value 
     fractional b; // S branch value 
@@ -63,6 +63,8 @@ typedef struct  {
 #elif defined INTEG
         int  d;
         int q;
+//    float d ; 
+//    float q ; 
 #endif 
 }dq;
     
@@ -80,6 +82,19 @@ typedef struct  {
         int vout ; 
 #endif
     }sensor;
+    
+typedef struct {
+    abc abc ; 
+    alphabeta alphabeta ; 
+    dq dq ; 
+    int theta ;
+}signal; 
+
+typedef struct {
+    signal ul ; 
+    signal il ; 
+    int vout ;
+}state;
 
 #ifdef	__cplusplus
 }

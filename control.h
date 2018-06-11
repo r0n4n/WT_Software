@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
 #include <stdio.h>
+#include <LIMITS.H>
 
     
 #include "typedef.h"
@@ -20,14 +21,29 @@ extern "C" {
 #include "estimation.h"
 #include "transform.h"
 #include "mcc_generated_files/adc1.h"
-#include "serialData.h"
+#include "common.h"
+#include "test_functions.h"
     
 #define UDC_REF 20 
     
-void VOC_controller(sensor sensor, abc *us_abc) ; 
-void VOC_initialize() ; 
+/* sensor declaration */
+//sensor sense;
+    
+//int var_test ;  
+    
+void VOC_controller(state *state, signal *us); 
+void VOC_initialize(int *id) ; 
+void send_ul_alphabeta_to_dq() ; 
     
 
+
+extern tPID voltage_controler;
+extern tPID id_controler;
+extern tPID iq_controler;
+
+extern int omega ; 
+extern int cos_theta ; 
+extern int sin_theta ; 
     
     
    

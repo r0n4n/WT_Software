@@ -32,8 +32,13 @@
 #define	XC_HEADER_TEMPLATE_H
 
 #include <xc.h> 
-#include "typedef.h"
 #include <stdbool.h>
+#include <stdio.h>
+
+#include "typedef.h"
+#include "mcc_generated_files/pin_manager.h"
+#include "serialData.h"
+#include "common.h"
 
 /*DEFINE */
 #define PWM_PERIOD 6000
@@ -42,7 +47,7 @@
 void init_pwm(void);
 void pwm_control(abc us);
 abc state_switch(void);
-void set_duty_cycle(abc us_abc, int udc) ; 
+void set_duty_cycle(abc us_abc, unsigned int udc) ; 
 
 // include processor files - each processor file is guarded.  
 
