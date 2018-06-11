@@ -27,8 +27,8 @@ alphabeta abc_to_alphabeta(abc abc) {
     
     alphabeta.alpha = (2*abc.a - abc.b - abc.c)/SQRT_SIX ; // divide by 10 
     alphabeta.beta = (abc.b - abc.c)/SQRT_TWO;
-    alphabeta.alpha *= 100 ;
-    alphabeta.beta *=100 ;
+    alphabeta.alpha *= 10 ;
+    alphabeta.beta *=10 ;
     
     return alphabeta; // THE VALUES ARE *1 000 
 }
@@ -42,7 +42,7 @@ dq alphabeta_to_dq(alphabeta alphabeta, trigo_type cos_theta , trigo_type sin_th
     
     dq.d = alphabeta.alpha/cos_theta + alphabeta.beta/sin_theta;
     dq.q = alphabeta.beta/cos_theta - alphabeta.alpha/sin_theta;
-    
+
     return dq;
 }
 

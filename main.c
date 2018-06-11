@@ -45,6 +45,7 @@
 
 #include "mcc_generated_files/mcc.h"
 #include <stdio.h>
+#include <time.h>
 #include "xc.h"
 #include "pwm.h"
 #include "serialData.h"
@@ -63,7 +64,15 @@ signal us ;
 
 int p ; 
 int *test1 ;
+
+_Q16 x = 3000 ; 
+_Q16 y = 3000 ; 
+_Q16 z ;
  
+
+clock_t last_time ; 
+
+clock_t new_time ; 
 // union u2
 //{
 //    int i; /**< acesso a pedaço de mémória de 32 bits através de tipo inteiro sem sinal. */
@@ -88,13 +97,14 @@ int main(void)
  
     //setReceiverMode() ; 
     setTransmitterMode() ;
+    
+  
 
     while (1)
     {
         
-        //RA2_Toggle() ; 
-
-//        RA2_SetLow() ; 
+//        RA2_Toggle() ;
+       
        
        //VOC_controller(sense,&us_abc) ; 
        //set_duty_cycle(us_abc, 10000) ;
@@ -109,12 +119,53 @@ int main(void)
 //            //RA2_SetLow() ; 
 //            
 //        }
-      //send_ul_abc_to_alphabeta(state_vector ) ;
-       //__delay32(100000);
-//       float i ; 
-//       for (i=0;i<10;i++){
-//           sendData(i) ;
-//       }
+//                   RA2_SetHigh() ;
+//       _Q15 t = _Q15atan(y);
+//      _Q15 t =_Q15atanYByX( -200, -31000);
+//    _Q15 t = x +y ;       
+//     send_omega(t, 0) ; 
+     
+//         RA2_SetLow() ; 
+//        z = _Q16mpy(x,y) ; 
+        if(AD1CON1bits.DONE){
+//            RA2_SetLow() ;
+//            RA2_Toggle() ;
+            
+            /********GET DATA*************/
+            get_sensor(&sense);
+            state_vector.ul.abc = sense.vabc ;
+        //    state_vector.il.abc = sense.iabc ;
+            state_vector.il.abc = sense.vabc ;
+            /**************************/
+////            
+            VOC_controller(&state_vector,&us) ;
+            
+            /*********SEND DATA********************/
+//            sendData((float)(last_time-clock())) ; 
+//            last_time = clock() ; 
+            
+//            send_measurements(state_vector ) ;
+//            send_ul_abc_to_alphabeta(state_vector ) ;
+//            send_theta_cos_theta( state_vector,  cos_theta,  sin_theta ) ; 
+            //send_omega(omega, state_vector.ul.theta) ; 
+            send_ul_alphabeta_to_dq(state_vector ) ; 
+//            //send_il_abc_to_alphabeta(state_vector ) ; 
+//            send_il_alphabeta_to_dq( state_vector) ;
+            
+            //send_id_controller(id_controler) ;
+//            send_iq_controller(iq_controler) ; 
+//            send_usd_decoupler_controller(state_vector,us,id_controler ) ;
+//            send_usq_decoupler_controller(state_vector,us, iq_controler) ; 
+
+            
+     
+            
+            
+            
+//            send_us_dq_to_alphabeta(us) ; 
+            //send_us_alphabeta_to_abc(us) ; 
+            /********************************************/
+        }
     
         
   
@@ -122,48 +173,49 @@ int main(void)
     return 1;
 }
 
-
+/*TAKE 20 µs to sample the 6 channels*/
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 {
-    //RA2_Toggle() ;  
+//    RA2_Toggle() ;  
+//    RA2_SetHigh() ;
     int i ; 
-    //RA2_SetHigh() ; 
+     
     for (i=0;i<6;i++){
         //RA2_SetHigh() ; 
         __delay32(16) ; // wait for the end of the conversion 
         AD1CON1bits.SAMP = 0 ;
         __delay32(60) ; // wait  ns
         AD1CON1bits.SAMP = 1 ; // start conversion   
+        
     }
-    //RA2_SetLow() ; 
+    //while (AD1CON1bits.DONE==0){} 
+//     RA2_Toggle() ;  
+//    __delay_us(2);
+//    RA2_SetLow() ;
+//    RA2_SetHigh() ;
+//     VOC_controller(&state_vector,&us) ;
 	IFS5bits.PWM1IF = false; 
+    //IFS0bits.AD1IF = true; 
 }
 
 
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 {
     
-    RA2_Toggle() ;
+    //RA2_Toggle() ;
     //RA2_SetHigh() ;
     
-    get_sensor(&sense);
-    state_vector.ul.abc = sense.vabc ; 
-    state_vector.il.abc = sense.iabc ; 
-    //state_vector.il.abc = sense.vabc ; 
-     
-    //VOC_controller(&state_vector,&us) ;
-    //state_vector.il.dq.d = 1000 ;
-    //send_measurements(state_vector ) ; 
-//    send_ul_abc_to_alphabeta(state_vector ) ;
-    //send_ul_alphabeta_to_dq(state_vector ) ; 
-    //send_il_abc_to_alphabeta(state_vector ) ; 
-    //send_il_alphabeta_to_dq( state_vector) ;
-    //send_us_dq_to_alphabeta(us) ; 
-    //send_us_alphabeta_to_abc(us) ; 
+
+
+   // VOC_controller(&state_vector,&us) ;
+//    send_omega(omega, state_vector.ul.theta) ; 
+
+
     
-    //__delay32(600000);
+    //__delay_us(10);
 //    set_duty_cycle(us_abc, 10000) ;
    // set_duty_cycle(us_abc, sense.vout) ;
+    
     //RA2_Toggle() ;
     //RA2_SetLow() ;
     // clear the ADC interrupt flag
@@ -173,3 +225,8 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 /**
  End of File
 */
+
+
+//void run(void) {
+//    
+//}
