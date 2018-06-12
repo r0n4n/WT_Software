@@ -7,6 +7,8 @@
     int last_theta ; 
     int cos_theta ; 
     int sin_theta ; 
+    int last_va ;
+    int increment ; 
 
    
     tPID voltage_controler;
@@ -62,43 +64,50 @@ void VOC_initialize(int *id){
         /** SET THE INITIAL REFERENCES*/
         //voltage_controler.controlReference = 20 ; //Q15(UDC_REF);
         iq_controler.controlReference = 0;
-        omega = 63 ; 
-        last_theta = generate_theta() ; 
+        increment = 0 ; 
+//        omega = 63 ; 
+        // = generate_theta() ; //
 
 }
 
 void VOC_controller(state *state, signal *us){
-   //RA2_SetHigh() ;
+//   RA2_SetHigh() ;
 
     /**********ESTIMATION + TRANSFORMATIONS **********/
-    RA2_SetHigh() ;
-    state->ul.alphabeta = abc_to_alphabeta(state->ul.abc) ; // 3 탎 (int)    
+//    RA2_SetHigh() ;
+    state->ul.alphabeta = abc_to_alphabeta(state->ul.abc) ; // 3 탎 (int)  
+     
     state->ul.theta = theta_estimator(state->ul.alphabeta); // time change with the value of alpha and beta
 
     //state->ul.theta = generate_theta() ; 
     //omega = derivate(last_theta, (int)theta, FS) ; 
-    //omega = omega_estimation(last_theta, state->ul.theta ) ; 
-   // last_theta = state->ul.theta ; 
     
-    
+    increment++ ; 
+    if (increment==2){
+       //omega = state->ul.theta  - last_theta ;  
+        omega = omega_estimation(last_theta, state->ul.theta ) ;
+        last_theta = state->ul.theta ;
+        increment = 0 ; 
+    }
+       
 /******************************/
-    cos_theta = _Q15cosPI(state->ul.theta)/10 ; 
-    sin_theta = _Q15sinPI(state->ul.theta)/10 ;
-    
-    if (cos_theta!=0){
-        cos_theta = INT_MAX/(cos_theta) ; 
-    }
-    else cos_theta = INT_MAX ; 
-    if (sin_theta!=0){
-        sin_theta = INT_MAX/(sin_theta) ; 
-    }
-    else 
-        sin_theta = INT_MAX ; 
+//    cos_theta = _Q15cosPI(state->ul.theta)/10 ; 
+//    sin_theta = _Q15sinPI(state->ul.theta)/10 ;
+//    
+//    if (cos_theta!=0){
+//        cos_theta = INT_MAX/(cos_theta) ; 
+//    }
+//    else cos_theta = INT_MAX ; 
+//    if (sin_theta!=0){
+//        sin_theta = INT_MAX/(sin_theta) ; 
+//    }
+//    else 
+//        sin_theta = INT_MAX ; 
 /*****************************/
 
 
     //RA2_SetHigh() ;
-    state->ul.dq = alphabeta_to_dq(state->ul.alphabeta, cos_theta, sin_theta); // 4 탎
+    //state->ul.dq = alphabeta_to_dq(state->ul.alphabeta, cos_theta, sin_theta); // 4 탎
 //
 //    state->il.abc.c = -(state->il.abc.a + state->il.abc.b) ; // get the last current line
 //    state->il.alphabeta = abc_to_alphabeta(state->il.abc);
@@ -140,7 +149,7 @@ void VOC_controller(state *state, signal *us){
 //       us->abc = alphabeta_to_abc(us->alphabeta); // 2.6 탎 
         /********************************************/
         
-        RA2_SetLow() ;
+//        RA2_SetLow() ;
 }
 
 
