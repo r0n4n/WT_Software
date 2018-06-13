@@ -56,7 +56,7 @@
 #include "control.h"
 
 sensor sense ; 
-state state_vector ; 
+
 abc us_abc ;
 signal ul_out ; 
 signal il_out ; 
@@ -71,9 +71,9 @@ int etat = 0 ;
 _Q16 x = 3000 ; 
 _Q16 y = 3000 ; 
 _Q16 z ;
-char ReceivedChar;
 
-bool sending = false; 
+
+
 
 void run(void) ; 
  
@@ -140,54 +140,10 @@ int main(void)
 
 
        /* Get the data */
-        setReceiverMode() ; 
-        if(U1STAbits.URXDA == 1 && sending ==false)
-        {
-            RA2_SetHigh() ;
-            __delay_us(100);
-            ReceivedChar = U1RXREG;
-            RA2_SetLow() ; 
-            U1STAbits.OERR = 0;
-
-        }
+        
             
-        
-//        ReceivedChar = 3 ;
-        if (ReceivedChar==3 ) {
-            sending = true ; 
-            counter++ ; 
-            if (counter == 32000) {
-//                RA2_SetHigh();
-                sending = false ; 
-                counter =0 ; 
-                __delay_us(10);
-//                RA2_SetLow() ; 
-
-            }
-            RA2_SetHigh();
-            setTransmitterMode() ;
-            send_omega(omega, state_vector.ul.theta, last_theta) ;
-            RA2_SetLow() ; 
-        }
-        
-        if (ReceivedChar==2 ) {
-            sending = true ; 
-            counter++ ; 
-            if (counter == 32000) {
-//                RA2_SetHigh();
-                sending = false ; 
-                counter =0 ; 
-                __delay_us(10);
-//                RA2_SetLow() ; 
-
-            }
-            RA2_SetHigh();
-            setTransmitterMode() ;
-            send_theta_cos_theta( state_vector,  cos_theta,  sin_theta ) ; 
-            RA2_SetLow() ; 
-        }
-        
-       
+        listen_RS485() ; 
+        send_if_required() ; 
 
         if (etat == 1){
             run() ;
@@ -201,9 +157,7 @@ int main(void)
 ////                    RA2_SetLow() ;
 //               
 //        }
-    
-        
-  
+
     }
     return 1;
 }

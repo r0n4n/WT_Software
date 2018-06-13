@@ -11,6 +11,8 @@
 
 #include "serialData.h"
 
+#define SEND_NUMBER 32000
+
 union u
 {
     unsigned int i; /**< acesso a pedaço de mémória de 32 bits através de tipo inteiro sem sinal. */
@@ -28,6 +30,10 @@ union u
 
 
  union u2 chariot ;
+ unsigned int sendCounter ; 
+ bool sending ; 
+ char ReceivedChar; 
+ state state_vector ; 
  
  float vect[5] ;
 /**
@@ -44,6 +50,9 @@ void serialInit() {
     chariot.s[1] = 0 ; 
     chariot.s[2] = 0 ; 
     chariot.s[3] = 0 ;
+    
+    sendCounter = 0 ;
+    sending = false ; 
 }
 
 void sendData(float data){
@@ -194,4 +203,48 @@ void send_omega(int omega, int theta, int last_theta) {
     vect[1] = omega ; 
     vect[2] = last_theta ; 
     sendVect(vect,3) ; 
+}
+
+void limited_counter(){
+    sendCounter++ ; 
+    if (sendCounter == SEND_NUMBER) {
+//                RA2_SetHigh();
+        sending = false ; 
+        sendCounter =0 ; 
+//        __delay_us(10);
+//                RA2_SetLow() ; 
+    }
+}
+
+void listen_RS485(){
+    setReceiverMode() ; 
+    if(U1STAbits.URXDA == 1 && sending ==false)
+    {
+        RA2_SetHigh() ;
+//        __delay_us(100);
+        ReceivedChar = U1RXREG;
+        RA2_SetLow() ; 
+        U1STAbits.OERR = 0;
+
+    }
+}
+
+void send_if_required(){
+     if (ReceivedChar==3 ) {
+            sending = true ; 
+            limited_counter() ;
+            RA2_SetHigh();
+            setTransmitterMode() ;
+            send_omega(omega, state_vector.ul.theta, last_theta) ;
+            RA2_SetLow() ; 
+        }
+     
+     if (ReceivedChar==2 ) {
+            sending = true ; 
+            limited_counter() ; 
+            RA2_SetHigh();
+            setTransmitterMode() ;
+            send_theta_cos_theta( state_vector,  cos_theta,  sin_theta ) ; 
+            RA2_SetLow() ; 
+        }
 }
