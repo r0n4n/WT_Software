@@ -11,7 +11,8 @@
 
 #include "serialData.h"
 
-#define SEND_NUMBER 32000
+#define SEND_NUMBER 20000
+#define FUNCTION_NUMBER 12
 
 union u
 {
@@ -28,12 +29,14 @@ union u
     char s[4]; /**< acesso a pedaço de mémória de 32 bits pedaços correspondentes a caractéres. */
 };
 
+void (*functions_array[FUNCTION_NUMBER])(); 
 
  union u2 chariot ;
  unsigned int sendCounter ; 
  bool sending ; 
  char ReceivedChar; 
  state state_vector ; 
+ signal us ; 
  
  float vect[5] ;
 /**
@@ -53,6 +56,21 @@ void serialInit() {
     
     sendCounter = 0 ;
     sending = false ; 
+    functions_array[0] = send_measurements ; 
+    functions_array[1] = send_ul_abc_to_alphabeta ;
+    functions_array[2] = send_omega ; 
+    functions_array[3] = send_ul_alphabeta_to_dq ; 
+    
+    functions_array[4] = send_il_abc_to_alphabeta ; 
+    functions_array[5] = send_il_alphabeta_to_dq ; 
+    
+    functions_array[6] = send_id_controller ; 
+    functions_array[7] = send_iq_controller ; 
+    functions_array[8] = send_usq_decoupler_controller ; 
+    functions_array[9] = send_usd_decoupler_controller ; 
+    
+    functions_array[10] = send_us_dq_to_alphabeta ; 
+    functions_array[11] = send_us_alphabeta_to_abc ;
 }
 
 void sendData(float data){
@@ -90,21 +108,21 @@ void setReceiverMode(){
     RB5_SetLow() ; 
 }
 
-void send_measurements(state state){
-        vect[0] = (float)state.ul.abc.a ; 
-        vect[1] = (float)state.ul.abc.b ; 
-        vect[2] = (float)state.ul.abc.c ; 
-        vect[3] = (float)state.il.abc.a; 
-        vect[4] = (float)state.il.abc.b; 
+void send_measurements(){
+        vect[0] = (float)state_vector.ul.abc.a ; 
+        vect[1] = (float)state_vector.ul.abc.b ; 
+        vect[2] = (float)state_vector.ul.abc.c ; 
+        vect[3] = (float)state_vector.il.abc.a; 
+        vect[4] = (float)state_vector.il.abc.b; 
         sendVect(vect,5) ;
 }
 
-void send_ul_abc_to_alphabeta(state state){
-        vect[0] = (float)state.ul.abc.a ; 
-        vect[1] = (float)state.ul.abc.b ; 
-        vect[2] = (float)state.ul.abc.c ; 
-        vect[3] = (float)state.ul.alphabeta.alpha; 
-        vect[4] = (float)state.ul.alphabeta.beta; 
+void send_ul_abc_to_alphabeta(){
+        vect[0] = (float)state_vector.ul.abc.a ; 
+        vect[1] = (float)state_vector.ul.abc.b ; 
+        vect[2] = (float)state_vector.ul.abc.c ; 
+        vect[3] = (float)state_vector.ul.alphabeta.alpha; 
+        vect[4] = (float)state_vector.ul.alphabeta.beta; 
         sendVect(vect,5) ;
 }
 
@@ -115,72 +133,80 @@ void send_ul_abc_to_alphabeta(state state){
 //}
 
 
-void send_theta_cos_theta(state state, trigo_type cos_theta, trigo_type sin_theta ){
-    vect[0] = (float)state.ul.theta ;
-    vect[1] = (float)cos_theta ; 
-    vect[2] = (float)sin_theta; 
-    sendVect(vect,3) ;
+//void send_theta_cos_theta(  trigo_type cos_theta, trigo_type sin_theta ){
+//    vect[0] = (float)state_vector.ul.theta ;
+//    vect[1] = (float)cos_theta ; 
+//    vect[2] = (float)sin_theta; 
+//    sendVect(vect,5) ;
+//}
+
+void send_omega() {
+    vect[0] = state_vector.ul.theta ; 
+    vect[1] = omega ; 
+    
+    
+    sendVect(vect,5) ; 
 }
 
 
-void send_ul_alphabeta_to_dq(state state){
-        vect[0] = (float)state.ul.alphabeta.alpha ;
-        vect[1] = (float)state.ul.alphabeta.beta ; 
-        vect[2] = (float)state.ul.dq.d; 
-        vect[3] = (float)state.ul.dq.q ; 
-        vect[4] = (float)state.ul.theta ;   
+void send_ul_alphabeta_to_dq( ){
+        vect[0] = (float)state_vector.ul.alphabeta.alpha ;
+        vect[1] = (float)state_vector.ul.alphabeta.beta ; 
+        vect[2] = (float)state_vector.ul.dq.d; 
+        vect[3] = (float)state_vector.ul.dq.q ; 
+        vect[4] = (float)state_vector.ul.theta ;   
         sendVect(vect,5) ;
 }
 
-void send_il_abc_to_alphabeta(state state){
-        vect[0] = (float)state.il.abc.a ; 
-        vect[1] = (float)state.il.abc.b  ; 
-        vect[2] = (float)state.il.abc.c ; 
-        vect[3] = (float)state.il.alphabeta.alpha; 
-        vect[4] = (float)state.il.alphabeta.beta; 
+void send_il_abc_to_alphabeta( ){
+        vect[0] = (float)state_vector.il.abc.a ; 
+        vect[1] = (float)state_vector.il.abc.b  ; 
+        vect[2] = (float)state_vector.il.abc.c ; 
+        vect[3] = (float)state_vector.il.alphabeta.alpha; 
+        vect[4] = (float)state_vector.il.alphabeta.beta; 
         sendVect(vect,5) ;
 } 
 
-void send_il_alphabeta_to_dq(state state){
-        vect[0] = (float)state.il.alphabeta.alpha ;
-        vect[1] = (float)state.il.alphabeta.beta ; 
-        vect[2] = (float)state.il.dq.d; 
-        vect[3] = (float)state.il.dq.q ; 
-        vect[4] = state.ul.theta ;   
+void send_il_alphabeta_to_dq( ){
+        vect[0] = (float)state_vector.il.alphabeta.alpha ;
+        vect[1] = (float)state_vector.il.alphabeta.beta ; 
+        vect[2] = (float)state_vector.il.dq.d; 
+        vect[3] = (float)state_vector.il.dq.q ; 
+        vect[4] = state_vector.ul.theta ;   
         sendVect(vect,5) ;
 }
 
-void send_id_controller(tPID id_PID){
-        vect[0] = (float)id_PID.controlReference; 
-        vect[1] = (float)id_PID.measuredOutput ;  
-        vect[2] = (float)id_PID.controlOutput;       
-        sendVect(vect,3) ;
+void send_id_controller( ){
+        vect[0] = (float)id_controler.controlReference; 
+        vect[1] = (float)id_controler.measuredOutput ;  
+        vect[2] = (float)id_controler.controlOutput;       
+        sendVect(vect,5) ;
 }
 
-void send_iq_controller(tPID iq_PID){
-        vect[0] = (float)iq_PID.controlReference; 
-        vect[1] = (float)iq_PID.measuredOutput ;  
-        vect[2] = (float)iq_PID.controlOutput;       
-        sendVect(vect,3) ;
+void send_iq_controller( ){
+        vect[0] = (float)iq_controler.controlReference; 
+        vect[1] = (float)iq_controler.measuredOutput ;  
+        vect[2] = (float)iq_controler.controlOutput;       
+        sendVect(vect,5) ;
 }
 
-void send_usd_decoupler_controller(state state,signal us, tPID id_PID){
-        vect[0] = (float)id_PID.controlOutput ; 
-        vect[1] = (float)state.ul.dq.d; 
-        vect[2] = (float)state.il.dq.q; 
+void send_usd_decoupler_controller(  ){
+        vect[0] = (float)id_controler.controlOutput ; 
+        vect[1] = (float)state_vector.ul.dq.d; 
+        vect[2] = (float)state_vector.il.dq.q; 
         vect[3] = (float)us.dq.d ;
-        sendVect(vect,4) ;
+        sendVect(vect,5) ;
 }
 
-void send_usq_decoupler_controller(state state,signal us, tPID iq_PID){
-        vect[0] = (float)iq_PID.controlOutput ; 
-        vect[1] = (float)state.ul.dq.q; 
-        vect[2] = (float)state.il.dq.d; 
+void send_usq_decoupler_controller(   ){
+        vect[0] = (float)iq_controler.controlOutput ; 
+        vect[1] = (float)state_vector.ul.dq.q; 
+        vect[2] = (float)state_vector.il.dq.d; 
         vect[3] = (float)us.dq.q ;
-        sendVect(vect,4) ;
+        sendVect(vect,5) ;
 }
 
-void send_us_dq_to_alphabeta(signal us){
+void send_us_dq_to_alphabeta( ){
     vect[0] = (float)us.dq.d; 
     vect[1] = (float)us.dq.q ;
     vect[2] = (float)us.alphabeta.alpha ; 
@@ -189,7 +215,7 @@ void send_us_dq_to_alphabeta(signal us){
     sendVect(vect,5) ;
 }
 
-void send_us_alphabeta_to_abc(signal us){
+void send_us_alphabeta_to_abc( ){
     vect[0] = (float)us.alphabeta.alpha ; 
     vect[1] = (float)us.alphabeta.beta ;
     vect[2] = (float)us.abc.a; 
@@ -198,12 +224,7 @@ void send_us_alphabeta_to_abc(signal us){
     sendVect(vect,5) ;
 }
 
-void send_omega(int omega, int theta, int last_theta) {
-    vect[0] = theta ; 
-    vect[1] = omega ; 
-    vect[2] = last_theta ; 
-    sendVect(vect,3) ; 
-}
+
 
 void limited_counter(){
     sendCounter++ ; 
@@ -230,21 +251,15 @@ void listen_RS485(){
 }
 
 void send_if_required(){
-     if (ReceivedChar==3 ) {
-            sending = true ; 
-            limited_counter() ;
-            RA2_SetHigh();
-            setTransmitterMode() ;
-            send_omega(omega, state_vector.ul.theta, last_theta) ;
-            RA2_SetLow() ; 
-        }
      
-     if (ReceivedChar==2 ) {
+     if (ReceivedChar>=0 && ReceivedChar<FUNCTION_NUMBER ) {
             sending = true ; 
             limited_counter() ; 
             RA2_SetHigh();
             setTransmitterMode() ;
-            send_theta_cos_theta( state_vector,  cos_theta,  sin_theta ) ; 
+//            send_theta_cos_theta( state_vector,  cos_theta,  sin_theta ) ; 
+//            send_measurements( state_vector) ; 
+            (*functions_array[(int)ReceivedChar])() ; 
             RA2_SetLow() ; 
         }
 }

@@ -60,7 +60,7 @@ sensor sense ;
 abc us_abc ;
 signal ul_out ; 
 signal il_out ; 
-signal us ; 
+
 
 //int omega ; 
 
