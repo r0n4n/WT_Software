@@ -66,11 +66,14 @@ signal us ;
 
 int p ; 
 int *test1 ;
-int counter ; 
+int counter = 0 ; 
 int etat = 0 ; 
 _Q16 x = 3000 ; 
 _Q16 y = 3000 ; 
 _Q16 z ;
+char ReceivedChar;
+
+bool sending = false; 
 
 void run(void) ; 
  
@@ -100,14 +103,33 @@ int main(void)
     
     VOC_initialize(test1) ; 
  
-    //setReceiverMode() ; 
-    setTransmitterMode() ;
+    setReceiverMode() ; 
+//    setTransmitterMode() ;
 
     while (1)
     {
         
 //        RA2_Toggle() ;
-       
+        /*********SEND DATA********************/
+//            sendData((float)(last_time-clock())) ; 
+//            last_time = clock() ; 
+            
+//            send_measurements(state_vector ) ;
+//            send_ul_abc_to_alphabeta(state_vector ) ;
+           
+//            send_omega(omega, state_vector.ul.theta) ; 
+//            send_ul_alphabeta_to_dq(state_vector ) ; 
+//            //send_il_abc_to_alphabeta(state_vector ) ; 
+
+            
+            //send_id_controller(id_controler) ;
+//            send_iq_controller(iq_controler) ; 
+//            send_usd_decoupler_controller(state_vector,us,id_controler ) ;
+//            send_usq_decoupler_controller(state_vector,us, iq_controler) ; 
+
+
+            /********************************************/
+        
 //       send_omega(omega, state_vector.ul.theta, last_theta) ; 
 //        send_ul_alphabeta_to_dq(state_vector ) ; 
         //send_ul_alphabeta_to_dq(state_vector ) ;
@@ -115,18 +137,57 @@ int main(void)
 //    send_il_alphabeta_to_dq( state_vector) ;
 //                    send_us_dq_to_alphabeta(us) ; 
 //                      send_us_alphabeta_to_abc(us) ; 
-       //set_duty_cycle(us_abc, 10000) ;
+
 
        /* Get the data */
-//        char ReceivedChar;
-//        if(U1STAbits.URXDA == 1)
-//        {
-//            //RA2_SetHigh() ;
-//            __delay32(60000);
-//            ReceivedChar = U1RXREG;
-//            //RA2_SetLow() ; 
-//            
-//        }
+        setReceiverMode() ; 
+        if(U1STAbits.URXDA == 1 && sending ==false)
+        {
+            RA2_SetHigh() ;
+            __delay_us(100);
+            ReceivedChar = U1RXREG;
+            RA2_SetLow() ; 
+            U1STAbits.OERR = 0;
+
+        }
+            
+        
+//        ReceivedChar = 3 ;
+        if (ReceivedChar==3 ) {
+            sending = true ; 
+            counter++ ; 
+            if (counter == 32000) {
+//                RA2_SetHigh();
+                sending = false ; 
+                counter =0 ; 
+                __delay_us(10);
+//                RA2_SetLow() ; 
+
+            }
+            RA2_SetHigh();
+            setTransmitterMode() ;
+            send_omega(omega, state_vector.ul.theta, last_theta) ;
+            RA2_SetLow() ; 
+        }
+        
+        if (ReceivedChar==2 ) {
+            sending = true ; 
+            counter++ ; 
+            if (counter == 32000) {
+//                RA2_SetHigh();
+                sending = false ; 
+                counter =0 ; 
+                __delay_us(10);
+//                RA2_SetLow() ; 
+
+            }
+            RA2_SetHigh();
+            setTransmitterMode() ;
+            send_theta_cos_theta( state_vector,  cos_theta,  sin_theta ) ; 
+            RA2_SetLow() ; 
+        }
+        
+       
 
         if (etat == 1){
             run() ;
@@ -218,28 +279,7 @@ void run(void) {
     /**************************/
     
     VOC_controller(&state_vector,&us) ;
-    
-    
-          /*********SEND DATA********************/
-//            sendData((float)(last_time-clock())) ; 
-//            last_time = clock() ; 
-            
-//            send_measurements(state_vector ) ;
-//            send_ul_abc_to_alphabeta(state_vector ) ;
-//            send_theta_cos_theta( state_vector,  cos_theta,  sin_theta ) ; 
-//            send_omega(omega, state_vector.ul.theta) ; 
-//            send_ul_alphabeta_to_dq(state_vector ) ; 
-//            //send_il_abc_to_alphabeta(state_vector ) ; 
-
-            
-            //send_id_controller(id_controler) ;
-//            send_iq_controller(iq_controler) ; 
-//            send_usd_decoupler_controller(state_vector,us,id_controler ) ;
-//            send_usq_decoupler_controller(state_vector,us, iq_controler) ; 
-
-
-            /********************************************/
-    
+  
 }
 
 /**
