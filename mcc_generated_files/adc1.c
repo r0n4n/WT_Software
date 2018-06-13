@@ -76,6 +76,8 @@ long AN3_unit;
 long AN4_unit;
 long AN5_unit;
 
+int last_ADC1BUF0 ;  
+
 
 
 

@@ -62,9 +62,12 @@ signal ul_out ;
 signal il_out ; 
 signal us ; 
 
+//int omega ; 
+
 int p ; 
 int *test1 ;
-
+int counter ; 
+int etat = 0 ; 
 _Q16 x = 3000 ; 
 _Q16 y = 3000 ; 
 _Q16 z ;
@@ -105,8 +108,13 @@ int main(void)
         
 //        RA2_Toggle() ;
        
-       
-
+//       send_omega(omega, state_vector.ul.theta, last_theta) ; 
+//        send_ul_alphabeta_to_dq(state_vector ) ; 
+        //send_ul_alphabeta_to_dq(state_vector ) ;
+//        send_id_controller(id_controler) ;
+//    send_il_alphabeta_to_dq( state_vector) ;
+//                    send_us_dq_to_alphabeta(us) ; 
+//                      send_us_alphabeta_to_abc(us) ; 
        //set_duty_cycle(us_abc, 10000) ;
 
        /* Get the data */
@@ -120,13 +128,18 @@ int main(void)
 //            
 //        }
 
-     
-//         RA2_SetLow() ; 
-
-        if(AD1CON1bits.DONE){
-//           
-               run() ; 
+        if (etat == 1){
+            run() ;
+            set_duty_cycle(us.abc, 6000) ;
+            etat = 0 ;
         }
+ 
+
+        
+//        if(AD1CON1bits.DONE){
+////                    RA2_SetLow() ;
+//               
+//        }
     
         
   
@@ -140,37 +153,54 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 //    RA2_Toggle() ;  
 //    RA2_SetHigh() ;
     int i ; 
-     
+//    RA2_SetHigh() ; 
+
     for (i=0;i<6;i++){
-        //RA2_SetHigh() ; 
-        __delay32(16) ; // wait for the end of the conversion 
-        AD1CON1bits.SAMP = 0 ;
         __delay32(60) ; // wait  ns
-        AD1CON1bits.SAMP = 1 ; // start conversion   
+        if (i==0) {
+            etat =1 ; 
+        }
+        AD1CON1bits.SAMP = 1 ; // sampling start  
+//        __delay_us(10);// Wait for sampling time (10 us)
+        __delay32(16) ; // wait for the end of the conversion 
+        AD1CON1bits.SAMP = 0 ; // conversion start 
+//        __delay_us(10);// Wait for sampling time (10 us)
+//        while (!AD1CON1bits.DONE);
         
     }
-    //while (AD1CON1bits.DONE==0){} 
-//     RA2_Toggle() ;  
+//    RA2_SetLow() ;
+
+    //    while (AD1CON1bits.DONE==0); 
+//    AD1CON1bits.DONE = 1 ;
+     
 //    __delay_us(2);
 //    RA2_SetLow() ;
 //    RA2_SetHigh() ;
-//     VOC_controller(&state_vector,&us) ;
+
+
+//    RA2_Toggle() ; 
+//        IFS0bits.AD1IF = true; 
+
 	IFS5bits.PWM1IF = false; 
-    //IFS0bits.AD1IF = true; 
+//        run() ; 
+
+     
 }
 
 
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 {
-    //RA2_Toggle() ;
-    //RA2_SetHigh() ;
+//    RA2_Toggle() ;
+//    RA2_SetHigh() ;
     //__delay_us(10);
 //    set_duty_cycle(us_abc, 10000) ;
    // set_duty_cycle(us_abc, sense.vout) ;
     
-    //RA2_Toggle() ;
-    //RA2_SetLow() ;
+//    RA2_Toggle() ;
+//    RA2_SetLow() ;
     // clear the ADC interrupt flag
+//    run() ; 
+//    __delay32(600) ; // wait  ns
     IFS0bits.AD1IF = false; 
 }
 
@@ -178,7 +208,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 
 void run(void) {
 //     RA2_SetLow() ;
-//            RA2_Toggle() ;
+//    RA2_Toggle() ;
     
     /********GET DATA*************/
     get_sensor(&sense);
@@ -197,18 +227,17 @@ void run(void) {
 //            send_measurements(state_vector ) ;
 //            send_ul_abc_to_alphabeta(state_vector ) ;
 //            send_theta_cos_theta( state_vector,  cos_theta,  sin_theta ) ; 
-            //send_omega(omega, state_vector.ul.theta) ; 
-            send_ul_alphabeta_to_dq(state_vector ) ; 
+//            send_omega(omega, state_vector.ul.theta) ; 
+//            send_ul_alphabeta_to_dq(state_vector ) ; 
 //            //send_il_abc_to_alphabeta(state_vector ) ; 
-//            send_il_alphabeta_to_dq( state_vector) ;
+
             
             //send_id_controller(id_controler) ;
 //            send_iq_controller(iq_controler) ; 
 //            send_usd_decoupler_controller(state_vector,us,id_controler ) ;
 //            send_usq_decoupler_controller(state_vector,us, iq_controler) ; 
 
-//            send_us_dq_to_alphabeta(us) ; 
-            //send_us_alphabeta_to_abc(us) ; 
+
             /********************************************/
     
 }

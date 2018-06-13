@@ -189,8 +189,9 @@ void send_us_alphabeta_to_abc(signal us){
     sendVect(vect,5) ;
 }
 
-void send_omega(int omega, float theta) {
+void send_omega(int omega, int theta, int last_theta) {
     vect[0] = theta ; 
-    vect[1] = (float)omega ; 
-    sendVect(vect,2) ; 
+    vect[1] = omega ; 
+    vect[2] = last_theta ; 
+    sendVect(vect,3) ; 
 }

@@ -12,17 +12,19 @@
 extern "C" {
 #endif
     
-#include "typedef.h"
+#include <stdio.h>
 #include <math.h>
-#include "transform.h"
-#include "parameters.h"
 #include <errno.h> /* for errno */
 #include <dsp.h>
 #include <LIMITS.H>
+    
+#include "common.h"
+#include "parameters.h"
+#include "typedef.h"
 
 int theta_estimator(alphabeta ul);
-alphabeta line_voltage_estimator(abc iabc, alphabeta us_alpha_beta  ) ; 
-alphabeta converter_voltage_estimator(float udc, abc S) ; 
+//alphabeta line_voltage_estimator(abc iabc, alphabeta us_alpha_beta  ) ; 
+//alphabeta converter_voltage_estimator(float udc, abc S) ; 
 int omega_estimation(int last, int new ) ; 
 
 #ifdef	__cplusplus

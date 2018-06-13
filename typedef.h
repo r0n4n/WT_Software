@@ -12,7 +12,7 @@
 extern "C" {
 #endif
     
-#include <dsp.h>
+//#include <dsp.h>
 #include <libq.h>
     
 //#define FRACT

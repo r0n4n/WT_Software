@@ -6,6 +6,6 @@ int saturation(int min, int max, int value){
     else return value ; 
 }
 
-int derivate(int before, int after, int fs){
-    return (after - before)*fs  ;
+int derivate(int before, int after, int ts){
+    return (after - before)*10/ts ;
 }

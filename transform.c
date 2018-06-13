@@ -42,7 +42,8 @@ dq alphabeta_to_dq(alphabeta alphabeta, trigo_type cos_theta , trigo_type sin_th
     
     dq.d = alphabeta.alpha/cos_theta + alphabeta.beta/sin_theta;
     dq.q = alphabeta.beta/cos_theta - alphabeta.alpha/sin_theta;
-
+    dq.d *= 10 ; 
+    dq.q *= 10 ; 
     return dq;
 }
 
@@ -69,8 +70,8 @@ alphabeta dq_to_alphabeta(dq dq, trigo_type cos_theta , trigo_type sin_theta){
  */
 abc alphabeta_to_abc(alphabeta alphabeta){    
     abc abc;
-    alphabeta.alpha *= 100 ; 
-    alphabeta.beta *= 100 ;
+    alphabeta.alpha *= 10 ; 
+    alphabeta.beta *= 10 ;
     
     abc.b = -alphabeta.alpha/SQRT_SIX;
     abc.c = abc.b - alphabeta.beta/SQRT_TWO;

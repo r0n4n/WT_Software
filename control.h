@@ -14,8 +14,8 @@ extern "C" {
 
 #include <stdio.h>
 #include <LIMITS.H>
-
     
+
 #include "typedef.h"
 #include "parameters.h"
 #include "estimation.h"
@@ -33,17 +33,18 @@ extern "C" {
     
 void VOC_controller(state *state, signal *us); 
 void VOC_initialize(int *id) ; 
-void send_ul_alphabeta_to_dq() ; 
+
     
 
 
-extern tPID voltage_controler;
-extern tPID id_controler;
-extern tPID iq_controler;
+//extern tPID voltage_controler;
+//extern tPID id_controler;
+//extern tPID iq_controler;
 
 extern int omega ; 
 extern int cos_theta ; 
 extern int sin_theta ; 
+extern int last_theta ; 
     
     
    

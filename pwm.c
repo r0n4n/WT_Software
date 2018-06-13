@@ -141,10 +141,14 @@ void set_duty_cycle(abc us_abc, unsigned int udc){
     //RA2_SetHigh() ;
     //int ref = (udc / (us_abc.a + udc/2 )); 
     int pwm_gain = udc / PWM_PERIOD ;  
-    int duty_cycle1 = (us_abc.a + udc/2)/pwm_gain ; 
-    int duty_cycle2 = (us_abc.b + udc/2)/pwm_gain  ; 
-    int duty_cycle3 = (us_abc.c + udc/2)/pwm_gain  ;
+    int duty_cycle1 = (us_abc.a + udc/2)/pwm_gain*10 ; 
+    int duty_cycle2 = (us_abc.b + udc/2)/pwm_gain*10  ; 
+    int duty_cycle3 = (us_abc.c + udc/2)/pwm_gain*10  ;
     // unsigned int ref =  ; 
+//    PDC1 = duty_cycle1 ; 
+//    PDC2 = duty_cycle2 ;
+//    PDC3 = duty_cycle3 ;
+    
     PDC1 = saturation(0,PWM_PERIOD,duty_cycle1) ; 
     PDC2 = saturation(0,PWM_PERIOD,duty_cycle2) ;
     PDC3 = saturation(0,PWM_PERIOD,duty_cycle3) ;
