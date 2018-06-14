@@ -241,11 +241,11 @@ void listen_RS485(){
     setReceiverMode() ; 
     if(U1STAbits.URXDA == 1 && sending ==false)
     {
-        RA2_SetHigh() ;
+//        RA2_SetHigh() ;
 //        __delay_us(100);
         ReceivedChar = U1RXREG;
-        RA2_SetLow() ; 
-        U1STAbits.OERR = 0;
+//        RA2_SetLow() ; 
+        U1STAbits.OERR = 0; // empty the receiving buffer 
 
     }
 }
