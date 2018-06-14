@@ -60,14 +60,9 @@
 #define GAIN_I_IN  6 // GAIN_I_IN = 3.3/4096*8*1000 = 6,4453125
 #define OFFSET_I_IN 12500 //offset current = 1.65*10*1000 = 16500000
 #define OFFSET_V_IN 33515 //offset input voltage = 1.65*20.3125*1000000 = 33515625
-#define ADC_GAIN 10 
+#define ADC_GAIN 10
 
-signed long AN0;
-signed long AN1;
-signed long AN2;
-signed long AN3;
-signed long AN4;
-signed long AN5;
+
 
 long AN0_unit;
 long AN1_unit;
@@ -75,10 +70,6 @@ long AN2_unit;
 long AN3_unit;
 long AN4_unit;
 long AN5_unit;
-
-int last_ADC1BUF0 ;  
-
-
 
 
 
@@ -168,124 +159,18 @@ void ADC1_Initialize (void)
  * 
  */
 void get_sensor(sensor *sensor){
-    
-        
+         
     /* Retrieving the sensed values from A/D buffer. The values are from 0 to 1024, converting from 0V to 3.3V */
 
-    //RA2_SetHigh() ;
-//    AN0 = (signed long)ADC1BUF0;            // yes then get ADC value
-//    AN1 = (signed long)ADC1BUF1;            // yes then get ADC value
-//    AN2 = (signed long)ADC1BUF2;            // yes then get ADC value
-//    AN3 = (signed long)ADC1BUF3;            // yes then get ADC value
-//    AN4 = (signed long)ADC1BUF4;   
-//    AN5 = (signed long)ADC1BUF5; 
-//         
-         
-    /* For debuguing purpose : printing all values retrieved from the buffer */
-//    printf("AN0=%dl   ", ADC1BUF0);
-//   //  __delay32(1000) ; // wait for the end of the conversion 
-//    printf("AN1=%dl   ", ADC1BUF1);
-//     //__delay32(1000) ; // wait for the end of the conversion 
-//    printf("AN2=%dl   ", ADC1BUF2);
-//    // __delay32(1000) ; // wait for the end of the conversion 
-//    printf("AN3=%dl   ", ADC1BUF3);
-//    // __delay32(1000) ; // wait for the end of the conversion 
-//    printf("AN4=%dl   ", ADC1BUF4);
-//    // __delay32(1000) ; // wait for the end of the conversion 
-//    printf("AN5=%dl   \n\r", ADC1BUF5);
-     //__delay32(1000) ; // wait for the end of the conversion 
-    /******************************************/
-//    long int i=0 ; 
-//    printf("i=%ld   ", i);
-//    printf("i=%ld   ", i+1);
-//    printf("i=%ld   ", i+2);
-//    printf("i=%ld   ", i+3);
-//    printf("i=%ld   ", i+4);
-//    printf("i=%ld  \n\r", i+5);
-    
-    /* SEND DATA TO SIMULINK*/
-//    sendData(AN0) ; 
-//    sendData(AN1) ;
-//    sendData(AN2) ;
-//    sendData(AN3) ;
-//    sendData(AN4) ;
-//    sendData(AN5) ;
-//    __delay_ms(1000);
-    /***************/
-    
-    /****PERFOORM THE CONVERSION ****/
-       
-//         AN0_unit=((((float)AN0/4096)*3.3)-2.48)*Gain_current; // ia 
-//         AN1_unit=((((float)AN1/4096)*3.3)-2.48)*Gain_current; // ib 
-//         AN2_unit=(((float)AN2/4096)*3.3)*Gain_Vout; // vout
-//         AN3_unit=(((float)AN3/4096)*3.3)*Gain_vin;
-//         AN4_unit=(((float)AN4/4096)*3.3)*Gain_vin;
-//         AN5_unit=(((float)AN5/4096)*3.3)*Gain_vin;
-         //AN2_unit=(((float)AN2/4096)*3.3)*Gain_frequency; // frequency
-//         AN0_unit=(long int)ADC1BUF0 *6445-1984000; // ia 
-//         AN1_unit=(long int)ADC1BUF1*6445-1984000; // ib 
-//         AN2_unit=(long int)ADC1BUF2*22659; // vout
-//         AN3_unit=(long int)ADC1BUF3*16365-33515625;
-//         AN4_unit=(long int)ADC1BUF4*16365-33515625;
-//         AN5_unit=(long int)ADC1BUF5*16365-33515625;
-//         
-//         AN0_unit=ADC1BUF0*GAIN_I_IN-OFFSET_I_IN; // ia 
-//         AN1_unit=ADC1BUF1*GAIN_I_IN-OFFSET_I_IN; // ib 
-//         AN2_unit=ADC1BUF2*GAIN_VOUT; // vout
-//         AN3_unit=ADC1BUF3*GAIN_VIN; // va 
-//         AN4_unit=ADC1BUF4*GAIN_VIN; // vb 
-//         AN5_unit=ADC1BUF5*GAIN_VIN; // vc 
-         
          /* ALL THE INPUT ARE *1000*/
 //    int test = -10000 ; 
          sensor->vabc.a=(int)(ADC1BUF0*GAIN_VIN)/ADC_GAIN; //-OFFSET_V_IN; // va
          sensor->vabc.b=(int)(ADC1BUF1*GAIN_VIN)/ADC_GAIN; //-OFFSET_V_IN; // vb
          sensor->vabc.c=(int)(ADC1BUF2*GAIN_VIN)/ADC_GAIN ; //-OFFSET_V_IN; // vc 
-         //sensor->vabc.c= test/1000 ; //-OFFSET_V_IN; // vc 
          sensor->iabc.a=(int)(ADC1BUF3*GAIN_I_IN)/ADC_GAIN ; //-OFFSET_I_IN; // ia 
          sensor->iabc.b=(int)(ADC1BUF4*GAIN_I_IN)/ADC_GAIN; //-OFFSET_I_IN; // ib 
-         sensor->vout=(int)(ADC1BUF5*GAIN_VOUT); // vout
-          
-//         float vect[5] ;
-//        vect[0] = (float)(sensor->vabc.a) ; 
-//        vect[1] = (float)(sensor->vabc.a) ; 
-//        vect[2] = (float)(sensor->vabc.a) ; 
-///        vect[3] =(float)(sensor->vabc.a) ; 
-//        vect[4] =  (float)(sensor->vabc.a); 
-// 
-//        sendVect(vect, 5 ) ; 
-         //sensor.rpm=AN2_unit;
-//         sendData((float)sensor->vabc.a) ; 
-//         sendData((float)sensor->iabc.a) ; 
-         //sendData((float)ADC1BUF0) ; 
-         //float i = 0 ; 
-//         for (i=0;i<10; i++){
-//             sendData(i) ; 
-//         }
-         //printf("sum=%ld   ", sensor->vabc.c + sensor->vabc.b + sensor->vabc.a);
-         
-         
-         
-         //RA2_SetLow() ;
-         
-       
-    /* Printing all the A/D results over the RS485  */
-//    printf("AN0=%ld   ", AN0_unit/1000);
-//    printf("AN1=%ld   ", AN1_unit/1000);
-//    printf("AN2=%ld   ", AN2_unit/1000);
-//    printf("AN3=%ld   ", AN3_unit/1000);
-//    printf("AN4=%ld   ", AN4_unit/1000);
-//    printf("AN5=%ld   \n\r", AN5_unit/1000);
-    /***************************************************/   
-    
-    /* Printing all the A/D results over the RS485  */
-//    printf("va=%ld   ", sensor->vabc.a/1000);
-//    printf("vb=%ld   ", sensor->vabc.b/1000);
-//    printf("vc=%ld   ",sensor->vabc.c/1000);
-//    printf("ia=%ld   ", sensor->iabc.a/1000);
-//    printf("ib=%ld   ", sensor->iabc.b/1000);
-//    printf("vout=%ld   \n\r",sensor->vout/1000);
-    /***************************************************/  
+         sensor->vout=(int)(ADC1BUF5*GAIN_VOUT); // vout have to be < PWM_PERIOD 
+
 }
 
 
