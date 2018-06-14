@@ -44,7 +44,7 @@ void init_pwm(void) {
     /* PWM2 I/O CONTROL REGISTER */
     IOCON2 = 0; //RAZ Before setting
     IOCON2bits.PENH = 1; //PWM2H pin is enabled 
-   IOCON2bits.PENL = 1; //PWM2L pin is enabled
+    IOCON2bits.PENL = 1; //PWM2L pin is enabled
     IOCON2bits.POLH = 0; //PWM2H is active low
     IOCON2bits.PMOD = 0; //Complementary pwm mode
     
@@ -91,15 +91,15 @@ void init_pwm(void) {
     /********************************************/
     
     /***************** PWM DEAD-TIME   ***********************/
-    DTR1 = 5 ;// PWM1 DEAD-TIME //more or less 100ns deadtime
-    DTR2 = 5 ; // PWM2 DEAD-TIME
-    DTR3 = 5 ; // PWM3 DEAD-TIME
+    DTR1 = DEAD_TIME ;// PWM1 DEAD-TIME //more or less 100ns deadtime
+    DTR2 = DEAD_TIME ; // PWM2 DEAD-TIME
+    DTR3 = DEAD_TIME ; // PWM3 DEAD-TIME
     /*******************************************************/
     
     /**************   ALTERNATE DEAD-TIME *************/
-    ALTDTR1 = 5 ; // PWM1 ALTERNATE DEAD-TIME
-    ALTDTR2 = 5 ;  // PWM2 ALTERNATE DEAD-TIME
-    ALTDTR3 = 5 ;  // PWM3 ALTERNATE DEAD-TIME
+    ALTDTR1 = DEAD_TIME ; // PWM1 ALTERNATE DEAD-TIME
+    ALTDTR2 = DEAD_TIME ;  // PWM2 ALTERNATE DEAD-TIME
+    ALTDTR3 = DEAD_TIME ;  // PWM3 ALTERNATE DEAD-TIME
     /***************************************************/
 
     
@@ -140,10 +140,10 @@ void set_duty_cycle(abc us_abc, unsigned int udc){
 //    PDC3 = (us_abc.c/udc + 0.5)*PWM_PERIOD ;  // set PWM3 duty cycle 
     //RA2_SetHigh() ;
     //int ref = (udc / (us_abc.a + udc/2 )); 
-    int pwm_gain = udc / PWM_PERIOD ;  
-    int duty_cycle1 = (us_abc.a + udc/2)/pwm_gain*10 ; 
-    int duty_cycle2 = (us_abc.b + udc/2)/pwm_gain*10  ; 
-    int duty_cycle3 = (us_abc.c + udc/2)/pwm_gain*10  ;
+    int pwm_gain = PWM_PERIOD/udc ;  // if udc < PWM_PERIOD
+    int duty_cycle1 = (us_abc.a + udc/2)*pwm_gain ; 
+    int duty_cycle2 = (us_abc.b + udc/2)*pwm_gain  ; 
+    int duty_cycle3 = (us_abc.c + udc/2)*pwm_gain  ;
     // unsigned int ref =  ; 
 //    PDC1 = duty_cycle1 ; 
 //    PDC2 = duty_cycle2 ;

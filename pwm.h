@@ -42,7 +42,8 @@
 
 /*DEFINE */
 #define PWM_PERIOD 6000
-#define INITIAL_DUTY_CYCLE 6000/2
+#define INITIAL_DUTY_CYCLE PWM_PERIOD/2
+#define DEAD_TIME PWM_PERIOD/100 
 
 void init_pwm(void);
 void pwm_control(abc us);
