@@ -14,6 +14,7 @@ extern "C" {
 
 
 #define L 1 //0.0001f // line inductance 
+#define L_INV 10000
     
 #define Kp_u 0.1
 #define Ki_u 0  //0.1 
