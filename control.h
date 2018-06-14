@@ -37,9 +37,9 @@ void VOC_initialize(int *id) ;
     
 
 
-//extern tPID voltage_controler;
-//extern tPID id_controler;
-//extern tPID iq_controler;
+extern tPID voltage_controler;
+extern tPID id_controler;
+extern tPID iq_controler;
 
 extern int omega ; 
 extern int cos_theta ; 
