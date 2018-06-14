@@ -10,6 +10,7 @@
 
 #include "typedef.h"
 #include "math.h"
+#include "common.h"
 
 #ifndef TRANSFORM_H
 #define	TRANSFORM_H
