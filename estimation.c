@@ -39,8 +39,12 @@ int theta_estimator(alphabeta ul){
     return Atan2CORDIC(ul.beta, ul.alpha );
 }
 
-
-
+/**
+ * This function return the estimation of omega in rad/s
+ * @param last
+ * @param new
+ * @return 
+ */
 int omega_estimation(int last, int new ){
     static int last_omega = 0  ; 
     if (last-new >THETA_STEP) {

@@ -54,6 +54,7 @@
 #include "transform.h"
 #include <libpic30.h>
 #include "control.h"
+//#include "common.h"
 
 sensor sense ; 
 
@@ -65,12 +66,14 @@ signal il_out ;
 //int omega ; 
 
 int p ; 
+long int q ; 
 int *test1 ;
 int counter = 0 ; 
 int etat = 0 ; 
-_Q16 x = 3000 ; 
-_Q16 y = 3000 ; 
-_Q16 z ;
+int x  ; 
+int  y  ; 
+int z ; 
+int l ;
 
 
 
@@ -105,49 +108,40 @@ int main(void)
  
     setReceiverMode() ; 
 //    setTransmitterMode() ;
-
+//    x = 10 ; 
+//    y = 10 ; 
+    
+//    x = _Q16reciprocalQ15(Q15(0.5)) ; 
+//    x = 0x8000 ; 
+//    z = (x & 0x8000 ) ;
+//    z = z <<16 ; 
+//    y = _Q16reciprocalQ15(Q15(0.5)) ; 
+//    p = 1234 ; 
+//    x = _Q16shl(2,16) ; 
+//    y = Q15(0.5) ; 
+//    z = _Q16reciprocalQ15( -16384 ); 
     while (1)
     {
         
 //        RA2_Toggle() ;
-        /*********SEND DATA********************/
-//            sendData((float)(last_time-clock())) ; 
-//            last_time = clock() ; 
-            
-//            send_measurements(state_vector ) ;
-//            send_ul_abc_to_alphabeta(state_vector ) ;
-           
-//            send_omega(omega, state_vector.ul.theta) ; 
-//            send_ul_alphabeta_to_dq(state_vector ) ; 
-//            //send_il_abc_to_alphabeta(state_vector ) ; 
 
-            
-            //send_id_controller(id_controler) ;
-//            send_iq_controller(iq_controler) ; 
-//            send_usd_decoupler_controller(state_vector,us,id_controler ) ;
-//            send_usq_decoupler_controller(state_vector,us, iq_controler) ; 
-
-
-            /********************************************/
-        
-//       send_omega(omega, state_vector.ul.theta, last_theta) ; 
-//        send_ul_alphabeta_to_dq(state_vector ) ; 
-        //send_ul_alphabeta_to_dq(state_vector ) ;
-//        send_id_controller(id_controler) ;
-//    send_il_alphabeta_to_dq( state_vector) ;
-//                    send_us_dq_to_alphabeta(us) ; 
-//                      send_us_alphabeta_to_abc(us) ; 
-
-
-       /* Get the data */
-        
-            
+//        x = -8 ;
+//        y = Q15(-0.5) ;
+//         RA2_SetHigh() ;
+//         p = p >>2  ; 
+//        z = _Q16mpy(x,y);
+//         z = x*y ; 
+//        z=  multi_integ_frac(x,  y) ; 
+//        y = Q15(0.5) ;
+//        z=  multi_integ_frac(x,  y) ; 
+//        RA2_SetLow() ;
+        //    PDC1 = omega ; 
         listen_RS485() ; 
         send_if_required() ; 
 
         if (etat == 1){
             run() ;
-            set_duty_cycle(us.abc, 6000) ;
+//            set_duty_cycle(us.abc, state_vector.vout) ;
             etat = 0 ;
         }
  
@@ -228,8 +222,12 @@ void run(void) {
     /********GET DATA*************/
     get_sensor(&sense);
     state_vector.ul.abc = sense.vabc ;
-//    state_vector.il.abc = sense.iabc ;
-    state_vector.il.abc = sense.vabc ;
+    state_vector.il.abc = sense.iabc ;
+//    state_vector.il.abc = sense.vabc ;
+//    state_vector.il.abc.a = sense.vabc.a/10 ; 
+//    state_vector.il.abc.b = sense.vabc.b/10 ; 
+//    state_vector.il.abc.c = sense.vabc.c/10 ; 
+    state_vector.vout = 200 ;
     /**************************/
     
     VOC_controller(&state_vector,&us) ;

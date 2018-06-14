@@ -69,7 +69,7 @@ void VOC_initialize(int *id){
 }
 
 void VOC_controller(state *state, signal *us){
-   RA2_SetHigh() ;
+//   RA2_SetHigh() ;
 
     /**********ESTIMATION + TRANSFORMATIONS **********/
 //    RA2_SetHigh() ;
@@ -89,6 +89,8 @@ void VOC_controller(state *state, signal *us){
     }
 
 /******************************/
+//    cos_theta = _Q15cosPI(state->ul.theta) ; 
+//    sin_theta = _Q15sinPI(state->ul.theta) ;
     cos_theta = _Q15cosPI(state->ul.theta)/10 ; 
     sin_theta = _Q15sinPI(state->ul.theta)/10 ;
     
@@ -104,11 +106,10 @@ void VOC_controller(state *state, signal *us){
 /*****************************/
 
     state->ul.dq = alphabeta_to_dq(state->ul.alphabeta, cos_theta, sin_theta); // 4 탎
-//
     state->il.abc.c = -(state->il.abc.a + state->il.abc.b) ; // get the last current line
     state->il.alphabeta = abc_to_alphabeta(state->il.abc);
     state->il.dq = alphabeta_to_dq(state->il.alphabeta, cos_theta, sin_theta); // 4탎 
-////    /****************end transformations ***********************/
+   /****************end transformations ***********************/
          
        // RA2_SetHigh();
        
@@ -116,15 +117,15 @@ void VOC_controller(state *state, signal *us){
         /****************CONTROL ****************/
        
        /***************VOLTAGE CONTROLER *********/
-//        voltage_controler.measuredOutput = state->vout; // 200 ns
-//        PID (&voltage_controler); // 1.5탎
+        voltage_controler.measuredOutput = state->vout; // 200 ns
+        PID (&voltage_controler); // 1.5탎
        /**********************************************/  
         
         /*************id LOOP ******************/
 ////        id_controler.controlReference = voltage_controler.controlOutput; // ~0 탎
         id_controler.controlReference = 4000; // 
         id_controler.measuredOutput = state->il.dq.d; // 34탎
-//                id_controler.measuredOutput = 0; // 34탎
+////                id_controler.measuredOutput = 0; // 34탎
         PID (&id_controler); // 2 탎 
 //        /*************************************/
         
@@ -134,10 +135,10 @@ void VOC_controller(state *state, signal *us){
         /****************************************/
         
         /************ decoupling***************/
-//        omega_L = omega*L ; // 130ns
-        omega_L = 94 ;
-       us->dq.d = id_controler.controlOutput + state->ul.dq.d + (state->il.dq.q*omega_L)/10; // 500 ns 
-       us->dq.q = iq_controler.controlOutput + state->ul.dq.q - (state->il.dq.d*omega_L)/10; // 500 ns 
+        omega_L = omega/L_INV ; // 130ns
+//        omega_L = 94 ;
+       us->dq.d = id_controler.controlOutput + state->ul.dq.d + (state->il.dq.q*omega_L); // 500 ns 
+       us->dq.q = iq_controler.controlOutput + state->ul.dq.q - (state->il.dq.d*omega_L); // 500 ns 
         /************************************/
 //        us->dq.d = 3000 ; 
 //        us->dq.q = 0 ; 
@@ -146,7 +147,7 @@ void VOC_controller(state *state, signal *us){
        us->abc = alphabeta_to_abc(us->alphabeta); // 2.6 탎 
         /********************************************/
         
-        RA2_SetLow() ;
+//        RA2_SetLow() ;
 }
 
 
