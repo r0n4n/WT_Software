@@ -30,7 +30,7 @@ extern "C" {
 
 #define Ts 0.0001 
     
-#define FS 70 // value to justify. It should be taked into account the sample frequency, the incremment for the derivation
+#define FS 20 // value to justify. It should be taked into account the sample frequency, the incremment for the derivation
 
 #ifdef	__cplusplus
 }
