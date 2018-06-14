@@ -7,8 +7,8 @@
 #define ONE_BY_SQRT_SIX 41 // 1/sqrt(6) = 0.4082
 #define ONE_BY_SQRT_TWO 71 // 1/sqrt(2)=  0.7071
 #define SQRT_TWO_BY_TRHEE 81 // sqrt(2/3) = 0.8165 
-#define SQRT_SIX 24  // sqrt(6) = 2.4495 * 10 
-#define SQRT_TWO 14 // sqrt(2) = 1.4142 * 10 
+#define SQRT_SIX 245  // sqrt(6) = 2.4495 * 10 
+#define SQRT_TWO 141 // sqrt(2) = 1.4142 * 10 
 #define ONE_BY_SQRT_TWO_BY_TRHEE 12 //1.2247 * 10 
  
 
@@ -27,8 +27,8 @@ alphabeta abc_to_alphabeta(abc abc) {
     
     alphabeta.alpha = (2*abc.a - abc.b - abc.c)/SQRT_SIX ; // divide by 10 
     alphabeta.beta = (abc.b - abc.c)/SQRT_TWO;
-    alphabeta.alpha *= 10 ;
-    alphabeta.beta *=10 ;
+    alphabeta.alpha *= 100 ;
+    alphabeta.beta *=100 ;
     
     return alphabeta; // THE VALUES ARE *1 000 
 }
@@ -42,8 +42,12 @@ dq alphabeta_to_dq(alphabeta alphabeta, trigo_type cos_theta , trigo_type sin_th
     
     dq.d = alphabeta.alpha/cos_theta + alphabeta.beta/sin_theta;
     dq.q = alphabeta.beta/cos_theta - alphabeta.alpha/sin_theta;
-    dq.d *= 10 ; 
-    dq.q *= 10 ; 
+//    dq.d =  multi_integ_frac(alphabeta.beta, sin_theta) ; // multi_integ_frac(alphabeta.alpha, cos_theta)  +
+//    dq.q =   multi_integ_frac(alphabeta.alpha, sin_theta) ; //multi_integ_frac(alphabeta.beta, cos_theta)
+//    dq.d = alphabeta.alpha ; 
+//    dq.q = sin_theta ; 
+//    dq.d *= 10 ; 
+//    dq.q *= 10 ; 
     return dq;
 }
 
@@ -73,9 +77,9 @@ abc alphabeta_to_abc(alphabeta alphabeta){
     alphabeta.alpha *= 10 ; 
     alphabeta.beta *= 10 ;
     
-    abc.b = -alphabeta.alpha/SQRT_SIX;
-    abc.c = abc.b - alphabeta.beta/SQRT_TWO;
-    abc.b +=  alphabeta.beta/SQRT_TWO; 
+    abc.b = -alphabeta.alpha/(SQRT_SIX/10);
+    abc.c = abc.b - alphabeta.beta/(SQRT_TWO/10);
+    abc.b +=  alphabeta.beta/(SQRT_TWO/10); 
     abc.a = alphabeta.alpha/ONE_BY_SQRT_TWO_BY_TRHEE ;  
     return abc;
 }
