@@ -96,6 +96,13 @@ typedef struct {
     int vout ;
 }state;
 
+typedef struct {
+    int imag ; 
+    int real ; 
+    int module ; 
+    int angle ; 
+}complex;
+
 #ifdef	__cplusplus
 }
 #endif

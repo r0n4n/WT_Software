@@ -33,6 +33,7 @@ extern "C" {
     
 void VOC_controller(state *state, signal *us); 
 void VOC_initialize(int *id) ; 
+void reference_voltage_saturation(state *state, signal *us) ;
 
     
 

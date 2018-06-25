@@ -107,7 +107,8 @@ void init_pwm(void) {
     IFS5bits.PWM1IF = false;
     IEC5bits.PWM1IE = true; // enable PWM1 interrupt 
    
-    PTCONbits.PTEN = 1; // enable PWM
+    _PWM_enable() ;
+    
 }
 
 
@@ -161,3 +162,12 @@ void set_duty_cycle(abc us_abc, unsigned int udc){
 //    PDC2 = (us_abc.b/udc + 0.5)*PWM_PERIOD ; // set PWM2 duty cycle 
 //    PDC3 = (us_abc.c/udc + 0.5)*PWM_PERIOD ;  // set PWM3 duty cycle 
 }
+
+void _PWM_enable(){
+    PTCONbits.PTEN = 1; // enable PWM
+}
+
+void _PWM_disable(){
+    PTCONbits.PTEN = 0; // enable PWM
+}
+

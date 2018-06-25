@@ -36,6 +36,7 @@ void listen_RS485() ;
 void send_if_required() ; 
 
 void send_measurements( ) ; //0
+void send_dc_voltage() ; 
 void send_ul_abc_to_alphabeta( ) ; //1
 void send_omega() ;  //
 void send_ul_alphabeta_to_dq( ) ;

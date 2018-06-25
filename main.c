@@ -105,21 +105,22 @@ int main(void)
     serialInit() ; 
     
     VOC_initialize(test1) ; 
- 
-    setReceiverMode() ; 
-//    setTransmitterMode() ;
-//    x = 10 ; 
-//    y = 10 ; 
+    x = Q15(0.5) ; 
+    z= _Q15sqrt(x) ; 
+
+    y = _Q15norm(x) ; 
+   
     
-//    x = _Q16reciprocalQ15(Q15(0.5)) ; 
-//    x = 0x8000 ; 
-//    z = (x & 0x8000 ) ;
-//    z = z <<16 ; 
-//    y = _Q16reciprocalQ15(Q15(0.5)) ; 
-//    p = 1234 ; 
-//    x = _Q16shl(2,16) ; 
-//    y = Q15(0.5) ; 
-//    z = _Q16reciprocalQ15( -16384 ); 
+    setReceiverMode() ; 
+//    PDC1 = 1 ; 
+//    PDC2 = 2 ; 
+//    PDC3 = 3 ;
+//    setTransmitterMode() ;
+    us.dq.d = 1 ; 
+    us.dq.q = 10 ; 
+    state_vector.vout = 50 ;  
+    reference_voltage_saturation(&state_vector, &us) ; 
+
     while (1)
     {
         
@@ -136,14 +137,15 @@ int main(void)
 //        z=  multi_integ_frac(x,  y) ; 
 //        RA2_SetLow() ;
         //    PDC1 = omega ; 
-        listen_RS485() ; 
-        send_if_required() ; 
-
-        if (etat == 1){
-            run() ;
-//            set_duty_cycle(us.abc, state_vector.vout) ;
-            etat = 0 ;
-        }
+//        listen_RS485() ; 
+//        send_if_required() ; 
+//
+//        if (etat == 1){
+//            run() ;
+//            
+////            set_duty_cycle(us.abc, state_vector.vout) ;
+//            etat = 0 ;
+//        }
  
 
         
@@ -227,7 +229,7 @@ void run(void) {
 //    state_vector.il.abc.a = sense.vabc.a/10 ; 
 //    state_vector.il.abc.b = sense.vabc.b/10 ; 
 //    state_vector.il.abc.c = sense.vabc.c/10 ; 
-    state_vector.vout = 200 ;
+//    state_vector.vout = 200 ;
     /**************************/
     
     VOC_controller(&state_vector,&us) ;

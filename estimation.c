@@ -3,7 +3,7 @@
 
 
 
-fractional Atan2CORDIC( fractional y, fractional x );
+
 
 #define THETA_STEP INT_MAX // 3*100
 #define PI_10 314 

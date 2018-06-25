@@ -55,23 +55,14 @@
 #include <libpic30.h>
 
 
+//#define VREF 3.3 
+//#define _12BIT_MAX 4096 
 #define GAIN_VIN 16 // GAIN_VIN = 3.3/4096*20.3125*1000 = 16.3651
 #define GAIN_VOUT  22     // GAIN_VOUT = 3.3/4096*28.125*1000 = 22.659
 #define GAIN_I_IN  6 // GAIN_I_IN = 3.3/4096*8*1000 = 6,4453125
 #define OFFSET_I_IN 12500 //offset current = 1.65*10*1000 = 16500000
 #define OFFSET_V_IN 33515 //offset input voltage = 1.65*20.3125*1000000 = 33515625
 #define ADC_GAIN 10
-
-
-
-long AN0_unit;
-long AN1_unit;
-long AN2_unit;
-long AN3_unit;
-long AN4_unit;
-long AN5_unit;
-
-
 
 /**
   Section: Data Type Definitions
@@ -140,13 +131,6 @@ void ADC1_Initialize (void)
    
     __delay32(16) ; // wait 400 ns
     
-    //    //float Gain_frequency = 66;  //Hardware frequency to voltage converter has a 66HZ/V output
-//    float Gain_current = 8;     //Hardware current sensors have a 8 A/V. The measurement is signed and the 0A reference is 2.5V. 
-//                                //The sensors amplitude is 20A, the gain is 20A/2.5V = 8A/V
-//                                //FOR NOW THE MAX POSITIVE CURRENT MEASURABLE BEFORE SATURATION IS (3.3V-2.5V)*8A/V=6.4A
-//                                //CONVERTING THE 5V output in 3.3V output will be necessary to get 20A full scale measurement
-//    float Gain_Vout = 28.125;   //Hardware voltage divider is designed for a 90V max voltage. The gain is 90V/3.2V = 28.125
-//    float Gain_vin= 20.3125; // set gain value
 }
 
 /*
@@ -163,13 +147,12 @@ void get_sensor(sensor *sensor){
     /* Retrieving the sensed values from A/D buffer. The values are from 0 to 1024, converting from 0V to 3.3V */
 
          /* ALL THE INPUT ARE *1000*/
-//    int test = -10000 ; 
          sensor->vabc.a=(int)(ADC1BUF0*GAIN_VIN)/ADC_GAIN; //-OFFSET_V_IN; // va
          sensor->vabc.b=(int)(ADC1BUF1*GAIN_VIN)/ADC_GAIN; //-OFFSET_V_IN; // vb
          sensor->vabc.c=(int)(ADC1BUF2*GAIN_VIN)/ADC_GAIN ; //-OFFSET_V_IN; // vc 
-         sensor->iabc.a=(int)(ADC1BUF3*GAIN_I_IN)/ADC_GAIN ; //-OFFSET_I_IN; // ia 
+         sensor->iabc.c=(int)(ADC1BUF3*GAIN_I_IN)/ADC_GAIN ; //-OFFSET_I_IN; // ia 
          sensor->iabc.b=(int)(ADC1BUF4*GAIN_I_IN)/ADC_GAIN; //-OFFSET_I_IN; // ib 
-         sensor->vout=(int)(ADC1BUF5*GAIN_VOUT); // vout have to be < PWM_PERIOD 
+         sensor->vout=(int)((ADC1BUF5)*GAIN_VOUT); // vout have to be < PWM_PERIOD 
 
 }
 

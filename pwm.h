@@ -49,6 +49,8 @@ void init_pwm(void);
 void pwm_control(abc us);
 abc state_switch(void);
 void set_duty_cycle(abc us_abc, unsigned int udc) ; 
+void _PWM_enable() ; 
+void _PWM_disable() ;
 
 // include processor files - each processor file is guarded.  
 

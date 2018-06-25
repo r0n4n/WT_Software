@@ -12,7 +12,7 @@
 #include "serialData.h"
 
 #define SEND_NUMBER 20000
-#define FUNCTION_NUMBER 12
+#define FUNCTION_NUMBER 13
 
 union u
 {
@@ -71,6 +71,7 @@ void serialInit() {
     
     functions_array[10] = send_us_dq_to_alphabeta ; 
     functions_array[11] = send_us_alphabeta_to_abc ;
+    functions_array[12] = send_dc_voltage ; 
 }
 
 void sendData(float data){
@@ -117,6 +118,10 @@ void send_measurements(){
         sendVect(vect,5) ;
 }
 
+void send_dc_voltage() {
+    vect[0] = (float)state_vector.vout ; 
+    sendVect(vect,5) ; 
+}
 void send_ul_abc_to_alphabeta(){
         vect[0] = (float)state_vector.ul.abc.a ; 
         vect[1] = (float)state_vector.ul.abc.b ; 

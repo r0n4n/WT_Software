@@ -1,5 +1,6 @@
 #include "common.h"
 
+
 int saturation(int min, int max, int value){
     if (value>max)  return max ; 
     else if (value<min) return min ; 
@@ -31,3 +32,25 @@ _Q15 multi_integ_frac(int integer,  int fract){
     _Q15 z = _Q16mpy(x,y)>>16 ; 
     return z ; 
 }
+
+int module_square(complex complex){
+    int square = complex.real*complex.real + complex.imag*complex.imag ; 
+    return square  ;  
+}
+
+int get_complex_angle(complex complex){
+    return Atan2CORDIC(complex.imag, complex.real ) ; 
+}
+
+void complex_real_imag(complex *complex) {
+    complex->real = complex->module /inverse_trigo(_Q15cosPI(complex->angle)) ; 
+    complex->imag = complex->module /inverse_trigo(_Q15sinPI(complex->angle)) ;
+}
+
+int inverse_trigo(int trigo){
+    if (trigo!=0){
+        trigo = INT_MAX/(trigo) ; 
+    }
+    else trigo = INT_MAX ; 
+    return trigo ; 
+} 
