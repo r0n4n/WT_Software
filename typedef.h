@@ -99,7 +99,7 @@ typedef struct {
 typedef struct {
     int imag ; 
     int real ; 
-    int module ; 
+    long int module ; 
     int angle ; 
 }complex;
 

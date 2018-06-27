@@ -23,7 +23,7 @@ fractional Atan2CORDIC( fractional y, fractional x );
 int saturation(int min, int max, int value) ; 
 int derivate(int before, int after, int ts) ; 
 _Q15 multi_integ_frac(int integer,  int fract) ;
-int module_square(complex complex) ;
+long int module_square(complex complex) ;
 int get_complex_angle(complex complex) ; 
 void complex_real_imag(complex *complex) ; 
 int inverse_trigo(int trigo) ; 

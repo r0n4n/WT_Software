@@ -23,20 +23,24 @@ extern "C" {
 #include "mcc_generated_files/adc1.h"
 #include "common.h"
 #include "test_functions.h"
-    
-#define UDC_REF 20 
+
     
 /* sensor declaration */
 //sensor sense;
     
 //int var_test ;  
     
-void VOC_controller(state *state, signal *us); 
-void VOC_initialize(int *id) ; 
-void reference_voltage_saturation(state *state, signal *us) ;
+void VOC_controller(); 
+void VOC_initialize() ; 
+void reference_voltage_saturation() ;
 
     
 
+extern bool sending ;
+extern char ReceivedChar; 
+extern state state_vector ; 
+extern signal us ; 
+extern signal us_sat ; 
 
 extern tPID voltage_controler;
 extern tPID id_controler;

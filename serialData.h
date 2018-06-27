@@ -20,12 +20,10 @@ extern "C" {
     #include "control.h"
     
     
-extern bool sending ;
-extern char ReceivedChar; 
-extern state state_vector ; 
-extern signal us ; 
+
     
 void sendData(float data) ; 
+void send_int(int data_int) ; 
 void ReceiveData(float data) ; 
 void serialInit() ; 
 void sendVect(float *vect, int length ) ; 
@@ -52,7 +50,22 @@ void send_us_dq_to_alphabeta( );
 void send_us_alphabeta_to_abc( ); 
 //void send_theta_cos_theta( state, trigo_type cos_theta, trigo_type sin_theta ) ;
 
+ union u2
+{
+    int i; /**< acesso a pedaço de mémória de 32 bits através de tipo inteiro sem sinal. */
+    float f; 
+    char s[4]; /**< acesso a pedaço de mémória de 32 bits pedaços correspondentes a caractéres. */
+};
 
+union u
+{
+    int i; /**< acesso a pedaço de mémória de 32 bits através de tipo inteiro sem sinal. */
+    float f; 
+    double d ; 
+    uint8_t s[4]; /**< acesso a pedaço de mémória de 32 bits pedaços correspondentes a caractéres. */
+};
+
+extern  union u2 chariot ;
 #ifdef	__cplusplus
 }
 #endif

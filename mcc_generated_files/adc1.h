@@ -52,6 +52,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <LIMITS.h>
 #include "../typedef.h"
 #include <xc.h>
 #include "../serialData.h"
@@ -63,6 +64,8 @@
     extern "C" {
 
 #endif
+        
+#define MAX_SIGNED_12BITS 2048
 /**
   Section: ISR Helper Macros
 */

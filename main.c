@@ -67,7 +67,7 @@ signal il_out ;
 
 int p ; 
 long int q ; 
-int *test1 ;
+
 int counter = 0 ; 
 int etat = 0 ; 
 int x  ; 
@@ -104,11 +104,11 @@ int main(void)
     SYSTEM_Initialize(); // hardware initialization 
     serialInit() ; 
     
-    VOC_initialize(test1) ; 
-    x = Q15(0.5) ; 
-    z= _Q15sqrt(x) ; 
-
-    y = _Q15norm(x) ; 
+    VOC_initialize() ; 
+//    x = Q15(0.5) ; 
+//    z= _Q15sqrt(x) ; 
+//
+//    y = _Q15norm(x) ; 
    
     
     setReceiverMode() ; 
@@ -116,16 +116,18 @@ int main(void)
 //    PDC2 = 2 ; 
 //    PDC3 = 3 ;
 //    setTransmitterMode() ;
-    us.dq.d = 1 ; 
-    us.dq.q = 10 ; 
-    state_vector.vout = 50 ;  
-    reference_voltage_saturation(&state_vector, &us) ; 
+//    us.dq.d = 32000 ; 
+//    us.dq.q = 10 ; 
+////    q = us.dq.d ; 
+//    state_vector.vout = 32676 ;  
+//    reference_voltage_saturation() ; 
 
     while (1)
     {
         
 //        RA2_Toggle() ;
-
+        
+//         UART1_Write(3) ; 
 //        x = -8 ;
 //        y = Q15(-0.5) ;
 //         RA2_SetHigh() ;
@@ -137,23 +139,23 @@ int main(void)
 //        z=  multi_integ_frac(x,  y) ; 
 //        RA2_SetLow() ;
         //    PDC1 = omega ; 
-//        listen_RS485() ; 
-//        send_if_required() ; 
+        listen_RS485() ; 
+        send_if_required() ; 
+//        int i = 0 ; 
+//        for (i=0;i<10;i++){
+//            send_int(3) ; 
+//            sendData(3.0) ; 
+//            sendData(chariot.f) ;
+//             __delay_us(1000) ; // wait for the end of the conversion 
+
+//        }
 //
-//        if (etat == 1){
-//            run() ;
-//            
-////            set_duty_cycle(us.abc, state_vector.vout) ;
-//            etat = 0 ;
-//        }
- 
+        if (etat == 1){
+//                RA2_Toggle() ;  
 
-        
-//        if(AD1CON1bits.DONE){
-////                    RA2_SetLow() ;
-//               
-//        }
-
+            run() ;      
+            etat = 0 ;
+        }
     }
     return 1;
 }
@@ -163,55 +165,26 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 {
 //    RA2_Toggle() ;  
 //    RA2_SetHigh() ;
-    int i ; 
 //    RA2_SetHigh() ; 
-
+    int i ; 
     for (i=0;i<6;i++){
         __delay32(60) ; // wait  ns
         if (i==0) {
             etat =1 ; 
         }
         AD1CON1bits.SAMP = 1 ; // sampling start  
-//        __delay_us(10);// Wait for sampling time (10 us)
         __delay32(16) ; // wait for the end of the conversion 
-        AD1CON1bits.SAMP = 0 ; // conversion start 
-//        __delay_us(10);// Wait for sampling time (10 us)
-//        while (!AD1CON1bits.DONE);
-        
+        AD1CON1bits.SAMP = 0 ; // conversion start         
     }
 //    RA2_SetLow() ;
-
-    //    while (AD1CON1bits.DONE==0); 
-//    AD1CON1bits.DONE = 1 ;
-     
-//    __delay_us(2);
-//    RA2_SetLow() ;
 //    RA2_SetHigh() ;
-
-
 //    RA2_Toggle() ; 
-//        IFS0bits.AD1IF = true; 
-
-	IFS5bits.PWM1IF = false; 
-//        run() ; 
-
-     
+	IFS5bits.PWM1IF = false;    
 }
 
 
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 {
-//    RA2_Toggle() ;
-//    RA2_SetHigh() ;
-    //__delay_us(10);
-//    set_duty_cycle(us_abc, 10000) ;
-   // set_duty_cycle(us_abc, sense.vout) ;
-    
-//    RA2_Toggle() ;
-//    RA2_SetLow() ;
-    // clear the ADC interrupt flag
-//    run() ; 
-//    __delay32(600) ; // wait  ns
     IFS0bits.AD1IF = false; 
 }
 
@@ -219,21 +192,20 @@ void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 
 void run(void) {
 //     RA2_SetLow() ;
-//    RA2_Toggle() ;
+    //RA2_Toggle() ;
     
     /********GET DATA*************/
     get_sensor(&sense);
     state_vector.ul.abc = sense.vabc ;
     state_vector.il.abc = sense.iabc ;
-//    state_vector.il.abc = sense.vabc ;
-//    state_vector.il.abc.a = sense.vabc.a/10 ; 
-//    state_vector.il.abc.b = sense.vabc.b/10 ; 
-//    state_vector.il.abc.c = sense.vabc.c/10 ; 
-//    state_vector.vout = 200 ;
+    state_vector.vout = sense.vout ; 
     /**************************/
-    
-    VOC_controller(&state_vector,&us) ;
-  
+//    id_controler.controlReference = 100; // ~0 µs
+//    id_controler.measuredOutput = 0; // 34µs
+//    PID (&id_controler); // 2 µs
+    VOC_controller() ; // run the controller
+    set_duty_cycle(us_sat.abc, state_vector.vout) ; // change the duty cycle
+
 }
 
 /**

@@ -62,6 +62,7 @@
 #define GAIN_I_IN  6 // GAIN_I_IN = 3.3/4096*8*1000 = 6,4453125
 #define OFFSET_I_IN 12500 //offset current = 1.65*10*1000 = 16500000
 #define OFFSET_V_IN 33515 //offset input voltage = 1.65*20.3125*1000000 = 33515625
+ 
 #define ADC_GAIN 10
 
 /**
@@ -145,14 +146,14 @@ void ADC1_Initialize (void)
 void get_sensor(sensor *sensor){
          
     /* Retrieving the sensed values from A/D buffer. The values are from 0 to 1024, converting from 0V to 3.3V */
-
+    /*The values of the buffer are signed 12bits*/
          /* ALL THE INPUT ARE *1000*/
          sensor->vabc.a=(int)(ADC1BUF0*GAIN_VIN)/ADC_GAIN; //-OFFSET_V_IN; // va
          sensor->vabc.b=(int)(ADC1BUF1*GAIN_VIN)/ADC_GAIN; //-OFFSET_V_IN; // vb
          sensor->vabc.c=(int)(ADC1BUF2*GAIN_VIN)/ADC_GAIN ; //-OFFSET_V_IN; // vc 
          sensor->iabc.c=(int)(ADC1BUF3*GAIN_I_IN)/ADC_GAIN ; //-OFFSET_I_IN; // ia 
          sensor->iabc.b=(int)(ADC1BUF4*GAIN_I_IN)/ADC_GAIN; //-OFFSET_I_IN; // ib 
-         sensor->vout=(int)((ADC1BUF5)*GAIN_VOUT); // vout have to be < PWM_PERIOD 
+         sensor->vout=(int)(ADC1BUF5+MAX_SIGNED_12BITS)*GAIN_VOUT/ADC_GAIN; // vout have to be < PWM_PERIOD 
 
 }
 

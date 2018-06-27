@@ -14,20 +14,9 @@
 #define SEND_NUMBER 20000
 #define FUNCTION_NUMBER 13
 
-union u
-{
-    unsigned int i; /**< acesso a pedaço de mémória de 32 bits através de tipo inteiro sem sinal. */
-    float f; 
-    double d ; 
-    uint8_t s[4]; /**< acesso a pedaço de mémória de 32 bits pedaços correspondentes a caractéres. */
-};
 
- union u2
-{
-    int i; /**< acesso a pedaço de mémória de 32 bits através de tipo inteiro sem sinal. */
-    float f; 
-    char s[4]; /**< acesso a pedaço de mémória de 32 bits pedaços correspondentes a caractéres. */
-};
+
+
 
 void (*functions_array[FUNCTION_NUMBER])(); 
 
@@ -35,8 +24,7 @@ void (*functions_array[FUNCTION_NUMBER])();
  unsigned int sendCounter ; 
  bool sending ; 
  char ReceivedChar; 
- state state_vector ; 
- signal us ; 
+  
  
  float vect[5] ;
 /**
@@ -55,7 +43,7 @@ void serialInit() {
     chariot.s[3] = 0 ;
     
     sendCounter = 0 ;
-    sending = false ; 
+    
     functions_array[0] = send_measurements ; 
     functions_array[1] = send_ul_abc_to_alphabeta ;
     functions_array[2] = send_omega ; 
@@ -72,6 +60,9 @@ void serialInit() {
     functions_array[10] = send_us_dq_to_alphabeta ; 
     functions_array[11] = send_us_alphabeta_to_abc ;
     functions_array[12] = send_dc_voltage ; 
+    U1STAbits.OERR = 0;
+    sending = false ; 
+    
 }
 
 void sendData(float data){
@@ -83,7 +74,19 @@ void sendData(float data){
       for( i=0 ; i<4 ; i++){
           UART1_Write(number.s[i]) ;
       }
+
       
+}
+
+void send_int(int data_int){
+    union u number ;
+    number.i = data_int ; 
+     //RA2_Toggle() ; 
+    int i ; 
+    //float x = data ; 
+    for( i=0 ; i<2 ; i++){
+        UART1_Write(number.s[i]) ;
+    }
 }
 
 void ReceiveData(float data){
@@ -182,17 +185,20 @@ void send_il_alphabeta_to_dq( ){
 }
 
 void send_id_controller( ){
-        vect[0] = (float)id_controler.controlReference; 
-        vect[1] = (float)id_controler.measuredOutput ;  
-        vect[2] = (float)id_controler.controlOutput;       
+        int id_err = id_controler.controlHistory[0] ; 
+        int id_out = id_controler.controlOutput;  
+        vect[0] = (float)id_err; 
+        vect[1] = (float)id_out ;     
         sendVect(vect,5) ;
 }
 
 void send_iq_controller( ){
+//    RA2_Toggle() ;
         vect[0] = (float)iq_controler.controlReference; 
         vect[1] = (float)iq_controler.measuredOutput ;  
         vect[2] = (float)iq_controler.controlOutput;       
         sendVect(vect,5) ;
+//    RA2_Toggle() ;
 }
 
 void send_usd_decoupler_controller(  ){
@@ -212,20 +218,20 @@ void send_usq_decoupler_controller(   ){
 }
 
 void send_us_dq_to_alphabeta( ){
-    vect[0] = (float)us.dq.d; 
-    vect[1] = (float)us.dq.q ;
-    vect[2] = (float)us.alphabeta.alpha ; 
-    vect[3] = (float)us.alphabeta.beta ;
+    vect[0] = (float)us_sat.dq.d; 
+    vect[1] = (float)us_sat.dq.q ;
+    vect[2] = (float)us_sat.alphabeta.alpha ; 
+    vect[3] = (float)us_sat.alphabeta.beta ;
     //vect[4] = (float) us_abc->c ;
     sendVect(vect,5) ;
 }
 
 void send_us_alphabeta_to_abc( ){
-    vect[0] = (float)us.alphabeta.alpha ; 
-    vect[1] = (float)us.alphabeta.beta ;
-    vect[2] = (float)us.abc.a; 
-    vect[3] = (float)us.abc.b ;
-    vect[4] = (float)us.abc.c ;
+    vect[0] = (float)us_sat.alphabeta.alpha ; 
+    vect[1] = (float)us_sat.alphabeta.beta ;
+    vect[2] = (float)us_sat.abc.a; 
+    vect[3] = (float)us_sat.abc.b ;
+    vect[4] = (float)us_sat.abc.c ;
     sendVect(vect,5) ;
 }
 
@@ -260,11 +266,11 @@ void send_if_required(){
      if (ReceivedChar>=0 && ReceivedChar<FUNCTION_NUMBER ) {
             sending = true ; 
             limited_counter() ; 
-            RA2_SetHigh();
+//            RA2_SetHigh();
             setTransmitterMode() ;
 //            send_theta_cos_theta( state_vector,  cos_theta,  sin_theta ) ; 
 //            send_measurements( state_vector) ; 
             (*functions_array[(int)ReceivedChar])() ; 
-            RA2_SetLow() ; 
+//            RA2_SetLow() ; 
         }
 }

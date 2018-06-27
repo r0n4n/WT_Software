@@ -33,8 +33,8 @@ _Q15 multi_integ_frac(int integer,  int fract){
     return z ; 
 }
 
-int module_square(complex complex){
-    int square = complex.real*complex.real + complex.imag*complex.imag ; 
+long int module_square(complex complex){
+    long int square = (long int)complex.real*(long int) complex.real + (long int)complex.imag*(long int)complex.imag ; 
     return square  ;  
 }
 
@@ -43,8 +43,8 @@ int get_complex_angle(complex complex){
 }
 
 void complex_real_imag(complex *complex) {
-    complex->real = complex->module /inverse_trigo(_Q15cosPI(complex->angle)) ; 
-    complex->imag = complex->module /inverse_trigo(_Q15sinPI(complex->angle)) ;
+    complex->real = (int)complex->module /inverse_trigo(_Q15cosPI(complex->angle)) ; 
+    complex->imag = (int)complex->module /inverse_trigo(_Q15sinPI(complex->angle)) ;
 }
 
 int inverse_trigo(int trigo){
