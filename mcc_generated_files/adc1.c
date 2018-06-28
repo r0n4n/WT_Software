@@ -57,11 +57,14 @@
 
 //#define VREF 3.3 
 //#define _12BIT_MAX 4096 
-#define GAIN_VIN 16 // GAIN_VIN = 3.3/4096*20.3125*1000 = 16.3651
+//#define GAIN_VIN 16 // GAIN_VIN = 3.3/4096*20.3125*1000 = 16.3651
+#define GAIN_VIN 24 // GAIN_VIN =  0.8/993*37*1000 = 29.8087
+
 #define GAIN_VOUT  22     // GAIN_VOUT = 3.3/4096*28.125*1000 = 22.659
 #define GAIN_I_IN  6 // GAIN_I_IN = 3.3/4096*8*1000 = 6,4453125
 #define OFFSET_I_IN 12500 //offset current = 1.65*10*1000 = 16500000
-#define OFFSET_V_IN 33515 //offset input voltage = 1.65*20.3125*1000000 = 33515625
+
+#define OFFSET_V_IN 1193 
  
 #define ADC_GAIN 10
 
@@ -135,25 +138,27 @@ void ADC1_Initialize (void)
 }
 
 /*
- * AN0 -> ia 
- * AN1 -> ib 
- * AN2 -> vout 
- * AN3 -> va 
- * AN4 -> vb 
- * AN5 -> vc or AN5 -> freq 
- * 
+ * AN0 -> va
+ * AN1 -> vb 
+ * AN2 -> vc 
+ * AN3 -> ic 
+ * AN4 -> ib 
+ * AN5 -> vout
  */
 void get_sensor(sensor *sensor){
          
-    /* Retrieving the sensed values from A/D buffer. The values are from 0 to 1024, converting from 0V to 3.3V */
+    /* Retrieving the sensed values from A/D buffer. The values are from -2048 to +2048, converting from 0V to 3.3V */
     /*The values of the buffer are signed 12bits*/
-         /* ALL THE INPUT ARE *1000*/
-         sensor->vabc.a=(int)(ADC1BUF0*GAIN_VIN)/ADC_GAIN; //-OFFSET_V_IN; // va
-         sensor->vabc.b=(int)(ADC1BUF1*GAIN_VIN)/ADC_GAIN; //-OFFSET_V_IN; // vb
-         sensor->vabc.c=(int)(ADC1BUF2*GAIN_VIN)/ADC_GAIN ; //-OFFSET_V_IN; // vc 
-         sensor->iabc.c=(int)(ADC1BUF3*GAIN_I_IN)/ADC_GAIN ; //-OFFSET_I_IN; // ia 
-         sensor->iabc.b=(int)(ADC1BUF4*GAIN_I_IN)/ADC_GAIN; //-OFFSET_I_IN; // ib 
-         sensor->vout=(int)(ADC1BUF5+MAX_SIGNED_12BITS)*GAIN_VOUT/ADC_GAIN; // vout have to be < PWM_PERIOD 
+         /* ALL THE INPUT ARE *100 */
+         sensor->vabc.a=(int)((ADC1BUF0-OFFSET_V_IN)*GAIN_VIN)/ADC_GAIN; // va
+         sensor->vabc.b=(int)((ADC1BUF1-OFFSET_V_IN)*GAIN_VIN)/ADC_GAIN; // vb
+         sensor->vabc.c=(int)((ADC1BUF2-OFFSET_V_IN)*GAIN_VIN)/ADC_GAIN ;// vc 
+//          sensor->vabc.a=(int)(ADC1BUF0); // va
+//         sensor->vabc.b=(int)(ADC1BUF1); // vb
+//         sensor->vabc.c=(int)(ADC1BUF2) ;// vc 
+         sensor->iabc.c=(int)(ADC1BUF3*GAIN_I_IN)/ADC_GAIN ; // ic 
+         sensor->iabc.b=(int)(ADC1BUF4*GAIN_I_IN)/ADC_GAIN; // ib 
+         sensor->vout=(int)(ADC1BUF5+MAX_SIGNED_12BITS)*GAIN_VOUT/ADC_GAIN; // (vout have to be < PWM_PERIOD. The set duty cycle function) 
 
 }
 

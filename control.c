@@ -1,9 +1,6 @@
 
 #include "control.h"
 
-
-#define VOLTAGE_REFERENCE_SATURATION 1
-
 void run_transformations() ; 
 void run_voltage_controller() ; 
 void run_id_controller() ; 
@@ -11,56 +8,61 @@ void run_iq_controller() ;
 void run_decoupling()  ; 
 void inverse_transformations() ; 
 
-signal us ; 
-signal us_sat ; 
-state state_vector ; 
+signal us ; // the us signal is the control output of the controller  
+signal us_sat ; // the us_sat signal is the saturated control output of the controller  
+state state_vector ; // the state vector contains all the measurements and their transformations 
+
+int omega ; // pulsation of the signal 
+int omega_L ; // pulsation of the signal multiply by the estimated inductance (L)
+int last_theta ; // the value of theta at the previous iteration
+
+// Warning ! : This value is firstly the cosinus of theta but will become his inverse 
+int cos_theta ;  
+//Same for sinus
+int sin_theta ; 
+int increment ; // the increment to not estimation omega every interation of the controller
 
 
-    float err_udc;
-    int omega ; 
-    int omega_L ;
-    int last_theta ; 
-    int cos_theta ; 
-    int sin_theta ; 
-    int last_va ;
-    int increment ; 
+tPID voltage_controler; // the pid object for the voltage controller 
 
-   
-    tPID voltage_controler;
-    
-    tPID id_controler;
-    tPID id_windup_controler;
-    
-    tPID iq_controler;
-    tPID iq_windup_controler;
-    
-    fractional abcCoefficient_voltage[3] __attribute__ ((section (".xbss, bss, xmemory")));
-    fractional controlHistory_voltage[3] __attribute__ ((section (".ybss, bss, ymemory")));
-    
-    fractional abcCoefficient_id[3] __attribute__ ((section (".xbss, bss, xmemory")));
-    fractional controlHistory_id[3] __attribute__ ((section (".ybss, bss, ymemory")));
-    
-    fractional abcCoefficient_iq[3] __attribute__ ((section (".xbss, bss, xmemory")));
-    fractional controlHistory_iq[3] __attribute__ ((section (".ybss, bss, ymemory")));
-    
-    fractional abcCoef_id_anti_windup[3] __attribute__ ((section (".xbss, bss, xmemory")));
-    fractional controlHistory_id_anti_windup[3] __attribute__ ((section (".ybss, bss, ymemory")));
-    
-    fractional abcCoef_iq_anti_windup[3] __attribute__ ((section (".xbss, bss, xmemory")));
-    fractional controlHistory_iq_anti_windup[3] __attribute__ ((section (".ybss, bss, ymemory")));
-    
-    fractional voltage_gain_coeff[3] = {0 ,0 ,0};
-    
-    fractional id_gain_coeff[3] = {0 ,0 ,0};
-    fractional id_anti_windup_coeff[3] = {0, 0, 0} ;
-    
-    fractional iq_gain_coeff[3] = {0 ,0 ,0};
-    fractional iq_anti_windup_coeff[3] = {0, 0, 0} ; 
+tPID id_controler; // the pid object for the id controller 
+tPID id_windup_controler;  // the pid object for id anti-windup controller 
+
+tPID iq_controler; // the pid object for the iq controller 
+tPID iq_windup_controler; // the pid object for iq anti-windup controller 
+
+
+/*****************  MEMORY ALLOCATION FOR THE PIDS COEFF AND THE CONTROL HISTORY *********************/
+fractional abcCoefficient_voltage[3] __attribute__ ((section (".xbss, bss, xmemory")));
+fractional controlHistory_voltage[3] __attribute__ ((section (".ybss, bss, ymemory")));
+
+fractional abcCoefficient_id[3] __attribute__ ((section (".xbss, bss, xmemory")));
+fractional controlHistory_id[3] __attribute__ ((section (".ybss, bss, ymemory")));
+
+fractional abcCoefficient_iq[3] __attribute__ ((section (".xbss, bss, xmemory")));
+fractional controlHistory_iq[3] __attribute__ ((section (".ybss, bss, ymemory")));
+
+fractional abcCoef_id_anti_windup[3] __attribute__ ((section (".xbss, bss, xmemory")));
+fractional controlHistory_id_anti_windup[3] __attribute__ ((section (".ybss, bss, ymemory")));
+
+fractional abcCoef_iq_anti_windup[3] __attribute__ ((section (".xbss, bss, xmemory")));
+fractional controlHistory_iq_anti_windup[3] __attribute__ ((section (".ybss, bss, ymemory")));
+/***********************************************************/
+
+/****** array of the PID gains *********/
+fractional voltage_gain_coeff[3] = {0 ,0 ,0};
+
+fractional id_gain_coeff[3] = {0 ,0 ,0};
+fractional id_anti_windup_coeff[3] = {0, 0, 0} ;
+
+fractional iq_gain_coeff[3] = {0 ,0 ,0};
+fractional iq_anti_windup_coeff[3] = {0, 0, 0} ; 
+/*********************************************/
      
        
      
 void VOC_initialize(){
-    /* PID INITIALISATION */
+/****************** PID INITIALISATION ********************************/
         voltage_controler.abcCoefficients = &abcCoefficient_voltage[0];    /*Set up pointer to derived coefficients */
         id_controler.abcCoefficients = &abcCoefficient_id[0];    /*Set up pointer to derived coefficients */
         iq_controler.abcCoefficients = &abcCoefficient_iq[0];    /*Set up pointer to derived coefficients */
@@ -106,31 +108,114 @@ void VOC_initialize(){
         PIDCoeffCalc(&iq_gain_coeff[0], &iq_controler);             /*Derive the a,b, & c coefficients from the Kp, Ki & Kd */
         PIDCoeffCalc(&id_anti_windup_coeff[0], &id_windup_controler); 
         PIDCoeffCalc(&iq_anti_windup_coeff[0], &iq_windup_controler); 
-        /** SET THE INITIAL REFERENCES*/
+/****************************************************************************/
+        
+/******************** SET THE INITIAL REFERENCES***************************/
         voltage_controler.controlReference = UDC_REF ; 
         iq_controler.controlReference = 0;
         increment = 0 ; 
         us.dq.q = 0 ; 
         us.dq.d = 0 ; 
+/**************************************************************************/
 
 }
 
+/* The VOC_controller function performs the VOC algorithm. See "Voltage Oriented 
+ * Control of Three?Phase Boost PWM Converters" paper from Sylvain LECHAT SANJUAN. 
+ */
 void VOC_controller(){
    RA2_SetHigh() ;
    
-   run_transformations() ; 
+   run_transformations() ;  
    run_voltage_controller() ; 
    run_id_controller() ; 
    run_iq_controller() ; 
    run_decoupling() ; 
    reference_voltage_saturation() ; 
    inverse_transformations() ; 
-//       
+      
    RA2_SetLow() ;
 }
 
+void run_transformations(){
+      /**********ESTIMATION + TRANSFORMATIONS **********/
+//    RA2_SetHigh() ;
+    
+    state_vector.ul.alphabeta = abc_to_alphabeta(state_vector.ul.abc) ;   
+    state_vector.ul.theta = theta_estimator(state_vector.ul.alphabeta); 
+
+    increment++ ; 
+    if (increment==30){
+        omega = omega_estimation(last_theta, state_vector.ul.theta ) ;
+        last_theta = state_vector.ul.theta ;
+        increment = 0 ; 
+    }
+
+/******************************/
+    cos_theta = _Q15cosPI(state_vector.ul.theta) ; 
+    sin_theta = _Q15sinPI(state_vector.ul.theta) ;
+    
+    if (cos_theta!=0){
+        cos_theta = INT_MAX/(cos_theta) ; 
+    }
+    else cos_theta = INT_MAX ; 
+    if (sin_theta!=0){
+        sin_theta = INT_MAX/(sin_theta) ; 
+    }
+    else 
+        sin_theta = INT_MAX ; 
+/*****************************/
+
+    state_vector.ul.dq = alphabeta_to_dq(state_vector.ul.alphabeta, cos_theta, sin_theta); // 4 탎
+    state_vector.il.abc.a = -(state_vector.il.abc.c + state_vector.il.abc.b) ; // get the last current line
+    state_vector.il.alphabeta = abc_to_alphabeta(state_vector.il.abc);
+    state_vector.il.dq = alphabeta_to_dq(state_vector.il.alphabeta, cos_theta, sin_theta); // 4탎 
+   /****************end transformations ***********************/
+}
+
+void run_voltage_controller() {
+    /***************VOLTAGE CONTROLER *********/
+    voltage_controler.measuredOutput = state_vector.vout; // 200 ns
+    PID (&voltage_controler); // 1.5탎
+   /**********************************************/
+}
+
+
+void run_id_controller() {
+    /*************id LOOP ******************/
+    id_controler.controlReference = voltage_controler.controlOutput; // ~0 탎
+    id_controler.measuredOutput = state_vector.il.dq.d; // 34탎
+    PID (&id_controler); // 2 탎
+
+    
+    id_windup_controler.controlReference = id_controler.controlHistory[0] ; 
+    id_windup_controler.measuredOutput = (us_sat.dq.d - us.dq.d)*Ks_ID_ANTI_WINDUP ; 
+    PID (&id_windup_controler); // 2 탎
+    /*************************************/
+}
+
+void run_iq_controller() {
+    /******** iq loop************************/
+    iq_controler.measuredOutput = state_vector.il.dq.q; // 
+    PID (&iq_controler); // 
+    
+    iq_windup_controler.controlReference = iq_controler.controlHistory[0] ; 
+    iq_windup_controler.measuredOutput = (us_sat.dq.q - us.dq.q)*Ks_IQ_ANTI_WINDUP ; 
+    PID (&iq_windup_controler); 
+    /****************************************/
+}
+
+void run_decoupling() {
+/************ decoupling***************/
+    omega_L = omega/L_INV ; // 130ns
+    us.dq.d = (id_controler.controlOutput+id_windup_controler.controlOutput)  + state_vector.ul.dq.d + (state_vector.il.dq.q*omega_L); // 500 ns 
+    us.dq.q = (iq_controler.controlOutput+iq_windup_controler.controlOutput) + state_vector.ul.dq.q - (state_vector.il.dq.d*omega_L); // 500 ns 
+/************************************/
+}
+
 /**
- * This function apply a saturation on the reference volatage.
+ * This function apply a saturation on the reference volatage. See page 26 of 
+ * "Voltage Oriented Control of Three?Phase Boost PWM Converters". 
  * @param state
  * @param us
  */
@@ -171,102 +256,10 @@ void reference_voltage_saturation(){
 //    int i = 0 ; 
 }
 
-
-
-
-
-void run_transformations(){
-      /**********ESTIMATION + TRANSFORMATIONS **********/
-//    RA2_SetHigh() ;
-    state_vector.ul.alphabeta = abc_to_alphabeta(state_vector.ul.abc) ; // 3 탎 (int)  
-     
-    state_vector.ul.theta = theta_estimator(state_vector.ul.alphabeta); // time change with the value of alpha and beta
-
-    //state_vector.ul.theta = generate_theta() ; 
-    //omega = derivate(last_theta, (int)theta, FS) ; 
-    
-    increment++ ; 
-    if (increment==2){
-       //omega = state_vector.ul.theta  - last_theta ;  
-        omega = omega_estimation(last_theta, state_vector.ul.theta ) ;
-        last_theta = state_vector.ul.theta ;
-        increment = 0 ; 
-    }
-
-/******************************/
-    cos_theta = _Q15cosPI(state_vector.ul.theta) ; 
-    sin_theta = _Q15sinPI(state_vector.ul.theta) ;
-//    cos_theta = _Q15cosPI(state_vector.ul.theta)/10 ; 
-//    sin_theta = _Q15sinPI(state_vector.ul.theta)/10 ;
-    
-    if (cos_theta!=0){
-        cos_theta = INT_MAX/(cos_theta) ; 
-    }
-    else cos_theta = INT_MAX ; 
-    if (sin_theta!=0){
-        sin_theta = INT_MAX/(sin_theta) ; 
-    }
-    else 
-        sin_theta = INT_MAX ; 
-/*****************************/
-
-    state_vector.ul.dq = alphabeta_to_dq(state_vector.ul.alphabeta, cos_theta, sin_theta); // 4 탎
-    state_vector.il.abc.a = -(state_vector.il.abc.c + state_vector.il.abc.b) ; // get the last current line
-    state_vector.il.alphabeta = abc_to_alphabeta(state_vector.il.abc);
-    state_vector.il.dq = alphabeta_to_dq(state_vector.il.alphabeta, cos_theta, sin_theta); // 4탎 
-   /****************end transformations ***********************/
-}
-
-void run_voltage_controller() {
-    /***************VOLTAGE CONTROLER *********/
-    voltage_controler.measuredOutput = state_vector.vout; // 200 ns
-    PID (&voltage_controler); // 1.5탎
-   /**********************************************/
-}
-
-
-void run_id_controller() {
-    /*************id LOOP ******************/
-//     id_controler.controlReference = 100; // ~0 탎
-//    id_controler.measuredOutput = 0; 
-    id_controler.controlReference = voltage_controler.controlOutput; // ~0 탎
-    id_controler.measuredOutput = state_vector.il.dq.d; // 34탎
-    PID (&id_controler); // 2 탎
-
-    
-//    id_windup_controler.controlReference = id_controler.controlHistory[0] ; 
-//    id_windup_controler.measuredOutput = (us_sat.dq.d - us.dq.d)*Ks_ID_ANTI_WINDUP ; 
-//    PID (&id_windup_controler); // 2 탎
-    /*************************************/
-}
-
-void run_iq_controller() {
-    /******** iq loop************************/
-    iq_controler.measuredOutput = state_vector.il.dq.q; // 
-//    iq_controler.controlReference = 100;
-//        iq_controler.measuredOutput = 1; // 
-
-    PID (&iq_controler); // 
-    
-//    iq_windup_controler.controlReference = iq_controler.controlHistory[0] ; 
-//    iq_windup_controler.measuredOutput = (us_sat.dq.q - us.dq.q)*Ks_IQ_ANTI_WINDUP ; 
-//    PID (&iq_windup_controler); // 
-    /****************************************/
-}
-
-void run_decoupling() {
-     /************ decoupling***************/
-    omega_L = omega/L_INV ; // 130ns
-//    omega_L = 94 ;
-    us.dq.d = (id_controler.controlOutput+id_windup_controler.controlOutput)  + state_vector.ul.dq.d + (state_vector.il.dq.q*omega_L); // 500 ns 
-    us.dq.q = (iq_controler.controlOutput+ iq_windup_controler.controlOutput) + state_vector.ul.dq.q - (state_vector.il.dq.d*omega_L); // 500 ns 
-    /************************************/
-}
-
 void inverse_transformations() {
 /** INVERSE TRANSFORMATION  *********/
        us_sat.alphabeta = dq_to_alphabeta(us_sat.dq, cos_theta, sin_theta); // 4.3탎
-       
        us_sat.abc = alphabeta_to_abc(us_sat.alphabeta); // 2.6 탎 
   /********************************************/
 }
+

@@ -1,3 +1,4 @@
+
 /* 
  * File:   parameters.h
  * Author: rblan
@@ -18,7 +19,7 @@ extern "C" {
     
     
         
-#define UDC_REF 600 // reference in volt multuply by 100  
+#define UDC_REF 2500 // reference in volt multuply by 100  
     
 #define Kp_u 0.1
 #define Ki_u 0  //0.1 

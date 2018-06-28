@@ -33,21 +33,14 @@ alphabeta abc_to_alphabeta(abc abc) {
     return alphabeta; // THE VALUES ARE *1 000 
 }
 
-/*Takes 60 µs */
+/****  Takes 60 µs */
 /*
 *   Gain = x0.1  
 */
 dq alphabeta_to_dq(alphabeta alphabeta, trigo_type cos_theta , trigo_type sin_theta ){
     dq dq;
-    
     dq.d = alphabeta.alpha/cos_theta + alphabeta.beta/sin_theta;
     dq.q = alphabeta.beta/cos_theta - alphabeta.alpha/sin_theta;
-//    dq.d =  multi_integ_frac(alphabeta.beta, sin_theta) ; // multi_integ_frac(alphabeta.alpha, cos_theta)  +
-//    dq.q =   multi_integ_frac(alphabeta.alpha, sin_theta) ; //multi_integ_frac(alphabeta.beta, cos_theta)
-//    dq.d = alphabeta.alpha ; 
-//    dq.q = sin_theta ; 
-//    dq.d *= 10 ; 
-//    dq.q *= 10 ; 
     return dq;
 }
 
@@ -62,9 +55,6 @@ alphabeta dq_to_alphabeta(dq dq, trigo_type cos_theta , trigo_type sin_theta){
 //    dq.q /= 100 ;
     alphabeta.alpha = dq.d/cos_theta - dq.q/sin_theta;
     alphabeta.beta = dq.d/sin_theta + dq.q/cos_theta;
-    
-//    alphabeta.alpha /=10 ; 
-//    alphabeta.beta /= 10 ; 
     return alphabeta;
 }
 

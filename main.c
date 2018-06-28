@@ -43,58 +43,35 @@
 */
 #define FCY 30401250UL
 
-#include "mcc_generated_files/mcc.h"
 #include <stdio.h>
 #include <time.h>
+#include <libpic30.h>
+#include "mcc_generated_files/mcc.h"
 #include "xc.h"
 #include "pwm.h"
 #include "serialData.h"
 #include "typedef.h"
 #include "estimation.h"
 #include "transform.h"
-#include <libpic30.h>
 #include "control.h"
-//#include "common.h"
-
-sensor sense ; 
-
-abc us_abc ;
-signal ul_out ; 
-signal il_out ; 
 
 
-//int omega ; 
+sensor sense ; // structure which contains all the measurements 
+int etat = 0 ; // variable for the state machine 
 
-int p ; 
-long int q ; 
-
-int counter = 0 ; 
-int etat = 0 ; 
+/************* VARIABLE FOR TESTS***********/
 int x  ; 
 int  y  ; 
 int z ; 
 int l ;
-
-
-
+int p ; 
+long int q ; 
+clock_t last_time ; 
+clock_t new_time ; 
+/*******************************************/
 
 void run(void) ; 
  
-
-clock_t last_time ; 
-
-clock_t new_time ; 
-// union u2
-//{
-//    int i; /**< acesso a pedaço de mémória de 32 bits através de tipo inteiro sem sinal. */
-//    float f; 
-//    char s[4]; /**< acesso a pedaço de mémória de 32 bits pedaços correspondentes a caractéres. */
-//};
-//
-// union u2 chariot ;
-
-//float vect[5] ;
-//fractional Clarke[2][3] ;
 /*
                          Main application
  */ 
@@ -102,110 +79,96 @@ int main(void)
 {
     // initialize the device
     SYSTEM_Initialize(); // hardware initialization 
-    serialInit() ; 
     
-    VOC_initialize() ; 
-//    x = Q15(0.5) ; 
-//    z= _Q15sqrt(x) ; 
-//
-//    y = _Q15norm(x) ; 
-   
-    
-    setReceiverMode() ; 
-//    PDC1 = 1 ; 
-//    PDC2 = 2 ; 
-//    PDC3 = 3 ;
-//    setTransmitterMode() ;
-//    us.dq.d = 32000 ; 
-//    us.dq.q = 10 ; 
-////    q = us.dq.d ; 
-//    state_vector.vout = 32676 ;  
-//    reference_voltage_saturation() ; 
+    serialInit() ; // initialize the RS-485 communication 
+    VOC_initialize() ; // initialize the controller 
 
-    while (1)
+    
+    setReceiverMode() ; // put the board as a receiver 
+//    setTransmitterMode() ; //  put the board as a transmitter
+
+    while (1) // do loop 
     {
-        
 //        RA2_Toggle() ;
-        
-//         UART1_Write(3) ; 
-//        x = -8 ;
-//        y = Q15(-0.5) ;
-//         RA2_SetHigh() ;
-//         p = p >>2  ; 
-//        z = _Q16mpy(x,y);
-//         z = x*y ; 
-//        z=  multi_integ_frac(x,  y) ; 
-//        y = Q15(0.5) ;
-//        z=  multi_integ_frac(x,  y) ; 
+//        RA2_SetHigh() ;
 //        RA2_SetLow() ;
-        //    PDC1 = omega ; 
-        listen_RS485() ; 
-        send_if_required() ; 
+
+        listen_RS485() ; // check if data have been received with the RS485
+        send_if_required() ; // send data if required 
+        
+/********    TEST LOOP to improve the serial mecanism ******/
 //        int i = 0 ; 
 //        for (i=0;i<10;i++){
 //            send_int(3) ; 
 //            sendData(3.0) ; 
 //            sendData(chariot.f) ;
 //             __delay_us(1000) ; // wait for the end of the conversion 
-
 //        }
-//
-        if (etat == 1){
-//                RA2_Toggle() ;  
+/***********************************************************/
 
-            run() ;      
-            etat = 0 ;
+        if (etat == 1){ // if new data have been sample 
+//                RA2_Toggle() ;  
+            run() ;     // run the controller  
+            etat = 0 ;  // set state to idle mode  
         }
-    }
+    } 
     return 1;
 }
 
-/*TAKE 20 µs to sample the 6 channels*/
+/**
+ * The _PWM1Interrupt routine is called each period of PWM 
+ */
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt (  )
 {
 //    RA2_Toggle() ;  
 //    RA2_SetHigh() ;
 //    RA2_SetHigh() ; 
     int i ; 
-    for (i=0;i<6;i++){
-        __delay32(60) ; // wait  ns
+    for (i=0;i<6;i++){ // boucle for to sample the 6 channels
+        __delay32(60) ; // wait for the end of the conversion 
         if (i==0) {
             etat =1 ; 
         }
-        AD1CON1bits.SAMP = 1 ; // sampling start  
-        __delay32(16) ; // wait for the end of the conversion 
-        AD1CON1bits.SAMP = 0 ; // conversion start         
+        AD1CON1bits.SAMP = 1 ; // start sampling
+        __delay32(16) ; // wait for the end of sampling 
+        AD1CON1bits.SAMP = 0 ; // start conversion          
     }
 //    RA2_SetLow() ;
 //    RA2_SetHigh() ;
 //    RA2_Toggle() ; 
-	IFS5bits.PWM1IF = false;    
+	IFS5bits.PWM1IF = false;    // clear the PWM flag 
 }
 
 
+/**
+ * The _AD1Interrupt routine is not used. 
+ */
 void __attribute__ ( ( __interrupt__ , auto_psv ) ) _AD1Interrupt ( void )
 {
     IFS0bits.AD1IF = false; 
 }
 
 
-
+/***
+ * The run function performs one step of the controller from the measurements 
+ * conversion to the setting of the PWM duty cycle. 
+ * 
+ */
 void run(void) {
 //     RA2_SetLow() ;
-    //RA2_Toggle() ;
+//      RA2_Toggle() ;
     
     /********GET DATA*************/
-    get_sensor(&sense);
+    get_sensor(&sense); // get data from the buffers and do the conversions
+    
+    /**FULFILL THE STATE_VECTOR *****/
     state_vector.ul.abc = sense.vabc ;
     state_vector.il.abc = sense.iabc ;
     state_vector.vout = sense.vout ; 
-    /**************************/
-//    id_controler.controlReference = 100; // ~0 µs
-//    id_controler.measuredOutput = 0; // 34µs
-//    PID (&id_controler); // 2 µs
-    VOC_controller() ; // run the controller
+    /**************************************/
+    
+    VOC_controller() ; // run the VOC controller
     set_duty_cycle(us_sat.abc, state_vector.vout) ; // change the duty cycle
-
 }
 
 /**
